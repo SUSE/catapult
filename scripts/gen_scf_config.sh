@@ -43,10 +43,10 @@ kube:
   # The values below should work for
   # a default installation from the SUSE registry.
   registry:
-    hostname: "${REGISTRY}"
-    username: ""
-    password: ""
-  organization: "${ORG}"
+    hostname: "${DOCKER_REGISTRY}"
+    username: "${DOCKER_USERNAME}"
+    password: "${DOCKER_PASSWORD}"
+  organization: "${DOCKER_ORG}"
   auth: rbac
 
 secrets:

@@ -2,6 +2,7 @@
 
 set -ex 
 pushd build
+export KUBECONFIG=kubeconfig
 
 helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
 

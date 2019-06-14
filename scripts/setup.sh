@@ -3,7 +3,7 @@ set -x
 pushd build
 cluster_name=$(./kind get clusters)
 cp $(./kind get kubeconfig-path --name="$cluster_name") kubeconfig
-export KUBECONFIG=$PWD/kubeconfig
+export KUBECONFIG=kubeconfig
 
 kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
 kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
