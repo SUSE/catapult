@@ -26,8 +26,12 @@ scf:
 chart:
 	scripts/chart.sh
 
+.PHONY: login
+login:
+	scripts/login.sh
+
 .PHONY: all
-all: clean deps up gen-config chart setup scf
+all: clean deps up gen-config chart setup scf login
 
 .PHONY: build-scf-from-source
 build-scf-from-source:
