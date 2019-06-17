@@ -2,6 +2,7 @@
 set -x
 
 pushd build
+    export KUBECONFIG=kubeconfig
     helm del --purge susecf-uaa
     helm del --purge susecf-scf
     kubectl delete secret --all
