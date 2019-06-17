@@ -122,9 +122,7 @@ EOF
 
 kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
-helm init --upgrade
-
-sleep 120
+helm init --upgrade --wait
 
 #kubectl create namespace eirini
 #kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml

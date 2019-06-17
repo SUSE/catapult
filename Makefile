@@ -20,7 +20,7 @@ gen-config:
 
 .PHONY: scf
 scf:
-	scripts/setup_scf.sh
+	scripts/install_scf.sh
 
 .PHONY: chart
 chart:
@@ -28,3 +28,11 @@ chart:
 
 .PHONY: all
 all: clean deps up gen-config chart setup scf
+
+.PHONY: build-scf-from-source
+build-scf-from-source:
+	scripts/build_scf.sh
+
+.PHONY: build-stemcell-from-source
+build-stemcell-from-source:
+	scripts/build_stemcell.sh
