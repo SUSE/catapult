@@ -14,6 +14,14 @@ clean:
 up:
 	scripts/up.sh
 
+.PHONY: start
+start:
+	scripts/start.sh
+
+.PHONY: stop
+stop:
+	scripts/stop.sh
+
 .PHONY: gen-config
 gen-config:
 	scripts/gen_scf_config.sh
