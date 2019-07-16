@@ -16,5 +16,6 @@ nodes:
       # readOnly: true
 EOF
     ./kind create cluster --config kind-config.yaml
-
+    cluster_name=$(./kind get clusters)
+    cp $(./kind get kubeconfig-path --name="$cluster_name") kubeconfig
 popd

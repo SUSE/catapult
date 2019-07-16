@@ -1,8 +1,6 @@
 #!/bin/bash
 set -x
 pushd build
-cluster_name=$(./kind get clusters)
-cp $(./kind get kubeconfig-path --name="$cluster_name") kubeconfig
 export KUBECONFIG=kubeconfig
 
 kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
