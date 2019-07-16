@@ -38,8 +38,15 @@ chart:
 login:
 	scripts/login.sh
 
+.PHONY: stratos
+stratos:
+	scripts/stratos.sh
+
+.PHONY: kind
+kind: clean deps up
+
 .PHONY: all
-all: clean deps up gen-config chart setup scf login
+all: kind gen-config chart setup scf login
 
 .PHONY: build-scf-from-source
 build-scf-from-source:
