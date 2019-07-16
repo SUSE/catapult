@@ -9,6 +9,7 @@ DOCKER_REGISTRY="${DOCKER_REGISTRY:-}"
 DOCKER_ORG="${DOCKER_ORG:-}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
+ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 
 cat > scf-config-values.yaml <<EOF
 env:
@@ -27,7 +28,7 @@ env:
   UAA_PORT: 2793
 
 enable:
-  eirini: true
+  eirini: "${ENABLE_EIRINI}"
 
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
