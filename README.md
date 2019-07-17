@@ -1,4 +1,4 @@
-# Deploy SCF on kind
+# [![Build Status](https://travis-ci.org/os-fun/bkindwscf.svg?branch=master)](https://travis-ci.org/os-fun/bkindwscf) bkindwscf: Quickly deploy SCF on kind
 
 **Requirements:**
 
