@@ -1,0 +1,22 @@
+language: bash
+
+services:
+  - docker
+
+before_install:
+  - curl -L https://git.io/get_helm.sh | sudo bash
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  - curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
+  - sudo mv cf /usr/local/bin
+  - sudo chmod +x /usr/local/bin/cf
+
+env:
+  global:
+    - CHART_URL=https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip
+    - DOCKER_REGISTRY=registry.suse.com
+    - DOCKER_ORG=cap
+
+script:
+- make all stratos
