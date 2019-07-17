@@ -1,4 +1,4 @@
-# Deploy SCF with Eirini on kind
+# Deploy SCF on kind
 
 **Requirements:**
 
