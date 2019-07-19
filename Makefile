@@ -42,6 +42,10 @@ login:
 stratos:
 	scripts/stratos.sh
 
+.PHONY: upgrade
+upgrade:
+	scripts/upgrade.sh
+
 .PHONY: kind
 kind: clean deps up
 
