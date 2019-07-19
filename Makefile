@@ -46,6 +46,10 @@ stratos:
 upgrade:
 	scripts/upgrade.sh
 
+.PHONY: smoke
+smoke:
+	scripts/smoke.sh
+
 .PHONY: kind
 kind: clean deps up
 
