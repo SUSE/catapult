@@ -2,6 +2,7 @@
 set -x
 pushd build
 export KUBECONFIG=kubeconfig
+export CREATE_EIRINI_NAMESPACE="${CREATE_EIRINI_NAMESPACE:-false}"
 
 kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
 kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
@@ -122,7 +123,10 @@ kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
-kubectl create namespace eirini
+if [ "$CREATE_EIRINI_NAMESPACE" = true ] ; then
+  kubectl create namespace eirini
+fi
+
 #kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
 #kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/standalone/heapster-controller.yaml
 
