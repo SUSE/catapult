@@ -7,7 +7,7 @@ cluster_name=$(./kind get clusters)
 container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
 container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
 
-git clone https://github.com/cloudfoundry/cf-smoke-tests
+[ ! -d "cf-smoke-tests" ] && git clone https://github.com/cloudfoundry/cf-smoke-tests
 
 pushd cf-smoke-tests
 cat > config.json <<EOF
@@ -29,15 +29,12 @@ cat > config.json <<EOF
 }
 EOF
 
-GOPATH=$PWD/go 
-GOBIN=$GOPATH/bin
-PATH=$PATH:$GOBIN
+export GOPATH=$PWD/go 
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 
-mkdir -p $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
-ln -s $PWD/ $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
+mkdir -p $GOPATH/src/github.com/cloudfoundry
+ln -s $PWD $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
 pushd $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
-
-go get github.com/onsi/gomega
-go get github.com/cloudfoundry-incubator/cf-test-helpers
 
 CONFIG=$PWD/config.json ./bin/test
