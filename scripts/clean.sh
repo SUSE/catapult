@@ -1,10 +1,8 @@
 #!/bin/bash
 set -x
-DEEP_CLEAN="${DEEP_CLEAN:-false}"
+. scripts/include/common.sh
 
-if [ -d build ]; then
-  pushd build
-      export KUBECONFIG=kubeconfig
+if [ -d "../build" ]; then
       if [ "$DEEP_CLEAN" = true ] ; then
         helm del --purge susecf-uaa
         helm del --purge susecf-scf

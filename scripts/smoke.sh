@@ -1,11 +1,8 @@
 #!/bin/bash
 
 set -ex 
-pushd build
-export KUBECONFIG=kubeconfig
-cluster_name=$(./kind get clusters)
-container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
-container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
+
+. scripts/include/common.sh
 
 [ ! -d "cf-smoke-tests" ] && git clone https://github.com/cloudfoundry/cf-smoke-tests
 

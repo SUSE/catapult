@@ -1,11 +1,9 @@
 #!/bin/bash
 
 set -ex 
-pushd build
-export KUBECONFIG=kubeconfig
-export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
-export SCF_BRANCH="${SCF_BRANCH:-develelop}"
-cluster_name=$(./kind get clusters)
+
+. scripts/include/common.sh
+
 [ ! -d "scf" ] && git clone --recurse-submodules "$SCF_REPO"
 
 pushd scf

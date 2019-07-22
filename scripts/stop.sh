@@ -1,7 +1,6 @@
 #!/bin/bash
-set -x
+set -ex
 
-pushd build
-    cluster_name=$(./kind get clusters)
-    docker stop $cluster_name-control-plane
-popd
+. scripts/include/common.sh
+
+docker stop $cluster_name-control-plane

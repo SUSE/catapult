@@ -1,15 +1,8 @@
 #!/bin/bash
 set -ex 
-pushd build
-cluster_name=$(./kind get clusters)
-container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
-container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
 
-DOCKER_REGISTRY="${DOCKER_REGISTRY:-}"
-DOCKER_ORG="${DOCKER_ORG:-}"
-DOCKER_USERNAME="${DOCKER_USERNAME:-}"
-DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
-ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
+. scripts/include/common.sh
+
 
 cat > scf-config-values.yaml <<EOF
 env:
@@ -26,6 +19,7 @@ env:
   # UAA host and port
   UAA_HOST: uaa.${container_ip}.nip.io
   UAA_PORT: 2793
+  DEFAULT_STACK: "${DEFAULT_STACK}"
 
 enable:
   eirini: "${ENABLE_EIRINI}"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -ex 
-pushd build
-export KUBECONFIG=kubeconfig
+
+. scripts/include/common.sh
 
 [ ! -d "bosh-linux-stemcell-builder" ] && git clone https://github.com/SUSE/bosh-linux-stemcell-builder.git
 

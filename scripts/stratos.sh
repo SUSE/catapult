@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -ex 
-pushd build
-export KUBECONFIG=kubeconfig
+
+. scripts/include/common.sh
 
 helm repo add suse https://kubernetes-charts.suse.com/
 

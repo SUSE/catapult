@@ -1,8 +1,7 @@
 #!/bin/bash
 set -ex 
-pushd build
 
-CHART_URL="${CHART_URL:-}"
+. scripts/include/common.sh
 
 wget "$CHART_URL" -O chart.zip
 

@@ -1,8 +1,7 @@
 #!/bin/bash
 set -x
-pushd build
-export KUBECONFIG=kubeconfig
-export CREATE_EIRINI_NAMESPACE="${CREATE_EIRINI_NAMESPACE:-false}"
+
+. scripts/include/common.sh
 
 kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
 kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
