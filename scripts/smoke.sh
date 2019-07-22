@@ -31,7 +31,7 @@ export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 
 mkdir -p $GOPATH/src/github.com/cloudfoundry
-ln -s $PWD $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
+[ ! -e "$GOPATH/src/github.com/cloudfoundry/cf-smoke-tests" ] && ln -s $PWD $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
 pushd $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
 
 CONFIG=$PWD/config.json ./bin/test
