@@ -1,4 +1,4 @@
-# [![Build Status](https://travis-ci.org/os-fun/bkindwscf.svg?branch=master)](https://travis-ci.org/os-fun/bkindwscf) bkindwscf: Quickly deploy [SCF](https://github.com/SUSE/scf) on [Kind](https://github.com/kubernetes-sigs/kind)
+# [![Build Status](https://travis-ci.com/SUSE/bkindwscf.svg?branch=master)](https://travis-ci.com/SUSE/bkindwscf) bkindwscf: [SCF](https://github.com/SUSE/scf) on top of [Kind](https://github.com/kubernetes-sigs/kind)
 
 **Requirements:**
 
@@ -7,6 +7,7 @@
 * Kubectl
 * cf-cli (for logging and running smoke tests)
 * Docker running on the host
+* Go (only to run smoke and cats tests)
 
 ## Get deps:
 
@@ -34,13 +35,13 @@ Then you can turn on a [SCF](https://github.com/SUSE/scf)+[Kind](https://github.
 
 It will use [kind](https://github.com/kubernetes-sigs/kind) to spin up a local kubernetes cluster from your Docker host.
 
-To use it in a CI, like travis, see the example [.travis.yml](https://github.com/os-fun/bkindwscf/blob/master/.travis.yml) file which is being used by this repository.
+To use it in a CI, like travis, see the example [.travis.yml](https://github.com/SUSE/bkindwscf/blob/master/.travis.yml) file which is being used by this repository.
 
 ## How to run
 
 Clone this repository locally:
 
-    $> git clone https://github.com/os-fun/bkindwscf
+    $> git clone https://github.com/SUSE/bkindwscf
 
 Then run the make targets inside the folder, see below for few examples. A new ```build/``` directory will be created inside after the kubernetes cluster is up.
 
@@ -104,6 +105,12 @@ You can also test upgrades, by just providing a new chart, regenerating the conf
     ENABLE_EIRINI="false" \
     make all stratos
 
+### Login
+
+Once the deployment of [SCF](https://github.com/SUSE/scf) succeeded, you can also manually login to your cluster if needed:
+
+    $> make login
+
 ## Run Tests 
 
 You can run smoke and cats tests against the deployed cluster:
@@ -117,6 +124,8 @@ You can run smoke and cats tests against the deployed cluster:
     make cats
 
 If what you really want is just running tests, you can also chain the make target ( *e.g.* ```make all smoke cats```).
+
+**Note**: You need go installed to run smoke and cats tests
 
 ## Example
 
