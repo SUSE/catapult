@@ -122,7 +122,4 @@ If what you really want is just running tests, you can also chain the make targe
 
 Deploy [SCF](https://github.com/SUSE/scf) from public chart:
 
-    $> CHART_URL="https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" \
-    DOCKER_REGISTRY="registry.suse.com" \
-    DOCKER_ORG="cap" \
-    make all
+    $> CHART_URL="https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" make all

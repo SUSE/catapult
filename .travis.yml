@@ -15,8 +15,6 @@ before_install:
 env:
   global:
     - CHART_URL=https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip
-    - DOCKER_REGISTRY=registry.suse.com
-    - DOCKER_ORG=cap
 
 script:
 - make kind gen-config setup

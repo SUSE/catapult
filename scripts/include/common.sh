@@ -14,8 +14,8 @@ export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.
 export DEEP_CLEAN="${DEEP_CLEAN:-false}" # If true, triggers helm to delete releases before cleaning up
  
 
-export DOCKER_REGISTRY="${DOCKER_REGISTRY:-}"
-export DOCKER_ORG="${DOCKER_ORG:-}"
+export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
+export DOCKER_ORG="${DOCKER_ORG:-cap}"
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
