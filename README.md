@@ -104,6 +104,20 @@ You can also test upgrades, by just providing a new chart, regenerating the conf
     ENABLE_EIRINI="false" \
     make all stratos
 
+## Run Tests 
+
+You can run smoke and cats tests against the deployed cluster:
+
+### Smoke
+
+    make smoke
+
+### CATs
+
+    make cats
+
+If what you really want is just running tests, you can also chain the make target ( *e.g.* ```make all smoke cats```).
+
 ## Example
 
 Deploy [SCF](https://github.com/SUSE/scf) from public chart:
