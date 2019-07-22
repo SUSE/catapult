@@ -50,6 +50,10 @@ upgrade:
 smoke:
 	scripts/smoke.sh
 
+.PHONY: cats
+cats:
+	scripts/cats.sh
+
 .PHONY: kind
 kind: clean deps up
 
