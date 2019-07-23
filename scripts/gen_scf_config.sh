@@ -1,8 +1,13 @@
 #!/bin/bash
-set -ex 
+set -ex
 
 . scripts/include/common.sh
 
+if [ "$ENABLE_EIRINI" = true ] ; then
+  AUTH="rbac"
+else
+  AUTH="none"
+fi
 
 cat > scf-config-values.yaml <<EOF
 env:
@@ -21,8 +26,9 @@ env:
   UAA_PORT: 2793
   DEFAULT_STACK: "${DEFAULT_STACK}"
 
+
 enable:
-  eirini: "${ENABLE_EIRINI}"
+  eirini: ${ENABLE_EIRINI}
 
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
@@ -42,7 +48,7 @@ kube:
     username: "${DOCKER_USERNAME}"
     password: "${DOCKER_PASSWORD}"
   organization: "${DOCKER_ORG}"
-  auth: rbac
+  auth: ${AUTH}
 
 secrets:
   # Create a password for your CAP cluster
