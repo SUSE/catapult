@@ -10,7 +10,7 @@ SECRET=$(kubectl get pods --namespace uaa \
 CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-helm upgrade susecf-scf helm/cf/ --values scf-config-values.yaml \
+helm upgrade --recreate-pods susecf-scf helm/cf/ --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
 bash ../scripts/wait.sh scf
