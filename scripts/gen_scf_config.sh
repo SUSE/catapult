@@ -25,7 +25,7 @@ env:
   UAA_HOST: uaa.${container_ip}.nip.io
   UAA_PORT: 2793
   DEFAULT_STACK: "${DEFAULT_STACK}"
-
+${OVERRIDE}
 
 enable:
   eirini: ${ENABLE_EIRINI}
