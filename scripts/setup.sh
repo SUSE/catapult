@@ -122,11 +122,13 @@ kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
-if [ "$CREATE_EIRINI_NAMESPACE" = true ] ; then
+if [ "$ENABLE_EIRINI" = true ] ; then
   kubectl create namespace eirini
 fi
 
 #kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
 #kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/standalone/heapster-controller.yaml
 
-helm install stable/metrics-server --name=metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"
+if [ "$ENABLE_EIRINI" = true ]; then
+  helm install stable/metrics-server --name=metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"
+fi
