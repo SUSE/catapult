@@ -71,3 +71,7 @@ build-stemcell-from-source:
 .PHONY: docker-kubeconfig
 docker-kubeconfig:
 	scripts/docker_kubeconfig.sh
+
+.PHONY:image
+image:
+	scripts/image.sh
