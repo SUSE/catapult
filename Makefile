@@ -67,3 +67,7 @@ build-scf-from-source:
 .PHONY: build-stemcell-from-source
 build-stemcell-from-source:
 	scripts/build_stemcell.sh
+
+.PHONY: docker-kubeconfig
+docker-kubeconfig:
+	scripts/docker_kubeconfig.sh
