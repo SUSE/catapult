@@ -55,7 +55,7 @@ cats:
 	scripts/cats.sh
 
 .PHONY: kind
-kind: clean deps up
+kind: clean deps up kubeconfig
 
 .PHONY: all
 all: kind gen-config chart setup scf login
@@ -75,3 +75,10 @@ docker-kubeconfig:
 .PHONY:image
 image:
 	scripts/image.sh
+
+.PHONY: kubeconfig
+kubeconfig:
+	scripts/kubeconfig.sh
+
+.PHONY: recover
+recover: deps kubeconfig
