@@ -49,6 +49,16 @@ Then run the make targets inside the folder, see below for few examples. A new `
     $> make ...
     $> KUBECONFIG=build/kubeconfig kubectl get pods ...
 
+## From the docker image
+
+You can build locally a docker image with bkindwscf:
+
+    $> make image
+
+And then you can use bkindwscf directly from the docker image:
+
+    $> docker run -v /var/run/docker.sock:/var/run/docker.sock --rm bkindwscf:latest all
+
 ## Running options
 
 The make targets can be executed separated, the only dependency is that some of them might require the cluster up.
