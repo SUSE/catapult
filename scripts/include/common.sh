@@ -17,7 +17,7 @@ export cluster_name=$(./kind get clusters)
 export container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
 export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
 export DEEP_CLEAN="${DEEP_CLEAN:-false}" # If true, triggers helm to delete releases before cleaning up
- 
+export KIND_VERSION="${KIND_VERSION:-0.2.1}"
 
 export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
 export DOCKER_ORG="${DOCKER_ORG:-cap}"
