@@ -3,10 +3,30 @@ set -ex
 
 . scripts/include/common.sh
 
+VALUES=
 if [ "$ENABLE_EIRINI" = true ] ; then
   AUTH="rbac"
 else
   AUTH="none"
+  VALUES=$(cat <<'END_HEREDOC'
+sizing:
+  cc_uploader:
+    capabilities: ["SYS_RESOURCE"]
+  diego_api:
+    capabilities: ["SYS_RESOURCE"]
+  diego_brain:
+    capabilities: ["SYS_RESOURCE"]
+  diego_ssh:
+    capabilities: ["SYS_RESOURCE"]
+  nats:
+    capabilities: ["SYS_RESOURCE"]
+  router:
+    capabilities: ["SYS_RESOURCE"]
+  routing_api:
+    capabilities: ["SYS_RESOURCE"]
+END_HEREDOC
+)
+
 fi
 
 cat > scf-config-values.yaml <<EOF
@@ -27,6 +47,7 @@ env:
   DEFAULT_STACK: "${DEFAULT_STACK}"
 ${OVERRIDE}
 
+${VALUES}
 enable:
   eirini: ${ENABLE_EIRINI}
 
