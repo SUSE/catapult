@@ -52,9 +52,9 @@ kube:
 
 secrets:
   # Create a password for your CAP cluster
-  CLUSTER_ADMIN_PASSWORD: password
+  CLUSTER_ADMIN_PASSWORD: ${CLUSTER_PASSWORD}
 
   # Create a password for your UAA client secret
-  UAA_ADMIN_CLIENT_SECRET: password
+  UAA_ADMIN_CLIENT_SECRET: ${CLUSTER_PASSWORD}
 EOF
 

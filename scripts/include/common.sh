@@ -24,6 +24,7 @@ export DOCKER_ORG="${DOCKER_ORG:-cap}"
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
+export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
 
 
 if [ -z "${DEFAULT_STACK}" ]; then
