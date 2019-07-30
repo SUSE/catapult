@@ -60,6 +60,9 @@ kind: clean deps up kubeconfig
 .PHONY: all
 all: kind gen-config chart setup scf login
 
+.PHONY: dind
+dind: kind docker-kubeconfig gen-config chart setup scf login
+
 .PHONY: build-scf-from-source
 build-scf-from-source:
 	scripts/build_scf.sh
@@ -82,3 +85,6 @@ kubeconfig:
 
 .PHONY: recover
 recover: deps kubeconfig
+
+.PHONY: force-clean
+force-clean: deps clean
