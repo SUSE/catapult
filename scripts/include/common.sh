@@ -13,7 +13,7 @@ export CHART_URL="${CHART_URL:-}"
 export KUBECONFIG=kubeconfig
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
-export cluster_name=$(./kind get clusters)
+export cluster_name=${CLUSTER_NAME:-kind}
 export container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
 export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
 export DEEP_CLEAN="${DEEP_CLEAN:-false}" # If true, triggers helm to delete releases before cleaning up
