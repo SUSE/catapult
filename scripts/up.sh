@@ -1,5 +1,6 @@
 #!/bin/bash
 set -x
+. scripts/include/common.sh
 
 pushd build
     APPLICATION_PATH=$PWD
@@ -15,5 +16,5 @@ nodes:
       hostPath: ${APPLICATION_PATH}
       # readOnly: true
 EOF
-    ./kind create cluster --config kind-config.yaml
+    ./kind create cluster --config kind-config.yaml --name=${cluster_name}
 popd

@@ -13,7 +13,7 @@ if [ -d "../build" ]; then
         kubectl delete secret --all -n eirini
       fi
       helm reset --force
-      ./kind delete cluster
+      ./kind delete cluster --name="${cluster_name}"
   popd
 
   rm -rf build
