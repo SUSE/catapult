@@ -4,21 +4,30 @@ set -ex
 
 . scripts/include/common.sh
 
-helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
 
-#watch -c 'kubectl get pods --namespace uaa'
-bash ../scripts/wait.sh uaa
+if [ "${EMBEDDED_UAA}" != "true" ]; then
 
-SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+    helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
 
-CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+    bash ../scripts/wait.sh uaa
 
-helm install helm/cf --name susecf-scf --namespace scf \
---values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+    SECRET=$(kubectl get pods --namespace uaa \
+    -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-#watch kubectl get pods -n scf
+    CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+    -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+    helm install helm/cf --name susecf-scf --namespace scf \
+    --values scf-config-values.yaml \
+    --set "secrets.UAA_CA_CERT=${CA_CERT}"
+
+else
+
+    helm install helm/cf --name susecf-scf --namespace scf \
+    --values scf-config-values.yaml \
+    --set enable.uaa=true
+
+    bash ../scripts/wait.sh uaa
+fi
 
 bash ../scripts/wait.sh scf

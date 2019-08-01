@@ -51,6 +51,77 @@ ${VALUES}
 enable:
   eirini: ${ENABLE_EIRINI}
 
+config:
+  HA: ${HA}
+
+sizing:
+  uaa:
+   count: ${SIZING}
+  tcp_router:
+   count: ${SIZING}
+  syslog_scheduler:
+   count: ${SIZING}
+  adapter:
+    count: ${SIZING}
+  api_group:
+    count: ${SIZING}
+  autoscaler_actors:
+    count: 1
+  autoscaler_api:
+    count: ${SIZING}
+  autoscaler_metrics:
+    count: ${SIZING}
+  autoscaler_postgres:
+    count: 1
+  bits:
+    count: 1
+  blobstore:
+    count: 1
+  cc_clock:
+    count: ${SIZING}
+  cc_uploader:
+    count: ${SIZING}
+  cc_worker:
+    count: ${SIZING}
+  cf_usb_group:
+    count: ${SIZING}
+  credhub_user:
+    count: ${SIZING}
+  diego_api:
+    count: ${SIZING}
+  diego_brain:
+    count: ${SIZING}
+  diego_cell:
+    count: ${SIZING}
+  diego_ssh:
+    count: ${SIZING}
+  doppler:
+    count: ${SIZING}
+  eirini:
+    count: ${SIZING}
+  locket:
+    count: ${SIZING}
+  log_api:
+    count: ${SIZING}
+  log_cache_scheduler:
+    count: ${SIZING}
+  loggregator_agent:
+    count: ${SIZING}
+  mysql:
+    count: ${SIZING}
+  nats:
+    count: ${SIZING}
+  nfs_broker:
+    count: 1
+  post_deployment_setup:
+    count: 1
+  router:
+    count: ${SIZING}
+  routing_api:
+    count: ${SIZING}
+  secret_generation:
+    count: 1
+
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
   external_ips: ["${container_ip}"]
