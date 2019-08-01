@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-mkdir build
+mkdir build${CLUSTER_NAME}
 
 . scripts/include/common.sh
 

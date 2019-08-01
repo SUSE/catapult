@@ -7,7 +7,7 @@ if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
 fi
 
 # Forces our build context
-[ -d "build" ] && pushd build
+[ -d "build${CLUSTER_NAME}" ] && pushd build${CLUSTER_NAME}
 
 export CHART_URL="${CHART_URL:-}"
 export KUBECONFIG=kubeconfig

@@ -2,7 +2,7 @@
 set -x
 . scripts/include/common.sh
 
-if [ -d "../build" ]; then
+if [ -d "../build${CLUSTER_NAME}" ]; then
       if [ "$DEEP_CLEAN" = true ] ; then
         helm del --purge susecf-uaa
         helm del --purge susecf-scf
@@ -16,5 +16,5 @@ if [ -d "../build" ]; then
       ./kind delete cluster --name="${cluster_name}"
   popd
 
-  rm -rf build
+  rm -rf build${CLUSTER_NAME}
 fi

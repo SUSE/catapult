@@ -2,7 +2,7 @@
 set -x
 . scripts/include/common.sh
 
-pushd build
+pushd build${CLUSTER_NAME}
     APPLICATION_PATH=$PWD
 
     cat > kind-config.yaml <<EOF
