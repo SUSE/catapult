@@ -4,10 +4,13 @@ set -x
 
 pushd build${CLUSTER_NAME}
     APPLICATION_PATH=$PWD
-
+    type="Config"
+    if [ "${KIND_APIVERSION}" == "kind.sigs.k8s.io/v1alpha3" ]; then
+        type="Cluster"
+    fi
     cat > kind-config.yaml <<EOF
-kind: Config
-apiVersion: kind.sigs.k8s.io/v1alpha2
+kind: $type
+apiVersion: ${KIND_APIVERSION}
 nodes:
 - role: control-plane
   replicas: 1

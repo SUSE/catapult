@@ -88,3 +88,7 @@ recover: deps kubeconfig
 
 .PHONY: force-clean
 force-clean: deps clean
+
+.PHONY:registry
+registry:
+	scripts/registry.sh
