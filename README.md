@@ -69,7 +69,7 @@ To teardown:
 
     $> docker run -v /var/run/docker.sock:/var/run/docker.sock --rm -ti splatform/bkindwscf:latest force-clean
 
-You can provide the same options as running it locally, but you have to pass the environment variables with ```-e``` prefixed.  e.g. ``` docker run -e CHART_URL=xxx -v /var/run/docker.sock:/var/run/docker.sock --rm -ti splatform/bkindwscf:latest force-clean```
+You can provide the same options as running it locally, but you have to pass the environment variables with ```-e``` prefixed.  e.g. ``` docker run -e CHART_URL=xxx -v /var/run/docker.sock:/var/run/docker.sock --rm -ti splatform/bkindwscf:latest kind docker-kubeconfig chart gen-config setup scf```
 
 ## Running options
 
@@ -161,6 +161,10 @@ You need to specify the following environment variables when running the make ta
     DOCKER_USERNAME="xxxx"
     DOCKER_PASSWORD="xxxx"
 ```
+
+### Build and run SCF from source against a stemcell
+
+    DOCKER_OPTS="-e FISSILE_STEMCELL=registry.some.org/org/fissile-stemcell:latest" make kind build-scf-from-source
 
 ### Login
 
