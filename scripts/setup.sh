@@ -122,7 +122,7 @@ kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
-if [ "$ENABLE_EIRINI" = true ] ; then
+if [ "$CREATE_EIRINI_NAMESPACE" = true ] ; then
   kubectl create namespace eirini
 fi
 
