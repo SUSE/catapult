@@ -22,10 +22,12 @@ export HA="${HA:-false}"
 export SIZING="${SIZING:-1}"
 export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
 export DOCKER_ORG="${DOCKER_ORG:-cap}"
+set +x
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
-export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
+set -x
+export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
 export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha2}"
 if [ -z "${DEFAULT_STACK}" ]; then
