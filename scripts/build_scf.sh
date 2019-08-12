@@ -7,7 +7,7 @@ set -ex
 [ ! -d "scf" ] && git clone --recurse-submodules "$SCF_REPO"
 pushd scf
     git checkout "$SCF_BRANCH"
-
+    git pull
     git submodule sync --recursive && \
     git submodule update --init --recursive && \
     git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"

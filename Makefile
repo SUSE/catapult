@@ -92,3 +92,7 @@ force-clean: deps clean
 .PHONY:registry
 registry:
 	scripts/registry.sh
+
+.PHONY:eirinifs
+eirinifs:
+	scripts/eirinifs.sh
