@@ -42,9 +42,10 @@ env:
         default_size: "2Gi"
 
   # UAA host and port
-  UAA_HOST: uaa.${DOMAIN}
+  #UAA_HOST: uaa.${DOMAIN}
   UAA_PORT: 2793
   DEFAULT_STACK: "${DEFAULT_STACK}"
+  UAA_HOST: uaa.${container_ip}.nip.io
 ${OVERRIDE}
 
 ${VALUES}
