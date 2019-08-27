@@ -19,5 +19,10 @@ nodes:
       hostPath: ${APPLICATION_PATH}
       # readOnly: true
 EOF
-    ./kind create cluster --config kind-config.yaml --name=${cluster_name}
+
+    if [ -n "$EKCP_HOST" ]; then
+        curl -d "name=${CLUSTER_NAME}" -X POST http://$EKCP_HOST/new
+    else
+        ./kind create cluster --config kind-config.yaml --name=${cluster_name}
+    fi
 popd

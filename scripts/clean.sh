@@ -13,7 +13,11 @@ if [ -d "../build${CLUSTER_NAME}" ]; then
         kubectl delete secret --all -n eirini
       fi
       helm reset --force
-      ./kind delete cluster --name="${cluster_name}"
+      if [ -n "$EKCP_HOST" ]; then
+        curl -X DELETE http://$EKCP_HOST/${CLUSTER_NAME}
+      else
+        ./kind delete cluster --name="${cluster_name}"
+      fi
   popd
 
   rm -rf build${CLUSTER_NAME}

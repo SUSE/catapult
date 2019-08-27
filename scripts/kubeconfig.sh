@@ -3,4 +3,8 @@ set -ex
 
 . scripts/include/common.sh
 
-cp $(./kind get kubeconfig-path --name="$cluster_name") kubeconfig
+if [ -n "$EKCP_HOST" ]; then
+    curl http://$EKCP_HOST/kubeconfig/${CLUSTER_NAME} > kubeconfig
+else
+    cp $(./kind get kubeconfig-path --name="$cluster_name") kubeconfig
+fi

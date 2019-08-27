@@ -32,7 +32,7 @@ fi
 cat > scf-config-values.yaml <<EOF
 env:
   # Enter the domain you created for your CAP cluster
-  DOMAIN: ${container_ip}.nip.io
+  DOMAIN: ${DOMAIN}
   EIRINI_PERSI_PLANS: |
       - id: "default"
         name: "default"
@@ -42,7 +42,7 @@ env:
         default_size: "2Gi"
 
   # UAA host and port
-  UAA_HOST: uaa.${container_ip}.nip.io
+  UAA_HOST: uaa.${DOMAIN}
   UAA_PORT: 2793
   DEFAULT_STACK: "${DEFAULT_STACK}"
 ${OVERRIDE}
