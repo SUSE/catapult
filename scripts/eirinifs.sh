@@ -5,7 +5,7 @@ set -ex
 . scripts/include/common.sh
 
 EIRINIFS=${EIRINIFS:-https://github.com/os-fun/eirinifs.git}
-EIRINISSH=${EIRINISSH:-https://github.com/jimmykarily/eirini-ssh}
+EIRINISSH=${EIRINISSH:-https://github.com/SUSE/eirini-ssh}
 
 [ ! -d "eirinifs" ] && git clone --recurse-submodules "${EIRINIFS}"
 pushd eirinifs
