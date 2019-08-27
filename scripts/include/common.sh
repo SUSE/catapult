@@ -17,7 +17,7 @@ export cluster_name=${CLUSTER_NAME:-kind}
 
 if [ -n "$EKCP_HOST" ]; then
   export container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
-  export DOMAIN="${CLUSTER_NAME}.${EKCP_DOMAIN}"
+  export DOMAIN="${CLUSTER_NAME}.${container_ip}.${EKCP_DOMAIN}"
 else
   export container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
   export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
