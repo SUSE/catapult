@@ -1,0 +1,18 @@
+
+#https://github.com/weaveworks/build-tools/blob/master/socks/connect.sh
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: socksproxy
+  namespace: default
+spec:
+  containers:
+    - name: socksproxy
+      image: weaveworks/socksproxy
+      ports:
+        - name: socks
+          containerPort: 8000
+        - name: http
+          containerPort: 8080
+      

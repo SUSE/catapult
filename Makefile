@@ -96,3 +96,11 @@ registry:
 .PHONY:eirinifs
 eirinifs:
 	scripts/eirinifs.sh
+
+.PHONY: ingress
+ingress:
+	scripts/ingress.sh
+
+.PHONY: ingress-forward
+ingress-forward:
+	scripts/ingress-forward.sh
