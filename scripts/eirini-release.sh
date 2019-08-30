@@ -77,7 +77,6 @@ bash ../scripts/wait.sh uaa
 
 SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 CA_CERT="$(kubectl get secret $SECRET --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-CA_KEY="$(kubectl get secret $SECRET --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 cp -rfv ../config/config.toml ./config.toml
 
@@ -89,4 +88,8 @@ docker cp config.toml ${cluster_name}-control-plane:/etc/containerd/config.toml
 # Restart the kubelet
 docker exec ${cluster_name}-control-plane systemctl restart kubelet.service
 
-helm install eirini/cf --namespace scf --name scf --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" --set "eirini.secrets.BITS_TLS_CRT=${CA_CERT}"
+openssl req -newkey rsa:4096 -nodes -sha256 -keyout domain.key -x509 -days 365 -out domain.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=registry.${DOMAIN}"
+
+helm install eirini/cf --namespace scf --name scf --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
+
+bash ../scripts/wait.sh scf
