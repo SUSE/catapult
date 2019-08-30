@@ -10,7 +10,7 @@ fi
 [ -d "build${CLUSTER_NAME}" ] && pushd build${CLUSTER_NAME}
 
 export CHART_URL="${CHART_URL:-}"
-export KUBECONFIG=kubeconfig
+export KUBECONFIG=$PWD/kubeconfig
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 export cluster_name=${CLUSTER_NAME:-kind}
