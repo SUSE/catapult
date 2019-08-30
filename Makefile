@@ -104,3 +104,22 @@ ingress:
 .PHONY: ingress-forward
 ingress-forward:
 	scripts/ingress-forward.sh
+
+.PHONY: deps-caasp4os
+deps-caasp4os: deps
+	scripts/docker_skuba.sh
+
+.PHONY: caasp4os-deploy
+caasp4os-deploy:
+	scripts/caasp4os_deploy.sh
+
+.PHONY: caasp-prepare
+caasp-prepare:
+	scripts/caasp_prepare.sh
+
+.PHONY: all-caasp4os
+all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare gen-config chart setup scf login
+
+.PHONY: clean-caasp4os
+clean-caasp4os:
+	scripts/caasp4os_destroy.sh

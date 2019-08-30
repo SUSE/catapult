@@ -1,7 +1,11 @@
 #!/bin/bash
 set -x
 
-mkdir build${CLUSTER_NAME}
+# duplicated in s/include/common.sh, needed for bootstrapping:
+export cluster_name=${CLUSTER_NAME:-kind}
+export BUILD_DIR=build${cluster_name}
+
+mkdir "$BUILD_DIR"
 
 . scripts/include/common.sh
 
@@ -10,4 +14,11 @@ if [ -z "$EKCP_HOST" ]; then
     mv kind-linux-amd64 kind
     chmod +x kind
 fi
+
+cat <<HEREDOC > .envrc
+export KUBECONFIG=$(pwd)/kubeconfig
+export HELM_HOME=$(pwd)/.helm
+export CF_HOME=$(pwd)/.cf
+HEREDOC
+
 popd

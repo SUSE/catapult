@@ -6,15 +6,17 @@ if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
   OVERRIDE=$(cat $VALUES_OVERRIDE)
 fi
 
-# Forces our build context
-[ -d "build${CLUSTER_NAME}" ] && pushd build${CLUSTER_NAME}
+export cluster_name=${CLUSTER_NAME:-kind}
+export BUILD_DIR=build${cluster_name}
 
+# Forces our build context
+[ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
+
+export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export CHART_URL="${CHART_URL:-}"
 export KUBECONFIG=$PWD/kubeconfig
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
-export cluster_name=${CLUSTER_NAME:-kind}
-
 if [ -n "$EKCP_HOST" ]; then
   export container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
   export DOMAIN="${CLUSTER_NAME}.${container_ip}.${EKCP_DOMAIN}"
