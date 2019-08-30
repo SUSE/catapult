@@ -11,8 +11,8 @@ cat > config.json <<EOF
 {
   "suite_name"                      : "CF_SMOKE_TESTS",
   "skip_ssl_validation": true,
-  "api"                             : "api.${container_ip}.nip.io",
-  "apps_domain"                     : "${container_ip}.nip.io",
+  "api"                             : "api.${DOMAIN}",
+  "apps_domain"                     : "${DOMAIN}",
   "user"                            : "admin",
   "password"                        : "password",
   "cleanup"                         : false,

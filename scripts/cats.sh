@@ -9,8 +9,8 @@ set -ex
 pushd cf-acceptance-tests
 cat > config.json <<EOF
 {
-  "api"                             : "api.${container_ip}.nip.io",
-  "apps_domain"                     : "${container_ip}.nip.io",
+  "api"                             : "api.${DOMAIN}",
+  "apps_domain"                     : "${DOMAIN}",
   "admin_user": "admin",
   "admin_password": "password",
   "artifacts_directory": "logs",
