@@ -166,6 +166,11 @@ You need to specify the following environment variables when running the make ta
 
     DOCKER_OPTS="-e FISSILE_STEMCELL=registry.some.org/org/fissile-stemcell:latest" make kind build-scf-from-source
 
+## Deploy Eirini release from CF
+
+
+    KIND_APIVERSION=kind.sigs.k8s.io/v1alpha3  KIND_VERSION=v0.4.0 make kind setup eirini-release
+
 ### Login
 
 Once the deployment of [SCF](https://github.com/SUSE/scf) succeeded, you can also manually login to your cluster if needed:
