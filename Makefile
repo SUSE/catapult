@@ -123,3 +123,7 @@ all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare gen-config chart setup
 .PHONY: clean-caasp4os
 clean-caasp4os:
 	scripts/caasp4os_destroy.sh
+
+.PHONY: eirini-release
+eirini-release:
+	scripts/eirini-release.sh
