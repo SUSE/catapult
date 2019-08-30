@@ -1,7 +1,11 @@
 #!/bin/bash
 set -x
 
-mkdir build${CLUSTER_NAME}
+# duplicated in s/include/common.sh, needed for bootstrapping:
+export cluster_name=${CLUSTER_NAME:-kind}
+export BUILD_DIR=build${cluster_name}
+
+mkdir "$BUILD_DIR"
 
 . scripts/include/common.sh
 
