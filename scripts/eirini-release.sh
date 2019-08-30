@@ -1,11 +1,11 @@
 #!/bin/bash
 set -ex 
 
-if [ "$KIND_VERSION" != "v0.4.0"]
+if [ "$KIND_VERSION" != "v0.4.0"]; then
  echo "We only support Kind version 0.4.0 for now"
 
  exit 1
- 
+
 fi
 . scripts/include/common.sh
 
@@ -73,17 +73,20 @@ EOF
 helm repo add eirini https://cloudfoundry-incubator.github.io/eirini-release
 helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
 helm install eirini/uaa --namespace uaa --name uaa --values eirini-values.yaml
+bash ../scripts/wait.sh uaa
 
 SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 CA_CERT="$(kubectl get secret $SECRET --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+CA_KEY="$(kubectl get secret $SECRET --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 cp -rfv ../config/config.toml ./config.toml
 
-sed -i 's/http:\/\/localhost:32001/https://registry.'${DOMAIN}'/g' ./config.toml
+sed -i 's/http:\/\/localhost:32001/https:\/\/registry.'${DOMAIN}'/g' ./config.toml
 
 # Overwrite config.toml with our own
-docker cp ../config/config.toml ${cluster_name}-control-plane:/etc/containerd/config.toml
+docker cp config.toml ${cluster_name}-control-plane:/etc/containerd/config.toml
 
 # Restart the kubelet
-docker exec ${node_name}-control-plane systemctl restart kubelet.service
+docker exec ${cluster_name}-control-plane systemctl restart kubelet.service
 
+helm install eirini/cf --namespace scf --name scf --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" --set "eirini.secrets.BITS_TLS_CRT=${CA_CERT}"
