@@ -14,4 +14,11 @@ if [ -z "$EKCP_HOST" ]; then
     mv kind-linux-amd64 kind
     chmod +x kind
 fi
+
+cat <<HEREDOC > .envrc
+export KUBECONFIG=$(pwd)/kubeconfig
+export HELM_HOME=$(pwd)/.helm
+export CF_HOME=$(pwd)/.cf
+HEREDOC
+
 popd
