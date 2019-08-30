@@ -121,7 +121,7 @@ You can also test upgrades, by just providing a new chart, regenerating the conf
 
 ### Deploy from a specific chart url
 
-Set the chart url in the ```CHART_URL``` variable. 
+Set the chart url in the ```CHART_URL``` variable.
 
     $> CHART_URL="https://s3.amazonaws.com/xxx.zip" make all
 
@@ -177,7 +177,7 @@ Once the deployment of [SCF](https://github.com/SUSE/scf) succeeded, you can als
 
     $> make login
 
-## Run Tests 
+## Run Tests
 
 You can also run smoke and cats tests against the deployed cluster:
 
@@ -192,3 +192,31 @@ You can also run smoke and cats tests against the deployed cluster:
 If what you really want is just running tests, you can also chain the make target ( *e.g.* ```make all smoke cats```).
 
 **Note**: You need go installed to run smoke and cats tests
+
+
+## Getting a CaasP4 on Openstack configured for CAP
+
+    make all-caasp4os
+
+This target gives you a CaasP4 cluster, plus added NFS server, on Openstack. It
+also configures the cluster for CAP.
+
+It creates a docker skuba punctured image with the CaasP4 product. With it, it
+spawns the Openstack infrastructure by Terraform, bootstraps the cluster with
+skuba (the Caasp4 cli), and configures and prepares cluster for cap by adding
+correct RBACs, storageclasses, etc. It will build the skuba docker image if not
+present.
+
+Needs an Openstack's `openrc.sh` sourced for the terraform-openstack provider.
+Adds an ssh key to ssh-agent if not present, and injects it into the machines.
+
+### Destroying the CaasP4 deployment on Openstack
+
+Since the infrastructure is living on Openstack, instead of deleting the
+corresponding `build` folder, please run:
+
+    make clean-caasp4os
+
+which first destroys the k8s storageclass (allowing a shared NFS server to
+dispose of the shares) and then destroys the infrastructure on Openstack with
+Terraform.
