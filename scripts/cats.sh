@@ -64,5 +64,9 @@ export PATH=$PATH:$GOBIN
 mkdir -p $GOPATH/src/github.com/cloudfoundry
 [ ! -e "$GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests" ] && ln -s $PWD $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
 pushd $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
-
+go get github.com/onsi/ginkgo/ginkgo
+go install github.com/onsi/ginkgo/ginkgo
+if [ -n "$EKCP_PROXY" ]; then
+  export https_proxy=socks5://127.0.0.1:2224
+fi
 CONFIG=$PWD/config.json ./bin/test
