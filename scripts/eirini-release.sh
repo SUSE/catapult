@@ -80,7 +80,8 @@ CA_CERT="$(kubectl get secret $SECRET --namespace uaa -o jsonpath="{.data['inter
 
 cp -rfv ../config/config.toml ./config.toml
 
-sed -i 's/http:\/\/localhost:32001/https:\/\/registry.'${DOMAIN}'/g' ./config.toml
+sed -i 's/http:\/\/localhost:32001/https:\/\/registry.'${DOMAIN}':6666/g' ./config.toml
+sed -i 's/local.insecure-registry.io/registry.'${DOMAIN}'/g' ./config.toml
 
 # Overwrite config.toml with our own
 docker cp config.toml ${cluster_name}-control-plane:/etc/containerd/config.toml
