@@ -58,6 +58,10 @@ EOF
 export GOPATH=$PWD/go 
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
+go get github.com/onsi/ginkgo/ginkgo
+go install github.com/onsi/ginkgo/ginkgo
+rm -rf $GOPATH/src/*
+
 #go get -d github.com/cloudfoundry/cf-acceptance-tests
 ./bin/update_submodules
 

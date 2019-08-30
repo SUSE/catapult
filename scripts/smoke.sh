@@ -29,12 +29,14 @@ EOF
 export GOPATH=$PWD/go 
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
+go get github.com/onsi/ginkgo/ginkgo
+go install github.com/onsi/ginkgo/ginkgo
+rm -rf $GOPATH/src/*
 
 mkdir -p $GOPATH/src/github.com/cloudfoundry
 [ ! -e "$GOPATH/src/github.com/cloudfoundry/cf-smoke-tests" ] && ln -s $PWD $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
 pushd $GOPATH/src/github.com/cloudfoundry/cf-smoke-tests
-go get github.com/onsi/ginkgo/ginkgo
-go install github.com/onsi/ginkgo/ginkgo
+
 
 if [ -n "$EKCP_PROXY" ]; then
   export https_proxy=socks5://127.0.0.1:2224
