@@ -19,7 +19,7 @@ create_rolebinding() {
     kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
     kubectl create clusterrolebinding scfadmin --clusterrole=cluster-admin --user=system:serviceaccount:scf:default
 
-    kubectl apply -f - << HEREDOC
+    kubectl apply -f - <<HEREDOC
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
