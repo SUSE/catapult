@@ -1,5 +1,5 @@
 resource "openstack_compute_secgroup_v2" "secgroup_cap" {
-  name        = "caasp-cap-${var.stack_name}"
+  name        = "${var.stack_name}-cap_lb_secgroup"
   description = "CAP security group"
 
   rule {

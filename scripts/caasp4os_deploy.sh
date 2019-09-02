@@ -18,7 +18,7 @@ set -u
 
 export STACK=${STACK:-"$(whoami)-${CAASP_VER::3}-caasp4-cf-ci"}
 export DEBUG=${DEBUG:-0}
-export DOMAIN=${DOMAIN:-'omg.howdoi.website'}
+export MAGICDNS=${MAGICDNS:-'omg.howdoi.website'}
 
 
 if [[ ! -v OS_PASSWORD ]]; then
@@ -26,12 +26,11 @@ if [[ ! -v OS_PASSWORD ]]; then
 fi
 
 # Add ssh key if not present, needed for terraform
-agent="$(pgrep ssh-agent -u "$USER")"
-if [[ "$agent" == "" ]]; then
-    eval "$(ssh-agent -s)"
-fi
 if ! ssh-add -L | grep -q 'ssh' ; then
-    curl "https://raw.githubusercontent.com/SUSE/skuba/master/ci/infra/id_shared" -o id_rsa \
+    if [[ $(pgrep ssh-agent -u "$USER") ]]; then
+        eval "$(ssh-agent -s)"
+    fi
+    curl "https://raw.githubusercontent.com/SUSE/skuba/master/ci/infra/id_shared" -o id_rsa_shared \
         && chmod 0600 id_rsa_shared
     ssh-add id_rsa_shared
 fi
@@ -67,7 +66,8 @@ escapeSubst() {
     IFS= read -d '' -r < <(sed -e ':a' -e '$!{N;ba' -e '}' -e 's%[&/\]%\\&%g; s%\n%\\&%g' <<<"$1")
     printf %s "${REPLY%$'\n'}"
 }
-SSHKEY="$(ssh-add -L)"
+# save only first ssh key, caasp4 terraform script constraints:
+SSHKEY="$(ssh-add -L | head -n 1)"
 CAASP_PATTERN='patterns-caasp-Node-1.15'
 sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_magic_dns~#%$(escapeSubst "$DOMAIN")%g" \
@@ -76,7 +76,7 @@ sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_caasp_pattern~#%$(escapeSubst "$CAASP_PATTERN")%g" \
     ../caasp4/terraform-os/terraform.tfvars.skel > \
     deployment/terraform.tfvars
-sed -i '/\"\${openstack_compute_secgroup_v2\.secgroup_worker\.name}\",/a \ \ \ \ "\${openstack_compute_secgroup_v2.secgroup_cap.name}",' \
+sed -i '/\"\${openstack_networking_secgroup_v2\.secgroup.common\.name}\",/a \ \ \ \ "\${openstack_compute_secgroup_v2.secgroup_cap.name}",' \
     deployment/worker-instance.tf
 cp -r ../caasp4/terraform-os/* deployment/
 
@@ -110,17 +110,15 @@ sleep 100
 
 # Create k8s configmap
 PUBLIC_IP="$(skuba_container terraform output ip_workers | cut -d, -f1 | head -n1)"
-export PUBLIC_IP
 ROOTFS=overlay-xfs
-export ROOTFS
 NFS_SERVER_IP="$(skuba_container terraform output ip_storage_int)"
-export NFS_SERVER_IP
 NFS_PATH="$(skuba_container terraform output storage_share)"
-export NFS_PATH
+DOMAIN="$PUBLIC_IP"."$MAGICDNS"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=public-ip="${PUBLIC_IP}" \
+            --from-literal=domain="${DOMAIN}" \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=nfs-server-ip="${NFS_SERVER_IP}" \
             --from-literal=nfs-path="${NFS_PATH}" \
