@@ -63,6 +63,10 @@ all: kind gen-config chart setup scf login
 .PHONY: dind
 dind: kind docker-kubeconfig gen-config chart setup scf login
 
+.PHONY: clean-scf
+clean-scf:
+	scripts/scf_clean.sh
+
 .PHONY: build-scf-from-source
 build-scf-from-source:
 	scripts/build_scf.sh
