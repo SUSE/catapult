@@ -16,7 +16,7 @@ set -exo pipefail
 
 set -u
 
-export STACK=${STACK:-"$(whoami)-${CAASP_VER::3}-caasp4-cf-ci"}
+export STACK=${STACK:-"$(whoami)-caasp4-${CAASP_VER::3}-$CLUSTER_NAME"}
 export DEBUG=${DEBUG:-0}
 export MAGICDNS=${MAGICDNS:-'omg.howdoi.website'}
 
