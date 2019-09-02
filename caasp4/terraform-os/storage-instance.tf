@@ -94,8 +94,8 @@ resource "openstack_compute_instance_v2" "storage" {
   }
 
   security_groups = [
-    "${openstack_compute_secgroup_v2.secgroup_base.name}",
-    "${openstack_compute_secgroup_v2.secgroup_storage.name}",
+    "${openstack_compute_secgroup_v2.storage.name}",
+    "${openstack_networking_secgroup_v2.common.name}",
   ]
 
   user_data = "${data.template_file.storage-cloud-init.rendered}"
@@ -169,7 +169,7 @@ resource "null_resource" "storage_config" {
   }
 }
 
-resource "openstack_compute_secgroup_v2" "secgroup_storage" {
+resource "openstack_compute_secgroup_v2" "storage" {
   name        = "caasp-storage-${var.stack_name}"
   description = "Basic security group"
 
