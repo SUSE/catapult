@@ -18,7 +18,7 @@ set -u
 
 export STACK=${STACK:-"$(whoami)-${CAASP_VER::3}-caasp4-cf-ci"}
 export DEBUG=${DEBUG:-0}
-export DOMAIN=${DOMAIN:-'omg.howdoi.website'}
+export MAGICDNS=${MAGICDNS:-'omg.howdoi.website'}
 
 
 if [[ ! -v OS_PASSWORD ]]; then
@@ -110,17 +110,15 @@ sleep 100
 
 # Create k8s configmap
 PUBLIC_IP="$(skuba_container terraform output ip_workers | cut -d, -f1 | head -n1)"
-export PUBLIC_IP
 ROOTFS=overlay-xfs
-export ROOTFS
 NFS_SERVER_IP="$(skuba_container terraform output ip_storage_int)"
-export NFS_SERVER_IP
 NFS_PATH="$(skuba_container terraform output storage_share)"
-export NFS_PATH
+DOMAIN="$PUBLIC_IP"."$MAGICDNS"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=public-ip="${PUBLIC_IP}" \
+            --from-literal=domain="${DOMAIN}" \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=nfs-server-ip="${NFS_SERVER_IP}" \
             --from-literal=nfs-path="${NFS_PATH}" \
