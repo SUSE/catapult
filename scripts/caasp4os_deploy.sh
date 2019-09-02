@@ -88,6 +88,7 @@ skuba_container terraform plan -out my-plan
 skuba_container terraform apply -auto-approve my-plan
 
 # Bootstrap k8s with skuba
+skuba_container skuba version
 skuba_deploy
 wait
 cp -f ./my-cluster/admin.conf ../kubeconfig
