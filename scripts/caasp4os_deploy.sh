@@ -26,12 +26,11 @@ if [[ ! -v OS_PASSWORD ]]; then
 fi
 
 # Add ssh key if not present, needed for terraform
-agent="$(pgrep ssh-agent -u "$USER")"
-if [[ "$agent" == "" ]]; then
-    eval "$(ssh-agent -s)"
-fi
 if ! ssh-add -L | grep -q 'ssh' ; then
-    curl "https://raw.githubusercontent.com/SUSE/skuba/master/ci/infra/id_shared" -o id_rsa \
+    if [[ $(pgrep ssh-agent -u "$USER") ]]; then
+        eval "$(ssh-agent -s)"
+    fi
+    curl "https://raw.githubusercontent.com/SUSE/skuba/master/ci/infra/id_shared" -o id_rsa_shared \
         && chmod 0600 id_rsa_shared
     ssh-add id_rsa_shared
 fi
@@ -67,7 +66,8 @@ escapeSubst() {
     IFS= read -d '' -r < <(sed -e ':a' -e '$!{N;ba' -e '}' -e 's%[&/\]%\\&%g; s%\n%\\&%g' <<<"$1")
     printf %s "${REPLY%$'\n'}"
 }
-SSHKEY="$(ssh-add -L)"
+# save only first ssh key, caasp4 terraform script constraints:
+SSHKEY="$(ssh-add -L | head -n 1)"
 CAASP_PATTERN='patterns-caasp-Node-1.15'
 sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_magic_dns~#%$(escapeSubst "$DOMAIN")%g" \
