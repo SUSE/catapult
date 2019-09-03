@@ -2,7 +2,6 @@
 set -x
 . scripts/include/common.sh
 
-if [ -d "../build${CLUSTER_NAME}" ]; then
       if [ "$DEEP_CLEAN" = true ] ; then
         helm del --purge susecf-uaa
         helm del --purge susecf-scf
@@ -13,6 +12,7 @@ if [ -d "../build${CLUSTER_NAME}" ]; then
         kubectl delete secret --all -n eirini
       fi
       helm reset --force
+if [ -d "../$BUILD_DIR" ]; then
       if [ -n "$EKCP_HOST" ]; then
         curl -X DELETE http://$EKCP_HOST/${CLUSTER_NAME}
       else
@@ -20,5 +20,5 @@ if [ -d "../build${CLUSTER_NAME}" ]; then
       fi
   popd
 
-  rm -rf build${CLUSTER_NAME}
+  rm -rf "$BUILD_DIR"
 fi
