@@ -14,15 +14,19 @@ export BUILD_DIR=build${CLUSTER_NAME}
 
 export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export CHART_URL="${CHART_URL:-}"
-export KUBECONFIG=$PWD/kubeconfig
+export KUBECONFIG=$BUILD_DIR/kubeconfig
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 if [ -n "$EKCP_HOST" ]; then
   export container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
   export DOMAIN="${CLUSTER_NAME}.${container_ip}.${EKCP_DOMAIN}"
 else
-  export container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
-  export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
+  echo "CLUSTER_NAME is ${CLUSTER_NAME}"
+  export container_id=$(docker ps -f "name=${CLUSTER_NAME}-control-plane" -q)
+  if [ ! -z $container_id ]; then
+    echo "container_id is ${container_id}"
+    export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
+  fi
   export DOMAIN="${container_ip}.nip.io"
 fi
 
