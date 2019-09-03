@@ -5,6 +5,13 @@ set -ex
 . scripts/include/common.sh
 
 
+if [[ $ENABLE_EIRINI == true ]] ; then
+    kubectl create namespace eirini
+    helm install stable/metrics-server --name=metrics-server \
+         --set args[0]="--kubelet-preferred-address-types=InternalIP" \
+         --set args[1]="--kubelet-insecure-tls"
+fi
+
 if [ "${EMBEDDED_UAA}" != "true" ]; then
 
     helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
