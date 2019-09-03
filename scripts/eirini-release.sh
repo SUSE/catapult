@@ -71,7 +71,7 @@ EOF
 
 
 export EIRINI_RELEASE_REPO="${EIRINI_RELEASE_REPO:-https://github.com/mudler/eirini-release}"
-export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_REPO:-eirini_logging}"
+export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_CHECKOUT:-eirini_logging}"
 
 git clone $EIRINI_RELEASE_REPO eirini
 pushd eirini
