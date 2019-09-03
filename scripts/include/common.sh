@@ -17,7 +17,6 @@ export CHART_URL="${CHART_URL:-}"
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 
-export DEEP_CLEAN="${DEEP_CLEAN:-false}" # If true, triggers helm to delete releases before cleaning up
 export KIND_VERSION="${KIND_VERSION:-0.2.1}"
 export HA="${HA:-false}"
 export SIZING="${SIZING:-1}"
