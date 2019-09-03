@@ -2,6 +2,7 @@
 set -x
 
 . scripts/include/common.sh
+. .envrc
 
 kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
 kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default

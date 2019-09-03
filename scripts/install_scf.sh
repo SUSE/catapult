@@ -3,6 +3,7 @@
 set -ex 
 
 . scripts/include/common.sh
+. .envrc
 
 
 if [[ $ENABLE_EIRINI == true ]] ; then

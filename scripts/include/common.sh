@@ -9,8 +9,6 @@ fi
 export CLUSTER_NAME=${CLUSTER_NAME:-kind}
 export BUILD_DIR=build${CLUSTER_NAME}
 
-export KUBECONFIG=$PWD/$BUILD_DIR/kubeconfig
-
 # Forces our build context
 [ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
 

@@ -3,6 +3,7 @@ set -ex
 
 # Builds and patch eirinifs in a live cluster
 . scripts/include/common.sh
+. .envrc
 
 EIRINIFS=${EIRINIFS:-https://github.com/os-fun/eirinifs.git}
 EIRINISSH=${EIRINISSH:-https://github.com/SUSE/eirini-ssh}
