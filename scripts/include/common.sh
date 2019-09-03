@@ -14,6 +14,7 @@ export BUILD_DIR=build${cluster_name}
 
 export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export CHART_URL="${CHART_URL:-}"
+export KUBECONFIG=$PWD/kubeconfig
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 if [ -n "$EKCP_HOST" ]; then

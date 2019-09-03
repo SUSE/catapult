@@ -3,7 +3,6 @@
 set -ex 
 
 . scripts/include/common.sh
-. .envrc
 
 helm repo add suse https://kubernetes-charts.suse.com/
 

@@ -8,7 +8,6 @@ if [ "$KIND_VERSION" != "v0.4.0" ]; then
 
 fi
 . scripts/include/common.sh
-. .envrc
 
 cat > eirini-values.yaml <<EOF
 env:

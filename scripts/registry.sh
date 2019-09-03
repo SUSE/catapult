@@ -2,7 +2,6 @@
 set -ex
 
 . scripts/include/common.sh
-. .envrc
 
 # From: https://github.com/windmilleng/kind-local
 

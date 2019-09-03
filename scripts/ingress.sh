@@ -3,7 +3,6 @@
 set -ex 
 
 . scripts/include/common.sh
-. .envrc
 
 kubectl apply -f ../kube/socks.yaml
 
