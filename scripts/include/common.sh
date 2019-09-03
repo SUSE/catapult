@@ -9,12 +9,13 @@ fi
 export CLUSTER_NAME=${CLUSTER_NAME:-kind}
 export BUILD_DIR=build${CLUSTER_NAME}
 
+export KUBECONFIG=$PWD/$BUILD_DIR/kubeconfig
+
 # Forces our build context
 [ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
 
 export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export CHART_URL="${CHART_URL:-}"
-export KUBECONFIG=$BUILD_DIR/kubeconfig
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 if [ -n "$EKCP_HOST" ]; then
