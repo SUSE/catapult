@@ -3,6 +3,10 @@ set -ex
 
 . scripts/include/common.sh
 
+if [ -z "${DEFAULT_STACK}" ]; then
+    export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+fi
+
 VALUES=
 if [ "$ENABLE_EIRINI" = true ] ; then
   AUTH="rbac"

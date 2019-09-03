@@ -43,8 +43,3 @@ export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
 export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha2}"
-if [ -z "${DEFAULT_STACK}" ]; then
-  if [ -d "helm/cf" ]; then
-    export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
-  fi
-fi
