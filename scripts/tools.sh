@@ -2,8 +2,8 @@
 set -x
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
-export cluster_name=${CLUSTER_NAME:-kind}
-export BUILD_DIR=build${cluster_name}
+export CLUSTER_NAME=${CLUSTER_NAME:-kind}
+export BUILD_DIR=build${CLUSTER_NAME}
 
 mkdir "$BUILD_DIR"
 

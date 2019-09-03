@@ -23,6 +23,6 @@ EOF
     if [ -n "$EKCP_HOST" ]; then
         curl -d "name=${CLUSTER_NAME}" -X POST http://$EKCP_HOST/new
     else
-        ./kind create cluster --config kind-config.yaml --name=${cluster_name}
+        ./kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
     fi
 popd

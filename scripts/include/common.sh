@@ -6,8 +6,8 @@ if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
   OVERRIDE=$(cat $VALUES_OVERRIDE)
 fi
 
-export cluster_name=${CLUSTER_NAME:-kind}
-export BUILD_DIR=build${cluster_name}
+export CLUSTER_NAME=${CLUSTER_NAME:-kind}
+export BUILD_DIR=build${CLUSTER_NAME}
 
 # Forces our build context
 [ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
