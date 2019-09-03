@@ -58,10 +58,10 @@ cats:
 kind: clean deps up kubeconfig
 
 .PHONY: all
-all: kind gen-config chart setup scf login
+all: kind setup chart gen-config scf login
 
 .PHONY: dind
-dind: kind docker-kubeconfig gen-config chart setup scf login
+dind: kind docker-kubeconfig setup chart gen-config scf login
 
 .PHONY: clean-scf
 clean-scf:
@@ -122,7 +122,7 @@ caasp-prepare:
 	scripts/caasp_prepare.sh
 
 .PHONY: all-caasp4os
-all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare gen-config chart scf login
+all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
 
 .PHONY: clean-caasp4os
 clean-caasp4os:

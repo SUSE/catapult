@@ -18,16 +18,6 @@ export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export CHART_URL="${CHART_URL:-}"
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
-if [ -n "$EKCP_HOST" ]; then
-  export container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
-  export DOMAIN="${CLUSTER_NAME}.${container_ip}.${EKCP_DOMAIN}"
-else
-  export container_id=$(docker ps -f "name=${CLUSTER_NAME}-control-plane" -q)
-  if [ ! -z $container_id ]; then
-    export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
-  fi
-  export DOMAIN="${container_ip}.nip.io"
-fi
 
 export DEEP_CLEAN="${DEEP_CLEAN:-false}" # If true, triggers helm to delete releases before cleaning up
 export KIND_VERSION="${KIND_VERSION:-0.2.1}"
