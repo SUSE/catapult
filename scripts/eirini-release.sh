@@ -71,7 +71,7 @@ EOF
 
 
 export EIRINI_RELEASE_REPO="${EIRINI_RELEASE_REPO:-https://github.com/mudler/eirini-release}"
-export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_REPO:-eirini_logging}"
+export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_CHECKOUT:-eirini_logging}"
 
 git clone $EIRINI_RELEASE_REPO eirini
 pushd eirini
@@ -90,10 +90,10 @@ sed -i 's/http:\/\/localhost:32001/https:\/\/registry.'${DOMAIN}':6666/g' ./conf
 sed -i 's/local.insecure-registry.io/registry.'${DOMAIN}'/g' ./config.toml
 
 # Overwrite config.toml with our own
-docker cp config.toml ${cluster_name}-control-plane:/etc/containerd/config.toml
+docker cp config.toml ${CLUSTER_NAME}-control-plane:/etc/containerd/config.toml
 
 # Restart the kubelet
-docker exec ${cluster_name}-control-plane systemctl restart kubelet.service
+docker exec ${CLUSTER_NAME}-control-plane systemctl restart kubelet.service
 sleep 120
 openssl req -newkey rsa:4096 -nodes -sha256 -keyout domain.key -x509 -days 365 -out domain.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=registry.${DOMAIN}"
 

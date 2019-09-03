@@ -4,5 +4,5 @@ set -ex
 
 . scripts/include/common.sh
 
-docker start $cluster_name-control-plane
-docker exec $cluster_name-control-plane sh -c 'mount -o remount,ro /sys; kill -USR1 1'
+docker start $CLUSTER_NAME-control-plane
+docker exec $CLUSTER_NAME-control-plane sh -c 'mount -o remount,ro /sys; kill -USR1 1'

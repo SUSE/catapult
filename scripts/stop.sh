@@ -3,4 +3,4 @@ set -ex
 
 . scripts/include/common.sh
 
-docker stop $cluster_name-control-plane
+docker stop $CLUSTER_NAME-control-plane
