@@ -3,6 +3,7 @@
 set -ex 
 
 . scripts/include/common.sh
+. .envrc
 
 SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')

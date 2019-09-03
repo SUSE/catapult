@@ -3,6 +3,7 @@
 set -ex 
 
 . scripts/include/common.sh
+. .envrc
 
 
 if [ "${EMBEDDED_UAA}" != "true" ]; then

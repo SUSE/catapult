@@ -2,6 +2,7 @@
 set -ex 
 
 . scripts/include/common.sh
+. .envrc
 
 if [ -n "$EKCP_PROXY" ]; then
   export https_proxy=socks5://127.0.0.1:2224
