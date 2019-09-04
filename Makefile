@@ -2,9 +2,7 @@
 buildir:
 	scripts/buildir.sh
 
-.PHONY: setup
-setup:
-	scripts/scf_setup.sh
+# kind-only targets:
 
 .PHONY: deps
 deps: buildir
@@ -26,29 +24,47 @@ start:
 stop:
 	scripts/kind_stop.sh
 
+# scf-only targets:
+
+.PHONY: setup
+setup:
+	scripts/scf_setup.sh
+
 .PHONY: gen-config
 gen-config:
 	scripts/scf_gen_config.sh
-
-.PHONY: scf
-scf:
-	scripts/scf_install.sh
 
 .PHONY: chart
 chart:
 	scripts/scf_chart.sh
 
+.PHONY: scf
+scf:
+	scripts/scf_install.sh
+
 .PHONY: login
 login:
 	scripts/scf_login.sh
+
+.PHONY: upgrade
+upgrade:
+	scripts/scf_upgrade.sh
+
+.PHONY: clean-scf
+clean-scf:
+	scripts/scf_clean.sh
+
+.PHONY: build-scf-from-source
+build-scf-from-source:
+	scripts/scf_build.sh
+
+# stratos-only targets:
 
 .PHONY: stratos
 stratos:
 	scripts/stratos.sh
 
-.PHONY: upgrade
-upgrade:
-	scripts/scf_upgrade.sh
+# test-only targets:
 
 .PHONY: smoke
 smoke:
@@ -58,22 +74,7 @@ smoke:
 cats:
 	scripts/tests_cats.sh
 
-.PHONY: kind
-kind: clean deps up kubeconfig
-
-.PHONY: all
-all: kind setup chart gen-config scf login
-
-.PHONY: dind
-dind: kind docker-kubeconfig setup chart gen-config scf login
-
-.PHONY: clean-scf
-clean-scf:
-	scripts/scf_clean.sh
-
-.PHONY: build-scf-from-source
-build-scf-from-source:
-	scripts/scf_build.sh
+# one-off targets:
 
 .PHONY: build-stemcell-from-source
 build-stemcell-from-source:
@@ -101,9 +102,17 @@ force-clean: deps clean
 registry:
 	scripts/registry.sh
 
+# eirini-only targets:
+
 .PHONY:eirinifs
 eirinifs:
 	scripts/eirinifs.sh
+
+.PHONY: eirini-release
+eirini-release:
+	scripts/eirini_release.sh
+
+# ingress-only targets:
 
 .PHONY: ingress
 ingress:
@@ -112,6 +121,8 @@ ingress:
 .PHONY: ingress-forward
 ingress-forward:
 	scripts/ingress_forward.sh
+
+# caasp-only targets:
 
 .PHONY: deps-caasp4os
 deps-caasp4os: deps
@@ -125,13 +136,20 @@ caasp4os-deploy:
 caasp-prepare:
 	scripts/caasp_prepare.sh
 
-.PHONY: all-caasp4os
-all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
-
 .PHONY: clean-caasp4os
 clean-caasp4os:
 	scripts/caasp4os_destroy.sh
 
-.PHONY: eirini-release
-eirini-release:
-	scripts/eirini_release.sh
+# full targets:
+
+.PHONY: kind
+kind: clean deps up kubeconfig
+
+.PHONY: all
+all: kind setup chart gen-config scf login
+
+.PHONY: dind
+dind: kind docker-kubeconfig setup chart gen-config scf login
+
+.PHONY: all-caasp4os
+all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
