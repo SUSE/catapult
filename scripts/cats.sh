@@ -4,6 +4,10 @@ set -ex
 
 . scripts/include/common.sh
 
+if [ -z "${DEFAULT_STACK}" ]; then
+    export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+fi
+
 [ ! -d "cf-acceptance-tests" ] && git clone https://github.com/cloudfoundry/cf-acceptance-tests
 
 pushd cf-acceptance-tests
