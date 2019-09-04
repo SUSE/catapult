@@ -10,7 +10,7 @@ mkdir "$BUILD_DIR"
 . scripts/include/common.sh
 
 if [ -z "$EKCP_HOST" ]; then
-    wget https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/kind-linux-amd64
+    wget https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/${KIND_OS_TYPE}
     mv kind-linux-amd64 kind
     chmod +x kind
 fi
