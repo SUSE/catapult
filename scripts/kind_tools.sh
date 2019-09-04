@@ -21,10 +21,4 @@ if [ -z "$EKCP_HOST" ]; then
     chmod +x kind
 fi
 
-cat <<HEREDOC > .envrc
-export KUBECONFIG=$(pwd)/kubeconfig
-export HELM_HOME=$(pwd)/.helm
-export CF_HOME=$(pwd)/.cf
-HEREDOC
-
 popd

@@ -1,42 +1,46 @@
+.PHONY: buildir
+buildir:
+	scripts/buildir.sh
+
 .PHONY: setup
 setup:
-	scripts/setup.sh
+	scripts/scf_setup.sh
 
 .PHONY: deps
-deps:
-	scripts/tools.sh
+deps: buildir
+	scripts/kind_tools.sh
 
 .PHONY: clean
 clean:
-	scripts/clean.sh
+	scripts/kind_clean.sh
 
 .PHONY: up
 up:
-	scripts/up.sh
+	scripts/kind_up.sh
 
 .PHONY: start
 start:
-	scripts/start.sh
+	scripts/kind_start.sh
 
 .PHONY: stop
 stop:
-	scripts/stop.sh
+	scripts/kind_stop.sh
 
 .PHONY: gen-config
 gen-config:
-	scripts/gen_scf_config.sh
+	scripts/scf_gen_config.sh
 
 .PHONY: scf
 scf:
-	scripts/install_scf.sh
+	scripts/scf_install.sh
 
 .PHONY: chart
 chart:
-	scripts/chart.sh
+	scripts/scf_chart.sh
 
 .PHONY: login
 login:
-	scripts/login.sh
+	scripts/scf_login.sh
 
 .PHONY: stratos
 stratos:
@@ -44,15 +48,15 @@ stratos:
 
 .PHONY: upgrade
 upgrade:
-	scripts/upgrade.sh
+	scripts/scf_upgrade.sh
 
 .PHONY: smoke
 smoke:
-	scripts/smoke.sh
+	scripts/tests_smoke.sh
 
 .PHONY: cats
 cats:
-	scripts/cats.sh
+	scripts/tests_cats.sh
 
 .PHONY: kind
 kind: clean deps up kubeconfig
@@ -69,11 +73,11 @@ clean-scf:
 
 .PHONY: build-scf-from-source
 build-scf-from-source:
-	scripts/build_scf.sh
+	scripts/scf_build.sh
 
 .PHONY: build-stemcell-from-source
 build-stemcell-from-source:
-	scripts/build_stemcell.sh
+	scripts/stemcell_build.sh
 
 .PHONY: docker-kubeconfig
 docker-kubeconfig:
@@ -107,7 +111,7 @@ ingress:
 
 .PHONY: ingress-forward
 ingress-forward:
-	scripts/ingress-forward.sh
+	scripts/ingress_forward.sh
 
 .PHONY: deps-caasp4os
 deps-caasp4os: deps
@@ -130,4 +134,4 @@ clean-caasp4os:
 
 .PHONY: eirini-release
 eirini-release:
-	scripts/eirini-release.sh
+	scripts/eirini_release.sh

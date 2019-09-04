@@ -12,4 +12,4 @@ helm install suse/console \
     --namespace stratos \
     --values scf-config-values.yaml
 
-bash ../scripts/wait.sh stratos
+bash ../scripts/wait_ns.sh stratos

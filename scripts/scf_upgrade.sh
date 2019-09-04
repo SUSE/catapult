@@ -14,4 +14,4 @@ CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 helm upgrade --recreate-pods susecf-scf helm/cf/ --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
-bash ../scripts/wait.sh scf
+bash ../scripts/wait_ns.sh scf

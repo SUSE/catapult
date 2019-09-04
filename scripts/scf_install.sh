@@ -17,7 +17,7 @@ if [ "${EMBEDDED_UAA}" != "true" ]; then
 
     helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
 
-    bash ../scripts/wait.sh uaa
+    bash ../scripts/wait_ns.sh uaa
 
     SECRET=$(kubectl get pods --namespace uaa \
     -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -35,7 +35,7 @@ else
     --values scf-config-values.yaml \
     --set enable.uaa=true
 
-    bash ../scripts/wait.sh uaa
+    bash ../scripts/wait_ns.sh uaa
 fi
 
-bash ../scripts/wait.sh scf
+bash ../scripts/wait_ns.sh scf
