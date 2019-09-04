@@ -125,7 +125,7 @@ ingress-forward:
 # caasp-only targets:
 
 .PHONY: deps-caasp4os
-deps-caasp4os: deps
+deps-caasp4os: buildir
 	scripts/docker_skuba.sh
 
 .PHONY: caasp4os-deploy
