@@ -31,12 +31,6 @@ fi
 
 export DEEP_CLEAN="${DEEP_CLEAN:-false}" # If true, triggers helm to delete releases before cleaning up
 export KIND_VERSION="${KIND_VERSION:-0.2.1}"
-if [[ "$OSTYPE" == "darwin"* ]]; then 
-  export KIND_OS_TYPE="${KIND_OS_TYPE:-kind-darwin-amd64}" 
-else 
-  export KIND_OS_TYPE="${KIND_OS_TYPE:-kind-linux-amd64}" 
-fi
-
 export HA="${HA:-false}"
 export SIZING="${SIZING:-1}"
 export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
