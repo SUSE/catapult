@@ -4,8 +4,8 @@ buildir:
 
 # kind-only targets:
 
-.PHONY: deps
-deps: buildir
+.PHONY: deps-kind
+deps-kind: buildir
 	scripts/kind_tools.sh
 
 .PHONY: clean
@@ -93,10 +93,10 @@ kubeconfig:
 	scripts/kubeconfig.sh
 
 .PHONY: recover
-recover: deps kubeconfig
+recover: buildir kubeconfig
 
 .PHONY: force-clean
-force-clean: deps clean
+force-clean: buildir clean
 
 .PHONY:registry
 registry:
@@ -143,7 +143,7 @@ clean-caasp4os:
 # full targets:
 
 .PHONY: kind
-kind: clean deps up kubeconfig
+kind: clean deps-kind up kubeconfig
 
 .PHONY: all
 all: kind setup chart gen-config scf login
