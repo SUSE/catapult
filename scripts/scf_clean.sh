@@ -28,4 +28,4 @@ if [[ $ENABLE_EIRINI == true ]] ; then
     helm del --purge metrics-server
 fi
 
-rm -rf scf-config-values.yaml chart.zip helm kube
+rm -rf scf-config-values.yaml chart.zip helm kube "$HELM_HOME" "$CF_HOME"
