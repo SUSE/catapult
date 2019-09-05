@@ -4,4 +4,4 @@ set -ex
 
 . scripts/include/common.sh
 
-exec kubectl port-forward -n default pod/socksproxy 2224:8000
+exec kubectl port-forward -n default pod/socksproxy ${KUBEPROXY_PORT}:8000
