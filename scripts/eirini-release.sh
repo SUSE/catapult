@@ -73,12 +73,27 @@ EOF
 export EIRINI_RELEASE_REPO="${EIRINI_RELEASE_REPO:-https://github.com/mudler/eirini-release}"
 export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_CHECKOUT:-eirini_logging}"
 
-git clone $EIRINI_RELEASE_REPO eirini
+helm repo add eirini https://cloudfoundry-incubator.github.io/eirini-release
+#helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
+
+if [ ! -d eirini ]; then
+  git clone $EIRINI_RELEASE_REPO eirini
+fi
 pushd eirini
 git checkout ${EIRINI_RELEASE_CHECKOUT}
-cp -rfv helm ../
+git pull
 popd
-helm install helm/uaa --namespace uaa --name uaa --values eirini-values.yaml
+
+helm fetch eirini/cf
+tar xzvf eirini-cf.tgz
+pushd cf/charts
+tar xvfz eirini-*.tgz
+cp ../../eirini/helm/eirini/templates/eirini-loggregator-bridge.yaml eirini/templates
+tar cvfz eirini-*.tgz eirini
+rm -rf eirini
+popd
+
+#helm install eirini/uaa --namespace uaa --name uaa --values eirini-values.yaml
 bash ../scripts/wait.sh uaa
 
 SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -97,7 +112,6 @@ docker exec ${CLUSTER_NAME}-control-plane systemctl restart kubelet.service
 sleep 120
 openssl req -newkey rsa:4096 -nodes -sha256 -keyout domain.key -x509 -days 365 -out domain.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=registry.${DOMAIN}"
 
-helm install helm/cf --namespace scf --name scf --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
-helm install helm/eirini --namespace scf --name eirini --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
+helm install cf/ --namespace scf --name eirini --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
 
 bash ../scripts/wait.sh scf
