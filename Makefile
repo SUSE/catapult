@@ -22,6 +22,10 @@ start:
 stop:
 	scripts/stop.sh
 
+.PHONY: restart
+restart:
+	scripts/restart.sh
+
 .PHONY: gen-config
 gen-config:
 	scripts/gen_scf_config.sh
