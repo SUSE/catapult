@@ -93,7 +93,7 @@ tar cvfz eirini-*.tgz eirini
 rm -rf eirini
 popd
 
-#helm install eirini/uaa --namespace uaa --name uaa --values eirini-values.yaml
+helm install eirini/uaa --namespace uaa --name uaa --values eirini-values.yaml
 bash ../scripts/wait.sh uaa
 
 SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
