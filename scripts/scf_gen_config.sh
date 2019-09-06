@@ -2,10 +2,19 @@
 set -ex
 
 . scripts/include/common.sh
+. .envrc
 
 if [ -z "${DEFAULT_STACK}" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
 fi
+
+domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
+aux_external_ips=($(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address'))
+external_ips+="\"$public_ip\""
+for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
+external_ips+=", \"${aux_external_ips[$i]}\""
+done
 
 VALUES=
 if [ "$ENABLE_EIRINI" = true ] ; then
@@ -36,7 +45,7 @@ fi
 cat > scf-config-values.yaml <<EOF
 env:
   # Enter the domain you created for your CAP cluster
-  DOMAIN: ${DOMAIN}
+  DOMAIN: "${domain}"
   EIRINI_PERSI_PLANS: |
       - id: "default"
         name: "default"
@@ -46,7 +55,7 @@ env:
         default_size: "2Gi"
 
   # UAA host and port
-  UAA_HOST: uaa.${DOMAIN}
+  UAA_HOST: "uaa.${domain}"
   UAA_PORT: 2793
   DEFAULT_STACK: "${DEFAULT_STACK}"
 ${OVERRIDE}
@@ -128,7 +137,7 @@ sizing:
 
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
-  external_ips: ["${container_ip}"]
+  external_ips: [${external_ips}]
 
   # Run kubectl get storageclasses
   # to view your available storage classes

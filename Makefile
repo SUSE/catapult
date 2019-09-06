@@ -1,26 +1,34 @@
-.PHONY: setup
-setup:
-	scripts/setup.sh
+.PHONY: buildir
+buildir:
+	scripts/buildir.sh
 
-.PHONY: deps
-deps:
-	scripts/tools.sh
+# kind-only targets:
+
+.PHONY: deps-kind
+deps-kind: buildir
+	scripts/kind_tools.sh
 
 .PHONY: clean
 clean:
-	scripts/clean.sh
+	scripts/kind_clean.sh
 
 .PHONY: up
 up:
-	scripts/up.sh
+	scripts/kind_up.sh
 
 .PHONY: start
 start:
-	scripts/start.sh
+	scripts/kind_start.sh
 
 .PHONY: stop
 stop:
-	scripts/stop.sh
+	scripts/kind_stop.sh
+
+# scf-only targets:
+
+.PHONY: setup
+setup:
+	scripts/scf_setup.sh
 
 .PHONY: restart
 restart:
@@ -28,44 +36,23 @@ restart:
 
 .PHONY: gen-config
 gen-config:
-	scripts/gen_scf_config.sh
-
-.PHONY: scf
-scf:
-	scripts/install_scf.sh
+	scripts/scf_gen_config.sh
 
 .PHONY: chart
 chart:
-	scripts/chart.sh
+	scripts/scf_chart.sh
+
+.PHONY: scf
+scf:
+	scripts/scf_install.sh
 
 .PHONY: login
 login:
-	scripts/login.sh
-
-.PHONY: stratos
-stratos:
-	scripts/stratos.sh
+	scripts/scf_login.sh
 
 .PHONY: upgrade
 upgrade:
-	scripts/upgrade.sh
-
-.PHONY: smoke
-smoke:
-	scripts/smoke.sh
-
-.PHONY: cats
-cats:
-	scripts/cats.sh
-
-.PHONY: kind
-kind: clean deps up kubeconfig
-
-.PHONY: all
-all: kind gen-config chart setup scf login
-
-.PHONY: dind
-dind: kind docker-kubeconfig gen-config chart setup scf login
+	scripts/scf_upgrade.sh
 
 .PHONY: clean-scf
 clean-scf:
@@ -73,11 +60,29 @@ clean-scf:
 
 .PHONY: build-scf-from-source
 build-scf-from-source:
-	scripts/build_scf.sh
+	scripts/scf_build.sh
+
+# stratos-only targets:
+
+.PHONY: stratos
+stratos:
+	scripts/stratos.sh
+
+# test-only targets:
+
+.PHONY: smoke
+smoke:
+	scripts/tests_smoke.sh
+
+.PHONY: cats
+cats:
+	scripts/tests_cats.sh
+
+# one-off targets:
 
 .PHONY: build-stemcell-from-source
 build-stemcell-from-source:
-	scripts/build_stemcell.sh
+	scripts/stemcell_build.sh
 
 .PHONY: docker-kubeconfig
 docker-kubeconfig:
@@ -92,18 +97,26 @@ kubeconfig:
 	scripts/kubeconfig.sh
 
 .PHONY: recover
-recover: deps kubeconfig
+recover: buildir kubeconfig
 
 .PHONY: force-clean
-force-clean: deps clean
+force-clean: buildir clean
 
 .PHONY:registry
 registry:
 	scripts/registry.sh
 
+# eirini-only targets:
+
 .PHONY:eirinifs
 eirinifs:
 	scripts/eirinifs.sh
+
+.PHONY: eirini-release
+eirini-release:
+	scripts/eirini_release.sh
+
+# ingress-only targets:
 
 .PHONY: ingress
 ingress:
@@ -111,10 +124,12 @@ ingress:
 
 .PHONY: ingress-forward
 ingress-forward:
-	scripts/ingress-forward.sh
+	scripts/ingress_forward.sh
+
+# caasp-only targets:
 
 .PHONY: deps-caasp4os
-deps-caasp4os: deps
+deps-caasp4os: buildir
 	scripts/docker_skuba.sh
 
 .PHONY: caasp4os-deploy
@@ -125,13 +140,20 @@ caasp4os-deploy:
 caasp-prepare:
 	scripts/caasp_prepare.sh
 
-.PHONY: all-caasp4os
-all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare gen-config chart scf login
-
 .PHONY: clean-caasp4os
 clean-caasp4os:
 	scripts/caasp4os_destroy.sh
 
-.PHONY: eirini-release
-eirini-release:
-	scripts/eirini-release.sh
+# full targets:
+
+.PHONY: kind
+kind: clean deps-kind up kubeconfig
+
+.PHONY: all
+all: kind setup chart gen-config scf login
+
+.PHONY: dind
+dind: kind docker-kubeconfig setup chart gen-config scf login
+
+.PHONY: all-caasp4os
+all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login

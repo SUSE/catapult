@@ -2,6 +2,7 @@
 set -x
 
 . scripts/include/common.sh
+. .envrc
 
 kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
 kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
@@ -122,13 +123,18 @@ kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
-if [ "$CREATE_EIRINI_NAMESPACE" = true ] ; then
-  kubectl create namespace eirini
+if [ -n "$EKCP_HOST" ]; then
+    container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
+    domain="${CLUSTER_NAME}.${container_ip}.${EKCP_DOMAIN}"
+else
+    container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
+    container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
+    domain="${container_ip}.nip.io"
 fi
 
-#kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
-#kubectl apply --filename https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/standalone/heapster-controller.yaml
-
-if [ "$ENABLE_EIRINI" = true ]; then
-  helm install stable/metrics-server --name=metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"
+if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
+    kubectl create configmap -n kube-system cap-values \
+            --from-literal=public-ip="${container_ip}" \
+            --from-literal=domain="$domain" \
+            --from-literal=platform="kind"
 fi

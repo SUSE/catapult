@@ -8,6 +8,7 @@ if [ "$KIND_VERSION" != "v0.4.0" ]; then
 
 fi
 . scripts/include/common.sh
+. .envrc
 
 cat > eirini-values.yaml <<EOF
 env:
@@ -114,4 +115,4 @@ openssl req -newkey rsa:4096 -nodes -sha256 -keyout domain.key -x509 -days 365 -
 
 helm install cf/ --namespace scf --name eirini --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
 
-bash ../scripts/wait.sh scf
+bash ../scripts/wait_ns.sh scf

@@ -10,6 +10,7 @@
 . scripts/include/caasp4os.sh
 . scripts/include/skuba.sh
 . scripts/include/common.sh
+. .envrc
 
 set -exuo pipefail
 
