@@ -7,7 +7,7 @@ set -ex
 
 
 if [[ $ENABLE_EIRINI == true ]] ; then
-    kubectl create namespace eirini
+    [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     helm install stable/metrics-server --name=metrics-server \
          --set args[0]="--kubelet-preferred-address-types=InternalIP" \
          --set args[1]="--kubelet-insecure-tls"
