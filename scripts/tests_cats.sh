@@ -1,9 +1,11 @@
 #!/bin/bash
 
-set -ex 
+set -ex
 
 . scripts/include/common.sh
 . .envrc
+
+DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
 if [ -z "${DEFAULT_STACK}" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
@@ -60,22 +62,22 @@ cat > config.json <<EOF
 }
 EOF
 
-export GOPATH=$PWD/go 
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN
+export GOPATH="$PWD"/go
+export GOBIN="$GOPATH"/bin
+export PATH="$PATH":"$GOBIN"
 go get github.com/onsi/ginkgo/ginkgo
 go install github.com/onsi/ginkgo/ginkgo
-rm -rf $GOPATH/src/*
+rm -rf "$GOPATH"/src/*
 
 #go get -d github.com/cloudfoundry/cf-acceptance-tests
 ./bin/update_submodules
 
-mkdir -p $GOPATH/src/github.com/cloudfoundry
-[ ! -e "$GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests" ] && ln -s $PWD $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
-pushd $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
+mkdir -p "$GOPATH"/src/github.com/cloudfoundry
+[ ! -e "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests ] && ln -s "$PWD" "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+pushd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
 go get github.com/onsi/ginkgo/ginkgo
 go install github.com/onsi/ginkgo/ginkgo
 if [ -n "$EKCP_PROXY" ]; then
   export https_proxy=socks5://127.0.0.1:2224
 fi
-CONFIG=$PWD/config.json ./bin/test
+CONFIG="$PWD"/config.json ./bin/test
