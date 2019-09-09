@@ -15,7 +15,7 @@ fi
 
 if [ -z "$EKCP_HOST" ]; then
     wget https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/${KIND_OS_TYPE}
-    mv kind-linux-amd64 kind
+    mv ${KIND_OS_TYPE} kind
     chmod +x kind
 fi
 
