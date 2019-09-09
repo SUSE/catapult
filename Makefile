@@ -68,6 +68,10 @@ build-scf-from-source:
 stratos:
 	scripts/stratos.sh
 
+.PHONY: clean-stratos
+clean-stratos:
+	scripts/stratos_clean.sh
+
 # test-only targets:
 
 .PHONY: smoke
