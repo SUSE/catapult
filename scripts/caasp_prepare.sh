@@ -7,7 +7,6 @@
 # Requires:
 # kubectl & helm binaries
 
-. scripts/include/caasp4os.sh
 . scripts/include/common.sh
 
 set -exuo pipefail
