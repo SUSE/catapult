@@ -7,21 +7,17 @@
 # Requires:
 # kubectl & helm binaries
 
+. scripts/include/caasp4os.sh
 . scripts/include/common.sh
 
 set -exuo pipefail
 . .envrc
 
 create_rolebinding() {
-    if ! kubectl get clusterrolebindings 2>/dev/null | grep -qi admin; then
-        kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
-    fi
-    if ! kubectl get clusterrolebindings 2>/dev/null | grep -qi uaaadmin; then
-        kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
-    fi
-    if ! kubectl get clusterrolebindings 2>/dev/null | grep -qi scfadmin; then
-        kubectl create clusterrolebinding scfadmin --clusterrole=cluster-admin --user=system:serviceaccount:scf:default
-    fi
+
+    kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=system:serviceaccount:kube-system:default
+    kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
+    kubectl create clusterrolebinding scfadmin --clusterrole=cluster-admin --user=system:serviceaccount:scf:default
 
     kubectl apply -f - <<HEREDOC
 ---

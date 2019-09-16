@@ -17,8 +17,6 @@ To use it in a CI, like travis, see the example [.travis.yml](https://github.com
 * cf-cli (for logging and running smoke tests)
 * Docker running on the host
 * Go (only to run smoke and cats tests)
-* On MACOSX:
-  - awk,sed,etc binaries of their gnu versions in path
 
 ### Get deps:
 
