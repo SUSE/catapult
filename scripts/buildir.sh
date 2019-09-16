@@ -9,7 +9,7 @@ mkdir "$BUILD_DIR"
 
 . scripts/include/common.sh
 
-cat <<'HEREDOC' > .envrc
+cat <<HEREDOC > .envrc
 export KUBECONFIG=$(pwd)/kubeconfig
 export HELM_HOME=$(pwd)/.helm
 export CF_HOME=$(pwd)/.cf
