@@ -24,15 +24,15 @@ start:
 stop:
 	scripts/kind_stop.sh
 
-# scf-only targets:
+.PHONY: restart
+restart:
+	scripts/kind_restart.sh
 
 .PHONY: setup
 setup:
-	scripts/scf_setup.sh
+	scripts/kind_setup.sh
 
-.PHONY: restart
-restart:
-	scripts/restart.sh
+# scf-only targets:
 
 .PHONY: gen-config
 gen-config:
