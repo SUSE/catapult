@@ -35,6 +35,7 @@ else
     --values scf-config-values.yaml \
     --set enable.uaa=true
 
+    bash ../scripts/wait_ns.sh uaa
 fi
 
 bash ../scripts/wait_ns.sh scf
