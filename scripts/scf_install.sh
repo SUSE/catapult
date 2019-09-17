@@ -37,7 +37,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \
-    --set "provider=gke" --set "customResources.enableInstallation=true" --set "features.eirini=${ENABLE_EIRINI}" \
+    --set "provider=gke" --set "customResources.enableInstallation=true" \
     $OPERATOR_CHART_URL
 
     bash ../scripts/wait_ns.sh scf
@@ -50,7 +50,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     helm upgrade scf ${SCF_CHART} \
     --install \
     --namespace scf \
-    --set "system_domain=$domain"
+    --set "system_domain=$domain" --set "features.eirini=${ENABLE_EIRINI}"
 
     sleep 900
 
