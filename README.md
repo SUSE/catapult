@@ -12,7 +12,7 @@ To use it in a CI, like travis, see the example [.travis.yml](https://github.com
 **Requirements:**
 
 * wget
-* Helm
+* Helm (>2.12, https://github.com/helm/helm/issues/5054)
 * Kubectl
 * cf-cli (for logging and running smoke tests)
 * Docker running on the host
@@ -138,6 +138,13 @@ You need to disable eirini with: ```ENABLE_EIRINI=false```
     DOCKER_PASSWORD="" \
     ENABLE_EIRINI="false" \
     make all
+
+### Deploy SCFv3 (with cf-operator)
+
+Setting `SCF_OPERATOR=true` enables SCFv3 deployment.
+You can also tweak the CHART_URL to point to a specific chart, it defaults to latest from `v3-develop` branch in the SCF repository.
+
+        SCF_OPERATOR=true make all
 
 ### Install the Stratos console
 
