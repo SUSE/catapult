@@ -11,6 +11,10 @@ if [ -z "${DEFAULT_STACK}" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
 fi
 
+if [ "${SCF_OPERATOR}" == "true" ]; then
+    CLUSTER_PASSWORD=$(kubectl get secret -n scf scf.var-cf-admin-password -o json | jq -r .data.password | base64 -d)
+fi
+
 [ ! -d "cf-acceptance-tests" ] && git clone https://github.com/cloudfoundry/cf-acceptance-tests
 
 pushd cf-acceptance-tests
@@ -19,7 +23,7 @@ cat > config.json <<EOF
   "api"                             : "api.${DOMAIN}",
   "apps_domain"                     : "${DOMAIN}",
   "admin_user": "admin",
-  "admin_password": "password",
+  "admin_password": "${CLUSTER_PASSWORD}",
   "artifacts_directory": "logs",
   "skip_ssl_validation": true,
   "timeout_scale": 1,
