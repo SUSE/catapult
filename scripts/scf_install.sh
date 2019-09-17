@@ -37,7 +37,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \
-    --set "provider=gke" --set "customResources.enableInstallation=true" \
+    --set "provider=gke" --set "customResources.enableInstallation=true" --set "features.eirini=${ENABLE_EIRINI}" \
     $OPERATOR_CHART_URL
 
     bash ../scripts/wait_ns.sh scf
