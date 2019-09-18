@@ -78,6 +78,10 @@ clean-stratos:
 smoke:
 	scripts/tests_smoke.sh
 
+.PHONY: smoke-scf
+smoke-scf:
+	scripts/tests_smoke_scf.sh
+
 .PHONY: cats
 cats:
 	scripts/tests_cats.sh
