@@ -209,6 +209,26 @@ flavour/infrastructure. Once k8s is deployed, the previous steps for deploying
 scf, stratos, tests can be reused. Eg:
 
     $> CLUSTER_NAME=yourcaasp4os make all-caasp4os smoke
+
+### minikube
+
+Minikube allows you to have a k8s cluster with either docker, containerd, or
+cri-o. By default you will get docker as container runtime, but you can select
+which by passing the env var `MINIKUBE_RUNTIME`, with either `docker`,
+`containerd` or `cri-o`.
+You can obtain a minikube cluster with:
+
+    $> CLUSTER_NAME=minikube make minikube
+
+You can deploy SUSE Cloud Foundry on top with:
+
+    $> CLUSTER_NAME=minikube make all-minikube
+
+And delete your minikube VM with:
+
+    $> CLUSTER_NAME=minikube make clean-minikube
+
+
 ### CaaSP4
 
 #### Getting a CaaSP4 on Openstack configured for CAP
