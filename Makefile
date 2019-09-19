@@ -24,6 +24,31 @@ start:
 stop:
 	scripts/kind_stop.sh
 
+# minikube-only targets:
+
+.PHONY: deps-minikube
+deps-minikube: buildir
+	scripts/minikube_deps.sh
+
+.PHONY: clean-minikube
+clean-minikube:
+	scripts/minikube_clean.sh
+
+.PHONY: up-minikube
+up-minikube:
+	scripts/minikube_up.sh
+
+.PHONY: start-minikube
+start-minikube:
+	scripts/minikube_start.sh
+
+.PHONY: stop-minikube
+stop-minikube:
+	scripts/minikube_stop.sh
+
+.PHONY: minikube
+minikube:  deps-minikube up-minikube
+
 # scf-only targets:
 
 .PHONY: setup
@@ -162,6 +187,9 @@ all: kind setup chart gen-config scf login
 
 .PHONY: dind
 dind: kind docker-kubeconfig setup chart gen-config scf login
+
+.PHONY: all-minikube
+all-minikube:  minikube setup chart gen-config scf login
 
 .PHONY: all-caasp4os
 all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
