@@ -16,5 +16,3 @@ minikube start \
          --container-runtime="$MINIKUBE_RUNTIME" \
          --vm-driver="$MINIKUBE_VM_DRIVER" \
          --bootstrapper=kubeadm
-
-cp .kube/config kubeconfig
