@@ -5,7 +5,7 @@ set -ex
 . .envrc
 
 if [ -n "$EKCP_PROXY" ]; then
-    export https_proxy=socks5://127.0.0.1:2224
+    export https_proxy=socks5://127.0.0.1:${KUBEPROXY_PORT}
 fi
 
 if [ "${SCF_OPERATOR}" == "true" ]; then

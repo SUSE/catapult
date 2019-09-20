@@ -11,4 +11,8 @@ SAMPLE_APP_REPO="${SAMPLE_APP_REPO:-https://github.com/cloudfoundry-samples/cf-s
 
 pushd sample
 
+if [ -n "$EKCP_PROXY" ]; then
+    export https_proxy=socks5://127.0.0.1:${KUBEPROXY_PORT}
+fi
+
 cf push
