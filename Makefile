@@ -103,6 +103,10 @@ clean-stratos:
 smoke:
 	scripts/tests_smoke.sh
 
+.PHONY: test-eirini-persi
+test-eirini-persi:
+	scripts/tests_eirini_persi.sh
+
 .PHONY: smoke-scf
 smoke-scf:
 	scripts/tests_smoke_scf.sh
