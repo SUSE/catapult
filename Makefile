@@ -24,6 +24,10 @@ start:
 stop:
 	scripts/kind_stop.sh
 
+.PHONY: setup
+setup:
+	scripts/kind_setup.sh
+
 # minikube-only targets:
 
 .PHONY: deps-minikube
@@ -50,10 +54,6 @@ stop-minikube:
 minikube: clean-minikube deps-minikube up-minikube
 
 # scf-only targets:
-
-.PHONY: setup
-setup:
-	scripts/scf_setup.sh
 
 .PHONY: restart
 restart:
