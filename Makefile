@@ -16,6 +16,10 @@ clean:
 up:
 	scripts/kind_up.sh
 
+.PHONY: up_if_not_exists
+up-if-not-exists:
+	scripts/kind_up_if_not_exists.sh
+
 .PHONY: start
 start:
 	scripts/kind_start.sh
@@ -201,6 +205,9 @@ clean-caasp4os:
 
 .PHONY: kind
 kind: clean deps-kind up kubeconfig
+
+.PHONY: recover-or-kind
+recover-or-kind: deps-kind up-if-not-exists kubeconfig
 
 .PHONY: all
 all: kind setup chart gen-config scf login
