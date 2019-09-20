@@ -147,6 +147,10 @@ kwt:
 kwt-connect:
 	scripts/kwt_connect.sh
 
+.PHONY: sample
+sample:
+	scripts/sample.sh
+
 # eirini-only targets:
 
 .PHONY:eirinifs

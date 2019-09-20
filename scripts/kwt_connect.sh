@@ -11,7 +11,7 @@ set -ex
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
 : ${CF_NAMESPACE:=scf}
-: ${API_IP:=$(kubectl get svc -n ${CF_NAMESPACE} router-gorouter --template '{{.spec.clusterIP}}')}
+: ${API_IP:=$(kubectl get svc -n ${CF_NAMESPACE} router-gorouter-public --template '{{.spec.clusterIP}}')}
 export API_IP
 
 echo "Mapping *.${domain} to internal IP ${API_IP}..."
