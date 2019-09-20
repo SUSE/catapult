@@ -50,8 +50,12 @@ start-minikube:
 stop-minikube:
 	scripts/minikube_stop.sh
 
+.PHONY: prepare-minikube
+prepare-minikube:
+	scripts/minikube_prepare.sh
+
 .PHONY: minikube
-minikube: clean-minikube deps-minikube up-minikube
+minikube: clean-minikube deps-minikube up-minikube prepare-minikube
 
 # scf-only targets:
 
@@ -189,7 +193,7 @@ all: kind setup chart gen-config scf login
 dind: kind docker-kubeconfig setup chart gen-config scf login
 
 .PHONY: all-minikube
-all-minikube: minikube setup chart gen-config scf login
+all-minikube: minikube chart gen-config scf login
 
 .PHONY: all-caasp4os
 all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
