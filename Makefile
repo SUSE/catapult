@@ -139,6 +139,14 @@ force-clean: buildir clean
 registry:
 	scripts/registry.sh
 
+.PHONY:kwt
+kwt:
+	scripts/kwt.sh
+
+.PHONY:kwt-connect
+kwt-connect:
+	scripts/kwt_connect.sh
+
 # eirini-only targets:
 
 .PHONY:eirinifs
