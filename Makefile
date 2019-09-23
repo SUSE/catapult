@@ -63,9 +63,9 @@ minikube: clean-minikube deps-minikube up-minikube prepare-minikube
 restart:
 	scripts/restart.sh
 
-.PHONY: scf-precond
-scf-precond:
-	scripts/scf_precond.sh
+.PHONY: scf-precheck
+scf-precheck:
+	scripts/scf_precheck.sh
 
 .PHONY: gen-config
 gen-config:
