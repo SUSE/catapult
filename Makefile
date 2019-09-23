@@ -79,6 +79,10 @@ chart:
 scf:
 	scripts/scf_install.sh
 
+.PHONY: scf-brats-setup
+scf-brats-setup:
+	scripts/scf_brats_setup.sh
+
 .PHONY: login
 login:
 	scripts/scf_login.sh
