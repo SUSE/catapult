@@ -52,6 +52,7 @@ cat > scf-config-values.yaml <<EOF
 env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: "${domain}"
+  NGINX_MAX_REQUEST_BODY_SIZE: 4000
   EIRINI_PERSI_PLANS: |
       - id: "default"
         name: "default"
