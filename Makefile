@@ -103,6 +103,10 @@ clean-scf:
 build-scf-from-source:
 	scripts/scf_build.sh
 
+.PHONY: scf-klog
+scf-klog:
+	scripts/scf_klog.sh
+
 # stratos-only targets:
 
 .PHONY: stratos
