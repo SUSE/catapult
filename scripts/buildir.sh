@@ -13,7 +13,7 @@ mkdir bin
 cat <<HEREDOC > .envrc
 export KUBECONFIG="$(pwd)"/kubeconfig
 export HELM_HOME="$(pwd)"/.helm
-export CF_HOME="$(pwd)"/.cf
+export CF_HOME="$(pwd)"
 export PATH="$PATH:$(pwd)"/bin
 export MINIKUBE_HOME="$(pwd)"/.minikube
 HEREDOC
