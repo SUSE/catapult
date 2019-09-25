@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: brats
+spec:
+  containers:
+    - name: brats
+      image: splatform/concourse-brats
+      command:
+        - /bin/sh
+        - -ec
+        - |
+          set -x -e -o pipefail
+
+          SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+          rpm -e chromedriver
+          wget -O chromedriver.zip 'https://chromedriver.storage.googleapis.com/2.34/chromedriver_linux64.zip'
+          [ e42a55f9e28c3b545ef7c7727a2b4218c37489b4282e88903e4470e92bc1d967 = "$(shasum -a 256 chromedriver.zip | cut -d' ' -f1)" ]
+          unzip chromedriver.zip -d /usr/local/bin/
+          rm chromedriver.zip
+
+          cf login --skip-ssl-validation -a ${BRATS_CF_HOST} -u ${BRATS_CF_USERNAME} -p ${BRATS_CF_PASSWORD} -o system
+          cf create-space tmp
+          cf target -s tmp
+
+          # Setup git
+          git config --global user.email "johndoe@example.com"
+          git config --global user.name "johndoe"
+
+          git clone https://github.com/cloudfoundry/${BRATS_BUILDPACK}-buildpack.git
+          pushd ${BRATS_BUILDPACK}-buildpack
+          git checkout v${BRATS_BUILDPACK_VERSION}
+
+          # Make sure the manifest and version file from git are not used
+          rm manifest.yml VERSION 2>&1
+
+          # Fetch our buildpack and use our manifest and version files
+          wget ${BRATS_BUILDPACK_URL}
+          unzip ${BRATS_BUILDPACK}-buildpack*.zip manifest.yml VERSION
+
+          # In some cases the manifest stays intact after inflation and we don't want
+          # the script to exit because there is nothing to commit.
+          # (e.g. the binary buildpack comes from upstream)
+          if [[ -n $(git status -s | grep ' M') ]]; then
+            git commit manifest.yml VERSION -m "Replace manifest and VERSION by the version to test"
+          fi
+
+          if [ "${BRATS_TEST_SUITE}" == "brats" ]; then
+            scripts/${BRATS_TEST_SUITE}.sh
+          else
+            # https://github.com/cloudfoundry/libbuildpack/pull/24/files
+            export CF_STACK_DOCKER_IMAGE=registry.opensuse.org/cloud/platform/stack/rootfs/images/sle15:latest
+
+            # Mount cgroups to be able to call docker in docker
+            echo "Setup CGroups"
+            source $SCRIPT_DIR/helpers.sh
+            permit_device_control
+
+            echo "Starting docker daemon"
+            # Start docker daemon and wait until it's up
+            dockerd &> /dev/null &
+            sleep 10 # Give dockerd enough time to start
+            docker version
+            echo "Docker is up and running!"
+
+            # Do not fail on integration tests at the moment
+            scripts/${BRATS_TEST_SUITE}.sh 2>&1 | tee ../mail-output/body-failed.txt
+          fi
+      env:
+      - name: BRATS_CF_HOST
+        value: <%= ENV["BRATS_CF_HOST"] %>
+      - name: BRATS_CF_USERNAME
+        value: <%= ENV["BRATS_CF_USERNAME"] %>
+      - name: BRATS_CF_PASSWORD
+        value: <%= ENV["BRATS_CF_PASSWORD"] %>
+      - name: BRATS_BUILDPACK
+        value: <%= ENV["BRATS_BUILDPACK"] %>
+      - name: BRATS_BUILDPACK_VERSION
+        value: <%= ENV["BRATS_BUILDPACK_VERSION"] %>
+      - name: BRATS_BUILDPACK_URL
+        value: <%= ENV["BRATS_BUILDPACK_URL"] %>
+      - name: BRATS_TEST_SUITE
+        value: <%= ENV["BRATS_TEST_SUITE"] %>
+      - name: GINKGO_NODES
+        value: "<%= ENV["GINKGO_NODES"] %>"
+      - name: PROXY_SCHEME
+        value: "<%= ENV["PROXY_SCHEME"] %>"
+      - name: PROXY_PORT
+        value: "<%= ENV["PROXY_PORT"] %>"
+      - name: PROXY_USERNAME
+        value: "<%= ENV["PROXY_USERNAME"] %>"
+      - name: PROXY_PASSWORD
+        value: "<%= ENV["PROXY_PASSWORD"] %>"
+      - name: PROXY_HOST
+        value: "<%= ENV["PROXY_HOST"] %>"

@@ -130,6 +130,10 @@ clean-stratos:
 smoke:
 	scripts/tests_smoke.sh
 
+.PHONY: brats
+brats:
+	scripts/tests_brats.sh
+
 .PHONY: test-eirini-persi
 test-eirini-persi:
 	scripts/tests_eirini_persi.sh
