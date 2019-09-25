@@ -40,7 +40,7 @@ spec:
         - name: BASIC_AUTH_PASSWORD
           value: "password"
         - name: PROXY_PASS
-          value: "https://s3.amazonaws.com/" # Change this to "https://download.opensuse.org/" for OBS hosted dependencies
+          value: "https://suse-buildpacks-staging.s3.amazonaws.com/" # Change this to "https://download.opensuse.org/" for OBS hosted dependencies
         - name: PORT
           value: "80"
 EOF
