@@ -12,7 +12,7 @@ kubectl create -f ../kube/task.yaml
 bash ../scripts/wait_ns.sh bkindwscf
 
 kubectl cp ../build$CLUSTER_NAME bkindwscf/task:/bkindwscf/
-kubectl exec -ti -n bkindwscf task -- /bin/bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login"
+kubectl exec -ti -n bkindwscf task -- /bin/bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login" || true
 
 echo
 echo "@@@@@@@@@@@@@@"
