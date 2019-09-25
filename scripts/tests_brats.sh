@@ -8,9 +8,7 @@ set -exuo pipefail
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 
-if kubectl get pods -n scf 2>/dev/null | grep -qi brats; then
-    kubectl delete pod brats -n scf
-fi
+kubectl delete pod brats -n scf || true 
 
 export BRATS_CF_HOST="${BRATS_CF_HOST:-api.$DOMAIN}"
 export PROXY_HOST="${PROXY_HOST:-${public_ip}}"

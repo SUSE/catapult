@@ -29,8 +29,8 @@ spec:
           git config --global user.email "johndoe@example.com"
           git config --global user.name "johndoe"
 
-          git clone https://github.com/cloudfoundry/${BRATS_BUILDPACK}-buildpack.git
-          pushd ${BRATS_BUILDPACK}-buildpack
+          git clone https://github.com/SUSE/cf-${BRATS_BUILDPACK}-buildpack.git
+          pushd cf-${BRATS_BUILDPACK}-buildpack
           git checkout v${BRATS_BUILDPACK_VERSION}
 
           # Make sure the manifest and version file from git are not used
