@@ -61,6 +61,13 @@ prepare-minikube:
 .PHONY: minikube
 minikube: clean-minikube deps-minikube up-minikube prepare-minikube
 
+.PHONY: task
+task:
+	scripts/task.sh
+
+.PHONY: terminal
+terminal:
+	scripts/terminal.sh
 # scf-only targets:
 
 .PHONY: restart

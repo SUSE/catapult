@@ -1,0 +1,16 @@
+
+#https://github.com/weaveworks/build-tools/blob/master/socks/connect.sh
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task
+  namespace: bkindwscf
+spec:
+  containers:
+    - name: task
+      image: splatform/bkindwscf
+      command: ["/bin/bash"]
+      args: ["-c", "while true; do sleep 50000;done"]
+
+      
