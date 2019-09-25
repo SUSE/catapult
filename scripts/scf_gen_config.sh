@@ -14,6 +14,8 @@ else
   GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-btrfs}"
 fi
 
+DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
+
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 aux_external_ips=($(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address'))
@@ -114,7 +116,7 @@ sizing:
   diego_brain:
     count: ${SIZING}
   diego_cell:
-    count: ${SIZING}
+    count: ${DIEGO_SIZING}
   diego_ssh:
     count: ${SIZING}
   doppler:
