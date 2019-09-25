@@ -21,6 +21,7 @@ export PROXY_PORT="${PROXY_PORT:-9002}"
 export PROXY_USERNAME="${PROXY_USERNAME:-username}"
 export PROXY_PASSWORD="${PROXY_PASSWORD:-password}"
 export BRATS_TEST_SUITE=brats
+export CF_STACK="${CF_STACK:-sle15}"
 
 pod_definition=$(erb ../kube/brats/pod.yaml.erb)
 cat <<EOF
@@ -42,5 +43,5 @@ done
 
 mkdir -p artifacts
 kubectl logs -f brats -n scf > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
-
+kubectl delete pod -n scf brats
 exit "$(container_status "brats")"
