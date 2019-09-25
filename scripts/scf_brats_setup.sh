@@ -45,7 +45,7 @@ spec:
           value: "80"
 EOF
 
-kubectl create -f nginx_proxy_deployment.yaml
+kubectl apply -f nginx_proxy_deployment.yaml || true
 
 cat > nginx_proxy_service.yaml <<EOF
 apiVersion: v1
@@ -64,7 +64,7 @@ spec:
     app: nginx-proxy
 EOF
 
-kubectl create -f nginx_proxy_service.yaml
+kubectl apply -f nginx_proxy_service.yaml || true 
 
 cat > securitygroup.json <<EOF
 [
