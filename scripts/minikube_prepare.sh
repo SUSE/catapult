@@ -130,5 +130,6 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
     kubectl create configmap -n kube-system cap-values \
             --from-literal=public-ip="${container_ip}" \
             --from-literal=domain="$domain" \
-            --from-literal=platform="minikube"
+            --from-literal=platform="minikube" \
+            --from-literal=chart="$CHART_URL"
 fi

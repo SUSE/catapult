@@ -123,5 +123,6 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=nfs-server-ip="${NFS_SERVER_IP}" \
             --from-literal=nfs-path="${NFS_PATH}" \
-            --from-literal=platform=caasp4
+            --from-literal=platform=caasp4 \
+            --from-literal=chart="$CHART_URL"
 fi
