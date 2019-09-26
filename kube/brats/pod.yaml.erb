@@ -85,6 +85,8 @@ spec:
         value: <%= ENV["BRATS_TEST_SUITE"] %>
       - name: GINKGO_NODES
         value: "<%= ENV["GINKGO_NODES"] %>"
+      - name: GINKGO_ATTEMPTS
+        value: "<%= ENV["GINKGO_ATTEMPTS"] %>"
       - name: PROXY_SCHEME
         value: "<%= ENV["PROXY_SCHEME"] %>"
       - name: PROXY_PORT
