@@ -5,6 +5,9 @@ set -ex
 . scripts/include/common.sh
 . .envrc
 
+# save CHART_URL on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "$CHART_URL"'
+
 export OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-https://s3.amazonaws.com/cf-operators/release/helm-charts/cf-operator-v0.4.0%2B1.g3d277af0.tgz}"
 
 if [[ $ENABLE_EIRINI == true ]] ; then
