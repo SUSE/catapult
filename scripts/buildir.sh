@@ -11,6 +11,7 @@ mkdir "$BUILD_DIR"
 
 mkdir bin
 cat <<HEREDOC > .envrc
+export CLUSTER_NAME=${CLUSTER_NAME}
 export KUBECONFIG="$(pwd)"/kubeconfig
 export HELM_HOME="$(pwd)"/.helm
 export CF_HOME="$(pwd)"
