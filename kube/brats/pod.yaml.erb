@@ -31,7 +31,7 @@ spec:
 
           git clone https://github.com/SUSE/cf-${BRATS_BUILDPACK}-buildpack.git
           pushd cf-${BRATS_BUILDPACK}-buildpack
-          git checkout v${BRATS_BUILDPACK_VERSION}
+          git checkout ${BRATS_BUILDPACK_VERSION}
 
           # Make sure the manifest and version file from git are not used
           rm manifest.yml VERSION 2>&1
