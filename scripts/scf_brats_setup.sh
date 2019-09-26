@@ -76,6 +76,10 @@ cat > securitygroup.json <<EOF
 ]
 EOF
 
+if [ -n "$EKCP_PROXY" ]; then
+    export https_proxy=socks5://127.0.0.1:${KUBEPROXY_PORT}
+fi
+
 cf create-security-group nginx_proxy securitygroup.json
 cf bind-running-security-group nginx_proxy
 cf bind-staging-security-group nginx_proxy
