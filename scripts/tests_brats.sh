@@ -21,6 +21,10 @@ export PROXY_PASSWORD="${PROXY_PASSWORD:-password}"
 export BRATS_TEST_SUITE=brats
 export CF_STACK="${CF_STACK:-sle15}"
 
+export BRATS_BUILDPACK="${BRATS_BUILDPACK}"
+export BRATS_BUILDPACK_URL="${BRATS_BUILDPACK_URL}"
+export BRATS_BUILDPACK_VERSION="${BRATS_BUILDPACK_VERSION}"
+
 pod_definition=$(erb ../kube/brats/pod.yaml.erb)
 cat <<EOF
 Will create this pod (if you see empty values, make sure you defined all the needed env variables):
@@ -41,5 +45,6 @@ done
 
 mkdir -p artifacts
 kubectl logs -f brats -n scf > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
+status="$(container_status "brats")"
 kubectl delete pod -n scf brats
-exit "$(container_status "brats")"
+exit "$status"
