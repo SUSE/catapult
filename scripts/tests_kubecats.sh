@@ -3,9 +3,16 @@
 . scripts/include/common.sh
 . .envrc
 
-set -exuo pipefail
+set -euo pipefail
 
 export DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')
+
+echo
+echo "@@@@@@@@@"
+echo "Running CATs on deployed chart $DEPLOYED_CHART"
+echo "@@@@@@@@@"
+echo
 
 kubectl delete pod cats -n scf || true 
 
