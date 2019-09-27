@@ -130,6 +130,14 @@ clean-stratos:
 smoke:
 	scripts/tests_smoke.sh
 
+.PHONY: smoke-kube
+smoke-kube:
+	scripts/tests_kubesmokes.sh
+
+.PHONY: kubecats
+kubecats:
+	scripts/tests_kubecats.sh
+
 .PHONY: brats
 brats:
 	scripts/tests_brats.sh
