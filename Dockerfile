@@ -6,6 +6,6 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     mv ./kubectl /usr/local/bin/kubectl
 RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
 RUN mv cf /usr/local/bin && chmod +x /usr/local/bin/cf
-ADD . /bkindwscf
-WORKDIR /bkindwscf
+ADD . /catapult
+WORKDIR /catapult
 ENTRYPOINT [ "/usr/bin/make" ]

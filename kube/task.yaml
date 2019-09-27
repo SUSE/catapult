@@ -5,11 +5,11 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: task
-  namespace: bkindwscf
+  namespace: catapult
 spec:
   containers:
     - name: task
-      image: splatform/bkindwscf
+      image: splatform/catapult
       command: ["/bin/bash"]
       args: ["-c", "while true; do sleep 50000;done"]
 

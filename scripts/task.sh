@@ -5,23 +5,23 @@
 
 set -euo pipefail
 
-kubectl create namespace bkindwscf || true
+kubectl create namespace catapult || true
 kubectl create -f ../kube/task.yaml || true
 
-bash ../scripts/wait_ns.sh bkindwscf
+bash ../scripts/wait_ns.sh catapult
 
-kubectl cp ../build$CLUSTER_NAME bkindwscf/task:/bkindwscf/
-kubectl cp $TASK_SCRIPT bkindwscf/task:/bkindwscf/build$CLUSTER_NAME/
+kubectl cp ../build$CLUSTER_NAME catapult/task:/catapult/
+kubectl cp $TASK_SCRIPT catapult/task:/catapult/build$CLUSTER_NAME/
 
-kubectl exec -ti -n bkindwscf task -- bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login"
+kubectl exec -ti -n catapult task -- bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login"
 
 
 echo
 echo "@@@@@@@@@@@@@@"
-echo "Running $TASK_SCRIPT in /bkindwscf/build$CLUSTER_NAME inside the task pod (in bkindwscf namespace)"
+echo "Running $TASK_SCRIPT in /catapult/build$CLUSTER_NAME inside the task pod (in catapult namespace)"
 echo "@@@@@@@@@@@@@@"
 echo
 
-kubectl exec -ti task -n bkindwscf -- /bin/bash -l -c "source build$CLUSTER_NAME/.envrc && /bkindwscf/build$CLUSTER_NAME/$(basename $TASK_SCRIPT)"
+kubectl exec -ti task -n catapult -- /bin/bash -l -c "source build$CLUSTER_NAME/.envrc && /catapult/build$CLUSTER_NAME/$(basename $TASK_SCRIPT)"
 status=$?
 exit $status

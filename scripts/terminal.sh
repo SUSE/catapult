@@ -5,24 +5,24 @@
 
 set -euo pipefail
 
-kubectl create namespace bkindwscf || true
+kubectl create namespace catapult || true
 kubectl create -f ../kube/task.yaml || true
 
-bash ../scripts/wait_ns.sh bkindwscf
+bash ../scripts/wait_ns.sh catapult
 
-kubectl cp ../build$CLUSTER_NAME bkindwscf/task:/bkindwscf/
-kubectl exec -ti -n bkindwscf task -- /bin/bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login" || true
+kubectl cp ../build$CLUSTER_NAME catapult/task:/catapult/
+kubectl exec -ti -n catapult task -- /bin/bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login" || true
 
 echo "source build$CLUSTER_NAME/.envrc" > .bashrc
-kubectl cp .bashrc bkindwscf/task:/bkindwscf/
+kubectl cp .bashrc catapult/task:/catapult/
 rm -rf .bashrc
 
 echo
 echo "@@@@@@@@@@@@@@"
 echo "Executing into the persistent pod"
 echo "You can already use 'cf' and 'kubectl'"
-echo "Note: After you are done, you need to remove it explictly with: kubectl delete pod -n bkindwscf task"
+echo "Note: After you are done, you need to remove it explictly with: kubectl delete pod -n catapult task"
 echo "@@@@@@@@@@@@@@"
 echo
 
-exec kubectl exec -ti task -n bkindwscf -- /bin/bash -l -c "source build$CLUSTER_NAME/.envrc && /bin/bash"
+exec kubectl exec -ti task -n catapult -- /bin/bash -l -c "source build$CLUSTER_NAME/.envrc && /bin/bash"
