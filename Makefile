@@ -38,6 +38,23 @@ stop:
 setup:
 	scripts/kind_setup.sh
 
+# gke-only targets:
+
+.PHONY: deps-gke
+deps-gke: buildir
+	scripts/gke_deps.sh
+
+.PHONY: clean-gke
+clean-gke:
+	scripts/gke_clean.sh
+
+.PHONY: deploy-gke
+deploy-gke:
+	scripts/gke_deploy.sh
+
+.PHONY: gke
+gke: clean-gke buildir deps-gke deploy-gke
+
 # minikube-only targets:
 
 .PHONY: deps-minikube
@@ -257,3 +274,6 @@ all-minikube: minikube chart gen-config scf login
 
 .PHONY: all-caasp4os
 all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
+
+.PHONY: all-gke
+all-gke: gke chart gen-config scf login
