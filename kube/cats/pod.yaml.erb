@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cats
+spec:
+  containers:
+    - name: brats
+      image: splatform/concourse-brats
+      command:
+        - /bin/sh
+        - -ec
+        - |
+          #!/bin/bash
+
+          set -ex
+
+          # Some of the go deps are in bzr.
+          # And we don't ship ssl py2 support by default which is required by bzr
+          zypper in -y bzr python2-pyOpenSSL
+
+          git clone $CATS_REPO
+
+          pushd cf-acceptance-tests
+          cat > config.json <<EOF
+          {
+            "api"                             : "api.${DOMAIN}",
+            "apps_domain"                     : "${DOMAIN}",
+            "admin_user": "admin",
+            "admin_password": "${CLUSTER_PASSWORD}",
+            "artifacts_directory": "logs",
+            "skip_ssl_validation": true,
+            "timeout_scale": 1,
+            "use_http": true,
+            "use_log_cache": false,
+            "include_apps": true,
+            "include_backend_compatibility": true,
+            "include_capi_experimental": false,
+            "include_capi_no_bridge": true,
+            "include_container_networking": true,
+            "credhub_mode" : "assisted",
+            "credhub_client": "credhub_admin_client",
+            "credhub_secret": "credhub_secret",
+            "include_detect": true,
+            "include_docker": true,
+            "include_internet_dependent": true,
+            "include_internetless": false,
+            "include_isolation_segments": false,
+            "include_logging_isolation_segments": false,
+            "include_private_docker_registry": false,
+            "include_route_services": true,
+            "include_routing": true,
+            "include_tcp_routing": true,
+            "include_routing_isolation_segments": false,
+            "include_security_groups": true,
+            "include_service_discovery": false,
+            "include_services": true,
+            "include_service_instance_sharing": true,
+            "include_ssh": true,
+            "include_sso": true,
+            "include_tasks": true,
+            "include_v3": true,
+            "include_zipkin": true,
+            "include_credhub": false,
+            "include_tcp_routing": true,
+            "include_volume_services": false,
+            "stacks": [
+              "${DEFAULT_STACK}"
+            ]
+          }
+          EOF
+
+          export GOPATH="$PWD"/go
+          export GOBIN="$GOPATH"/bin
+          export PATH="$PATH":"$GOBIN"
+          go get github.com/onsi/ginkgo/ginkgo
+          go install github.com/onsi/ginkgo/ginkgo
+          rm -rf "$GOPATH"/src/*
+
+          ./bin/update_submodules
+
+          mkdir -p "$GOPATH"/src/github.com/cloudfoundry
+          ln -s "$PWD" "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+          pushd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+          go get github.com/onsi/ginkgo/ginkgo
+          go install github.com/onsi/ginkgo/ginkgo
+          CONFIG="$PWD"/config.json ./bin/test
+
+      env:
+      - name: DOMAIN
+        value: "<%= ENV["DOMAIN"] %>"
+      - name: DEFAULT_STACK
+        value: "<%= ENV["DEFAULT_STACK"] %>"
+      - name: CLUSTER_PASSWORD
+        value: "<%= ENV["CLUSTER_PASSWORD"] %>"
+      - name: CATS_REPO
+        value: "<%= ENV["CATS_REPO"] %>"
