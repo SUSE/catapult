@@ -2,6 +2,12 @@
 buildir:
 	scripts/buildir.sh
 
+# catapult-only targets:
+
+.PHONY: catapult-test
+catapult-test:
+	scripts/tests_catapult.sh
+
 # kind-only targets:
 
 .PHONY: deps-kind
