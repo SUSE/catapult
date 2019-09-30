@@ -276,4 +276,4 @@ all-minikube: minikube chart gen-config scf login
 all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
 
 .PHONY: all-gke
-all-gke: gke chart gen-config scf login
+all-gke: gke chart gen-config scf terminal
