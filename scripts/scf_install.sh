@@ -12,9 +12,11 @@ export OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-https://s3.amazonaws.com/cf-ope
 
 if [[ $ENABLE_EIRINI == true ]] ; then
     [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
-    helm install stable/metrics-server --name=metrics-server \
-         --set args[0]="--kubelet-preferred-address-types=InternalIP" \
-         --set args[1]="--kubelet-insecure-tls"
+    if ! helm ls 2>/dev/null | grep -qi metrics-server ; then
+        helm install stable/metrics-server --name=metrics-server \
+             --set args[0]="--kubelet-preferred-address-types=InternalIP" \
+             --set args[1]="--kubelet-insecure-tls"
+    fi
 fi
 
 if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
