@@ -28,7 +28,7 @@ if [[ $ENABLE_EIRINI == true ]] ; then
     helm del --purge metrics-server
 fi
 
-rm -rf scf-config-values.yaml chart.zip helm kube "$HELM_HOME" "$CF_HOME"
+rm -rf scf-config-values.yaml chart.zip helm kube "$HELM_HOME" "$CF_HOME"/.cf
 
 # delete CHART_URL on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "null"'
