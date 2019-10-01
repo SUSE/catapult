@@ -8,6 +8,10 @@ buildir:
 catapult-test:
 	scripts/tests_catapult.sh
 
+.PHONY: catapult-web
+catapult-web:
+	scripts/web.sh
+
 # kind-only targets:
 
 .PHONY: deps-kind

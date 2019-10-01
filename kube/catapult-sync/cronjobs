@@ -1,0 +1,1 @@
+*/1 * * * * sh /usr/local/bin/sync.sh 2>&1
