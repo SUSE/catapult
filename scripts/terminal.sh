@@ -8,7 +8,7 @@ set -euo pipefail
 kubectl create namespace catapult || true
 kubectl create -f ../kube/task.yaml || true
 
-bash ../scripts/wait_ns.sh catapult
+bash "$ROOT_DIR"/scripts/include/wait_ns.sh catapult
 
 kubectl cp ../build$CLUSTER_NAME catapult/task:/catapult/
 kubectl exec -ti -n catapult task -- /bin/bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login" || true

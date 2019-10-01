@@ -21,7 +21,7 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
 
     helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
 
-    bash ../scripts/wait_ns.sh uaa
+    bash "$ROOT_DIR"/scripts/include/wait_ns.sh uaa
 
     SECRET=$(kubectl get pods --namespace uaa \
     -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -53,7 +53,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     --set "provider=gke" --set "customResources.enableInstallation=true" \
     $OPERATOR_CHART_URL
 
-    bash ../scripts/wait_ns.sh scf
+    bash "$ROOT_DIR"/scripts/include/wait_ns.sh scf
 
     SCF_CHART="scf"
     if [ -d "deploy/helm/scf" ]; then
@@ -72,7 +72,7 @@ else
     --values scf-config-values.yaml \
     --set enable.uaa=true
 
-    bash ../scripts/wait_ns.sh uaa
+    bash "$ROOT_DIR"/scripts/include/wait_ns.sh uaa
 fi
 
-bash ../scripts/wait_ns.sh scf
+bash "$ROOT_DIR"/scripts/include/wait_ns.sh scf
