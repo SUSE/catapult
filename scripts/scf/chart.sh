@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex 
 
-. scripts/include/common.sh
+. ../include/common.sh
 
 if [ -z "$CHART_URL" ]; then
     echo "No chart url given - using latest public release from GH" 

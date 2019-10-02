@@ -88,51 +88,24 @@ task:
 .PHONY: terminal
 terminal:
 	scripts/terminal.sh
+
 # scf-only targets:
-
-.PHONY: restart
-restart:
-	scripts/restart.sh
-
-.PHONY: scf-precheck
-scf-precheck:
-	scripts/scf_precheck.sh
-
-.PHONY: gen-config
-gen-config:
-	scripts/scf_gen_config.sh
-
-.PHONY: chart
-chart:
-	scripts/scf_chart.sh
-
-.PHONY: scf
-scf:
-	scripts/scf_install.sh
-
-.PHONY: scf-brats-setup
-scf-brats-setup:
-	scripts/scf_brats_setup.sh
-
-.PHONY: login
-login:
-	scripts/scf_login.sh
-
-.PHONY: upgrade
-upgrade:
-	scripts/scf_upgrade.sh
 
 .PHONY: clean-scf
 clean-scf:
-	scripts/scf_clean.sh
+	make -C scripts/scf clean
+
+.PHONY: scf
+scf: 
+	make -C scripts/scf
+
+.PHONY: upgrade
+upgrade:
+	make -C scripts/scf upgrade
 
 .PHONY: build-scf-from-source
 build-scf-from-source:
-	scripts/scf_build.sh
-
-.PHONY: scf-klog
-scf-klog:
-	scripts/scf_klog.sh
+	make -C scripts/scf build-scf-from-source
 
 .PHONY: deploy-scf
 deploy-scf: chart gen-config scf

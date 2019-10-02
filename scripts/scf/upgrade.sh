@@ -2,7 +2,7 @@
 
 set -ex 
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 if [ -n "$CHART_URL" ]; then

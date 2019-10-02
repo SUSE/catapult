@@ -2,7 +2,7 @@
 
 set -ex 
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 # save CHART_URL on cap-values configmap
