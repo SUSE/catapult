@@ -114,11 +114,11 @@ deploy-scf: chart gen-config scf
 
 .PHONY: stratos
 stratos:
-	scripts/stratos.sh
+	make -C scripts/stratos
 
 .PHONY: clean-stratos
 clean-stratos:
-	scripts/stratos_clean.sh
+	make -C scripts/stratos clean
 
 # test-only targets:
 

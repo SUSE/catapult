@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -ex 
+set -ex
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 helm repo add suse https://kubernetes-charts.suse.com/
