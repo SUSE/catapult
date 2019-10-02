@@ -194,11 +194,11 @@ eirini-release:
 
 .PHONY: ingress
 ingress:
-	scripts/ingress.sh
+	make -C scripts/ingress ingress
 
 .PHONY: ingress-forward
 ingress-forward:
-	scripts/ingress_forward.sh
+	make -C scripts/ingress ingress-forward
 
 # caasp-only targets:
 

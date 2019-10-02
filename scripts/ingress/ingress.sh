@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -ex 
+set -ex
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 kubectl apply -f ../kube/socks.yaml
