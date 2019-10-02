@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -ex 
+set -ex
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 SAMPLE_APP_REPO="${SAMPLE_APP_REPO:-https://github.com/cloudfoundry-samples/cf-sample-app-nodejs}"

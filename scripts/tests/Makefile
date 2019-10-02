@@ -2,31 +2,31 @@
 
 .PHONY: smoke
 smoke:
-	./tests_smoke.sh
+	./smoke.sh
 
 .PHONY: smoke-kube
 smoke-kube:
-	./tests_kubesmokes.sh
+	./kubesmokes.sh
 
 .PHONY: kubecats
 kubecats:
-	./tests_kubecats.sh
+	./kubecats.sh
 
 .PHONY: brats
 brats:
-	./tests_brats.sh
+	./brats.sh
 
 .PHONY: test-eirini-persi
 test-eirini-persi:
-	./tests_eirini_persi.sh
+	./eirini_persi.sh
 
 .PHONY: smoke-scf
 smoke-scf:
-	./tests_smoke_scf.sh
+	./smoke_scf.sh
 
 .PHONY: cats
 cats:
-	./tests_cats.sh
+	./cats.sh
 
 .PHONY: sample
 smoke:
