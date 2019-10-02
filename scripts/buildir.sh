@@ -7,7 +7,7 @@ export BUILD_DIR=build${CLUSTER_NAME}
 
 mkdir "$BUILD_DIR"
 
-. scripts/include/common.sh
+. "$ROOT_DIR"/scripts/include/common.sh
 
 mkdir bin
 cat <<HEREDOC > .envrc
