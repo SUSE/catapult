@@ -14,33 +14,30 @@ catapult-web:
 
 # kind-only targets:
 
-.PHONY: deps-kind
-deps-kind: buildir
-	scripts/kind_tools.sh
+.PHONY: clean-kind
+clean-kind:
+	make -C scripts/kind clean
 
-.PHONY: clean
-clean:
-	scripts/kind_clean.sh
-
-.PHONY: up
-up:
-	scripts/kind_up.sh
+.PHONY: kind
+kind: clean-kind buildir
+	make -C scripts/kind
+	make kubeconfig
 
 .PHONY: up_if_not_exists
 up-if-not-exists:
-	scripts/kind_up_if_not_exists.sh
+	make -C scripts/kind up_if_not_exists
 
-.PHONY: start
-start:
-	scripts/kind_start.sh
+.PHONY: start-kind
+start-kind:
+	make -C scripts/kind start
 
-.PHONY: stop
-stop:
-	scripts/kind_stop.sh
+.PHONY: stop-kind
+stop-kind:
+	make -C scripts/kind stop
 
-.PHONY: setup
-setup:
-	scripts/kind_setup.sh
+.PHONY: restart-kind
+restart-kind:
+	make -C scripts/kind restart
 
 # gke-only targets:
 
@@ -153,7 +150,7 @@ image:
 
 .PHONY: kubeconfig
 kubeconfig:
-	scripts/kubeconfig.sh
+	make -C scripts/kind kubeconfig-kind
 
 .PHONY: recover
 recover: buildir kubeconfig
@@ -215,14 +212,14 @@ caasp4os: clean-caasp4os buildir
 
 # full targets:
 
-.PHONY: kind
-kind: clean deps-kind up kubeconfig
-
 .PHONY: recover-or-kind
 recover-or-kind: deps-kind up-if-not-exists kubeconfig
 
 .PHONY: all
 all: kind scf
+
+.PHONY: clean
+clean: clean-kind
 
 .PHONY: dind
 dind: kind docker-kubeconfig scf

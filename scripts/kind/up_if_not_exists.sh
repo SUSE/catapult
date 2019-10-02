@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-. scripts/include/common.sh
+. ../include/common.sh
 
 APPLICATION_PATH=$PWD
 type="Config"

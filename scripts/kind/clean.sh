@@ -1,8 +1,8 @@
 #!/bin/bash
 set -x
-. scripts/include/common.sh
+. ../include/common.sh
 
-if [ -d "../$BUILD_DIR" ]; then
+if [ -d "$BUILD_DIR" ]; then
       . .envrc
       if [ -n "$EKCP_HOST" ]; then
         curl -X DELETE http://$EKCP_HOST/${CLUSTER_NAME}
