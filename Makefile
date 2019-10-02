@@ -236,16 +236,16 @@ kind: clean deps-kind up kubeconfig
 recover-or-kind: deps-kind up-if-not-exists kubeconfig
 
 .PHONY: all
-all: kind setup chart gen-config scf login
+all: kind scf
 
 .PHONY: dind
-dind: kind docker-kubeconfig setup chart gen-config scf login
+dind: kind docker-kubeconfig scf
 
 .PHONY: all-minikube
-all-minikube: minikube chart gen-config scf login
+all-minikube: minikube scf
 
 .PHONY: all-caasp4os
-all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
+all-caasp4os: deps-caasp4os scf
 
 .PHONY: all-gke
-all-gke: gke chart gen-config scf terminal
+all-gke: gke scf terminal
