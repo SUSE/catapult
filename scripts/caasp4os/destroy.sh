@@ -7,15 +7,14 @@
 # - Sourced openrc.sh
 # - Key on the ssh keyring
 
-. scripts/include/caasp4os.sh
-. scripts/include/skuba.sh
-. scripts/include/common.sh
+. "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
+. ../include/common.sh
 . .envrc
 
 set -exuo pipefail
 
 
-if [ -d ../"$BUILD_DIR" ]; then
+if [ -d "$ROOT_DIR"/"$BUILD_DIR" ]; then
     if [[ ! -v OS_PASSWORD ]]; then
         echo ">>> Missing openstack credentials" && exit 1
     fi

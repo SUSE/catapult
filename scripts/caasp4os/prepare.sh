@@ -7,8 +7,8 @@
 # Requires:
 # kubectl & helm binaries
 
-. scripts/include/caasp4os.sh
-. scripts/include/common.sh
+. "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
+. ../include/common.sh
 
 set -exuo pipefail
 . .envrc
