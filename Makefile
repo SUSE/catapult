@@ -8,10 +8,6 @@ buildir:
 catapult-test:
 	scripts/tests_catapult.sh
 
-.PHONY: catapult-web
-catapult-web:
-	scripts/web.sh
-
 # kind-only targets:
 
 .PHONY: clean-kind
@@ -59,15 +55,35 @@ clean-minikube:
 minikube: clean-minikube buildir
 	make -C scripts/minikube
 
-# task targets:
+# extra targets:
+
+.PHONY: ingress
+ingress:
+	make -C scripts/extra ingress
+
+.PHONY: ingress-forward
+ingress-forward:
+	make -C scripts/extra ingress-forward
+
+.PHONY: kwt
+kwt:
+	make -C scripts/extra kwt
+
+.PHONY: kwt-connect
+kwt-connect:
+	make -C scripts/extra kwt-connect
 
 .PHONY: task
 task:
-	scripts/task.sh
+	make -C scripts/extra task
 
 .PHONY: terminal
 terminal:
-	scripts/terminal.sh
+	make -C scripts/extra terminal
+
+.PHONY: catapult-web
+catapult-web:
+	make -C scripts/extra catapult-web
 
 # scf-only targets:
 
@@ -162,14 +178,6 @@ force-clean: buildir clean-kind
 registry:
 	scripts/registry.sh
 
-.PHONY:kwt
-kwt:
-	scripts/kwt.sh
-
-.PHONY:kwt-connect
-kwt-connect:
-	scripts/kwt_connect.sh
-
 # Samples and fixtures
 
 .PHONY: sample
@@ -189,16 +197,6 @@ eirinifs:
 .PHONY: eirini-release
 eirini-release:
 	scripts/eirini_release.sh
-
-# ingress-only targets:
-
-.PHONY: ingress
-ingress:
-	make -C scripts/ingress ingress
-
-.PHONY: ingress-forward
-ingress-forward:
-	make -C scripts/ingress ingress-forward
 
 # caasp-only targets:
 

@@ -5,7 +5,7 @@ set -ex
 . ../include/common.sh
 . .envrc
 
-kubectl apply -f ../kube/socks.yaml
+kubectl apply -f "$ROOT_DIR"/kube/socks.yaml
 
 sleep 5
 

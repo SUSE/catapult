@@ -1,17 +1,17 @@
 #!/bin/bash
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 set -euo pipefail
 
 kubectl create namespace catapult || true
-kubectl create -f ../kube/task.yaml || true
+kubectl create -f "$ROOT_DIR"/kube/task.yaml || true
 
 bash "$ROOT_DIR"/scripts/include/wait_ns.sh catapult
 
-kubectl cp ../build$CLUSTER_NAME catapult/task:/catapult/
-kubectl cp $TASK_SCRIPT catapult/task:/catapult/build$CLUSTER_NAME/
+kubectl cp "$ROOT_DIR"/build$CLUSTER_NAME catapult/task:/catapult/
+kubectl cp "$TASK_SCRIPT" catapult/task:/catapult/build$CLUSTER_NAME/
 
 kubectl exec -ti -n catapult task -- bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir login"
 

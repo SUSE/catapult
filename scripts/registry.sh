@@ -28,7 +28,7 @@ for node in $(kubectl get nodes -oname); do
         echo "Overwriting /etc/containerd/config.toml"
 
         # Overwrite config.toml with our own
-        docker cp ../config/config.toml ${node_name}:/etc/containerd/config.toml
+        docker cp "$ROOT_DIR"/config/config.toml ${node_name}:/etc/containerd/config.toml
 
         # Restart the kubelet
         docker exec ${node_name} systemctl restart kubelet.service
@@ -38,7 +38,7 @@ for node in $(kubectl get nodes -oname); do
 done
 
 set -ex
-kubectl apply -f ../kube/registry.yaml
+kubectl apply -f "$ROOT_DIR"/kube/registry.yaml
 sleep 10
 bash "$ROOT_DIR"/scripts/include/wait_ns.sh container-registry
 kubectl port-forward -n container-registry service/registry 32001:5000

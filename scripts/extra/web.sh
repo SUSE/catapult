@@ -2,17 +2,17 @@
 set -e
 
 echo "Building wtty image"
-pushd kube/catapult-wtty
+pushd "$ROOT_DIR"/kube/catapult-wtty
     docker build -t catapult-wtty .
 popd
 
 echo "Building sync image"
-pushd kube/catapult-sync
+pushd "$ROOT_DIR"/kube/catapult-sync
     docker build --build-arg=EKCP_HOST=$EKCP_HOST -t catapult-sync .
 popd
 
 echo "Building redirector image"
-pushd kube/catapult-web
+pushd "$ROOT_DIR"/kube/catapult-web
     docker build -t catapult-web .
 popd
 
