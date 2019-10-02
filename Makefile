@@ -44,20 +44,13 @@ setup:
 
 # gke-only targets:
 
-.PHONY: deps-gke
-deps-gke: buildir
-	scripts/gke_deps.sh
-
 .PHONY: clean-gke
 clean-gke:
-	scripts/gke_clean.sh
-
-.PHONY: deploy-gke
-deploy-gke:
-	scripts/gke_deploy.sh
+	make -C scripts/gke clean
 
 .PHONY: gke
-gke: clean-gke buildir deps-gke deploy-gke
+gke: clean-gke buildir
+	make -C scripts/gke
 
 # minikube-only targets:
 

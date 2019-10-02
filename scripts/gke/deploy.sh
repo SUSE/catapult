@@ -3,7 +3,7 @@
 # Requires:
 # - gcloud credentials present
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 set -Eexuo pipefail

@@ -3,12 +3,12 @@
 # Requires:
 # - gcloud credentials present
 
-. scripts/include/common.sh
+. ../include/common.sh
 
 set -exuo pipefail
 
 
-if [ -d ../"$BUILD_DIR" ]; then
+if [ -d "$ROOT_DIR"/"$BUILD_DIR" ]; then
     . .envrc
 
     pushd cap-terraform/gke
