@@ -105,33 +105,37 @@ clean-stratos:
 
 # test-only targets:
 
-.PHONY: smoke
-smoke:
-	scripts/tests_smoke.sh
+.PHONY: tests
+tests:
+	make -C scripts/tests
 
-.PHONY: smoke-kube
-smoke-kube:
-	scripts/tests_kubesmokes.sh
+.PHONY: tests-smoke
+tests-smoke:
+	make -C scripts/tests smoke
 
-.PHONY: kubecats
-kubecats:
-	scripts/tests_kubecats.sh
+.PHONY: tests-smoke-kube
+tests-smoke-kube:
+	make -C scripts/tests smoke-kube
 
-.PHONY: brats
-brats:
-	scripts/tests_brats.sh
+.PHONY: tests-kubecats
+tests-kubecats:
+	make -C scripts/tests kubecats
 
-.PHONY: test-eirini-persi
-test-eirini-persi:
-	scripts/tests_eirini_persi.sh
+.PHONY: tests-brats
+tests-brats:
+	make -C scripts/tests brats
 
-.PHONY: smoke-scf
-smoke-scf:
-	scripts/tests_smoke_scf.sh
+.PHONY: tests-eirini-persi
+tests-eirini-persi:
+	make -C scripts/tests test-eirini-persi
 
-.PHONY: cats
-cats:
-	scripts/tests_cats.sh
+.PHONY: tests-smoke-scf
+tests-smoke-scf:
+	make -C scripts/tests smoke-scf
+
+.PHONY: tests-cats
+tests-cats:
+	make -C scripts/tests cats
 
 # one-off targets:
 
@@ -155,7 +159,7 @@ kubeconfig:
 recover: buildir kubeconfig
 
 .PHONY: force-clean
-force-clean: buildir clean
+force-clean: buildir clean-kind
 
 .PHONY:registry
 registry:
@@ -168,7 +172,6 @@ kwt:
 .PHONY:kwt-connect
 kwt-connect:
 	scripts/kwt_connect.sh
-
 
 # Samples and fixtures
 

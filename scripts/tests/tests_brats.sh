@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 set -euo pipefail
@@ -34,7 +34,7 @@ export BRATS_BUILDPACK="${BRATS_BUILDPACK}"
 export BRATS_BUILDPACK_URL="${BRATS_BUILDPACK_URL}"
 export BRATS_BUILDPACK_VERSION="${BRATS_BUILDPACK_VERSION}"
 
-pod_definition=$(erb ../kube/brats/pod.yaml.erb)
+pod_definition=$(erb "$ROOT_DIR"/kube/brats/pod.yaml.erb)
 cat <<EOF
 Will create this pod (if you see empty values, make sure you defined all the needed env variables):
 

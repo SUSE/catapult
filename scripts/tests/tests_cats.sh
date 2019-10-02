@@ -2,7 +2,7 @@
 
 set -ex
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')

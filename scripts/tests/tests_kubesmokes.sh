@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/include/common.sh
+. ../include/common.sh
 . .envrc
 
 set -euo pipefail
@@ -10,17 +10,16 @@ DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r
 
 echo
 echo "@@@@@@@@@"
-echo "Running CATs on deployed chart $DEPLOYED_CHART"
+echo "Running Smoke tests on deployed chart $DEPLOYED_CHART"
 echo "@@@@@@@@@"
 echo
 
 kubectl create namespace catapult || true
-kubectl delete pod cats -n catapult || true
+kubectl delete pod smokes -n catapult || true
 
-export DEFAULT_STACK="${DEFAULT_STACK:-cflinuxfs3}"
-export CATS_REPO="${CATS_REPO:-https://github.com/cloudfoundry/cf-acceptance-tests}"
+export SMOKES_REPO="${SMOKES_REPO:-https://github.com/cloudfoundry/cf-smoke-tests}"
 
-pod_definition=$(erb ../kube/cats/pod.yaml.erb)
+pod_definition=$(erb "$ROOT_DIR"/kube/smokes/pod.yaml.erb)
 cat <<EOF
 Will create this pod (if you see empty values, make sure you defined all the needed env variables):
 
@@ -35,13 +34,13 @@ container_status() {
 }
 
 bash ../scripts/wait_ns.sh catapult
-while [[ -z $(container_status "cats") ]]; do
-    kubectl attach -n catapult "cats" ||:
+while [[ -z $(container_status "smokes") ]]; do
+    kubectl attach -n catapult "smokes" ||:
 done
 
 set +e
 mkdir -p artifacts
-kubectl logs -f cats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_cats.log
-status="$(container_status "cats")"
-kubectl delete pod -n catapult cats
+kubectl logs -f smokes -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_smokes.log
+status="$(container_status "smokes")"
+kubectl delete pod -n catapult smokes
 exit "$status"
