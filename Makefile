@@ -6,7 +6,7 @@ buildir:
 
 .PHONY: catapult-test
 catapult-test:
-	scripts/tests_catapult.sh
+	make -C tests
 
 # kind-only targets:
 
