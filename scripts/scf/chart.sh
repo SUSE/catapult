@@ -1,10 +1,10 @@
 #!/bin/bash
-set -ex 
+set -ex
 
 . ../include/common.sh
 
 if [ -z "$CHART_URL" ]; then
-    echo "No chart url given - using latest public release from GH" 
+    echo "No chart url given - using latest public release from GH"
     if  [ "${SCF_OPERATOR}" != "true" ]; then
         CHART_URL=$(curl -s https://api.github.com/repos/SUSE/scf/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
     else

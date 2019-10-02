@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex 
+set -ex
 
 . ../include/common.sh
 . .envrc
@@ -10,7 +10,7 @@ public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.da
 aux_external_ips=($(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address'))
 external_ips+="\"$public_ip\""
 for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
-external_ips+=", \"${aux_external_ips[$i]}\""
+    external_ips+=", \"${aux_external_ips[$i]}\""
 done
 
 cat > nginx_proxy_deployment.yaml <<EOF
@@ -64,7 +64,7 @@ spec:
     app: nginx-proxy
 EOF
 
-kubectl apply -f nginx_proxy_service.yaml || true 
+kubectl apply -f nginx_proxy_service.yaml || true
 
 cat > securitygroup.json <<EOF
 [

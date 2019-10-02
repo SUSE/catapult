@@ -11,6 +11,6 @@ fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
 mkdir -p "$CF_HOME"
-cf login --skip-ssl-validation -a https://api."$domain" -u admin -p ${CLUSTER_PASSWORD} -o system
+cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$CLUSTER_PASSWORD" -o system
 cf create-space tmp
 cf target -s tmp

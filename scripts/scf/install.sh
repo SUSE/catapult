@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex 
+set -ex
 
 . ../include/common.sh
 . .envrc
@@ -26,7 +26,7 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
     SECRET=$(kubectl get pods --namespace uaa \
     -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-    CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+    CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa \
     -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
     helm install helm/cf --name susecf-scf --namespace scf \
@@ -51,7 +51,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     helm install --namespace scf \
     --name cf-operator \
     --set "provider=gke" --set "customResources.enableInstallation=true" \
-    $OPERATOR_CHART_URL
+    "$OPERATOR_CHART_URL"
 
     bash "$ROOT_DIR"/scripts/include/wait_ns.sh scf
 

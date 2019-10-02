@@ -96,7 +96,7 @@ clean-scf:
 	make -C scripts/scf clean
 
 .PHONY: scf
-scf: 
+scf:
 	make -C scripts/scf
 
 .PHONY: upgrade
