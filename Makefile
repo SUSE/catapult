@@ -54,32 +54,15 @@ gke: clean-gke buildir
 
 # minikube-only targets:
 
-.PHONY: deps-minikube
-deps-minikube: buildir
-	scripts/minikube_deps.sh
-
 .PHONY: clean-minikube
 clean-minikube:
-	scripts/minikube_clean.sh
-
-.PHONY: up-minikube
-up-minikube:
-	scripts/minikube_up.sh
-
-.PHONY: start-minikube
-start-minikube:
-	scripts/minikube_start.sh
-
-.PHONY: stop-minikube
-stop-minikube:
-	scripts/minikube_stop.sh
-
-.PHONY: prepare-minikube
-prepare-minikube:
-	scripts/minikube_prepare.sh
+	make -C scripts/minikube clean
 
 .PHONY: minikube
-minikube: clean-minikube deps-minikube up-minikube prepare-minikube
+minikube: clean-minikube buildir
+	make -C scripts/minikube
+
+# task targets:
 
 .PHONY: task
 task:
