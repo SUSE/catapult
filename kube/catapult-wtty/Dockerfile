@@ -8,5 +8,8 @@ RUN zypper install -y tmux
 
 EXPOSE 8080
 WORKDIR /catapult
-ENTRYPOINT [ "/usr/bin/ttyd",  "-p" ,"8080", "tmux", "new", "-A", "-s", "catapult", "/usr/bin/make" ]
+
+ENTRYPOINT [ "/usr/bin/ttyd",  "-p" ,"8080", "/usr/bin/make" ]
+# Spawn a tmux inside this container:
+#ENTRYPOINT [ "/usr/bin/ttyd",  "-p" ,"8080", "tmux", "new", "-A", "-s", "catapult", "/usr/bin/make" ]
 CMD [ "recover", "terminal" ]
