@@ -14,9 +14,9 @@ else
 fi
 
 if [ -z "$EKCP_HOST" ]; then
-    wget https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/${KIND_OS_TYPE}
-    mv ${KIND_OS_TYPE} kind
+    curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/${KIND_OS_TYPE}
     chmod +x kind
+    mv kind bin/kind
 fi
 
 popd

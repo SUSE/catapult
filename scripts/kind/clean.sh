@@ -7,7 +7,7 @@ if [ -d "$BUILD_DIR" ]; then
       if [ -n "$EKCP_HOST" ]; then
         curl -X DELETE http://$EKCP_HOST/${CLUSTER_NAME}
       else
-        ./kind delete cluster --name="${CLUSTER_NAME}"
+        kind delete cluster --name="${CLUSTER_NAME}"
       fi
   popd
 

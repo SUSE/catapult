@@ -1,6 +1,9 @@
 #!/bin/bash
 set -x
 . ../include/common.sh
+. .envrc
+
+set -Eexo pipefail
 
 APPLICATION_PATH=$PWD
 type="Config"
@@ -22,5 +25,5 @@ EOF
 if [ -n "$EKCP_HOST" ]; then
     curl -d "name=${CLUSTER_NAME}" -X POST http://$EKCP_HOST/new
 else
-    ./kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
+    kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
 fi

@@ -33,7 +33,7 @@ if [ -n "$EKCP_HOST" ]; then
 else
   if [ -z $(./kind get clusters | grep ${CLUSTER_NAME}) ]; then
     echo "Local cluster doesn't exist, creating now"
-    ./kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
+    kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
   else
     echo "Local cluster already exists, skipping creation"
   fi
