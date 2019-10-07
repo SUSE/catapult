@@ -26,6 +26,7 @@ set +x
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
+set -x
 
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
