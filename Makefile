@@ -217,9 +217,16 @@ kwt:
 kwt-connect:
 	scripts/kwt_connect.sh
 
+
+# Samples and fixtures
+
 .PHONY: sample
 sample:
 	scripts/sample.sh
+
+.PHONY: sample-ticking
+sample-ticking:
+	scripts/sample-ticking.sh
 
 # eirini-only targets:
 
