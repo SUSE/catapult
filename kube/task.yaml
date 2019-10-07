@@ -11,6 +11,7 @@ spec:
     - name: task
       image: splatform/catapult
       command: ["/bin/bash"]
+      imagePullPolicy: Always
       args: ["-c", "while true; do sleep 50000;done"]
 
       
