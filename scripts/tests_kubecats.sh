@@ -14,7 +14,8 @@ echo "Running CATs on deployed chart $DEPLOYED_CHART"
 echo "@@@@@@@@@"
 echo
 
-kubectl delete pod cats -n scf || true 
+kubectl create namespace catapult || true
+kubectl delete pod cats -n catapult || true
 
 export DEFAULT_STACK="${DEFAULT_STACK:-cflinuxfs3}"
 export CATS_REPO="${CATS_REPO:-https://github.com/cloudfoundry/cf-acceptance-tests}"
@@ -26,19 +27,21 @@ Will create this pod (if you see empty values, make sure you defined all the nee
 ${pod_definition}
 EOF
 
-kubectl apply -n scf -f <(echo "${pod_definition}")
+kubectl apply -n catapult -f <(echo "${pod_definition}")
 
 container_status() {
-    kubectl get --output=json -n scf pod "$1" \
+    kubectl get --output=json -n catapult pod "$1" \
         | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
 }
 
+bash ../scripts/wait_ns.sh catapult
 while [[ -z $(container_status "cats") ]]; do
-    kubectl attach -n scf "cats" ||:
+    kubectl attach -n catapult "cats" ||:
 done
 
+set +e
 mkdir -p artifacts
-kubectl logs -f cats -n scf > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_cats.log
+kubectl logs -f cats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_cats.log
 status="$(container_status "cats")"
-kubectl delete pod -n scf cats
+kubectl delete pod -n catapult cats
 exit "$status"

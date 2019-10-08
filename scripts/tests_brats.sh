@@ -15,7 +15,8 @@ echo "Running BRATs on deployed chart $DEPLOYED_CHART"
 echo "@@@@@@@@@"
 echo
 
-kubectl delete pod brats -n scf || true 
+kubectl create namespace catapult || true
+kubectl delete pod brats -n catapult || true
 
 export BRATS_CF_HOST="${BRATS_CF_HOST:-api.$DOMAIN}"
 export PROXY_HOST="${PROXY_HOST:-${public_ip}}"
@@ -40,19 +41,21 @@ Will create this pod (if you see empty values, make sure you defined all the nee
 ${pod_definition}
 EOF
 
-kubectl apply -n scf -f <(echo "${pod_definition}")
+kubectl apply -n catapult -f <(echo "${pod_definition}")
 
 container_status() {
-    kubectl get --output=json -n scf pod "$1" \
+    kubectl get --output=json -n catapult pod "$1" \
         | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
 }
 
+bash ../scripts/wait_ns.sh catapult
 while [[ -z $(container_status "brats") ]]; do
-    kubectl attach -n scf "brats" ||:
+    kubectl attach -n catapult "brats" ||:
 done
 
+set +e
 mkdir -p artifacts
-kubectl logs -f brats -n scf > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
+kubectl logs -f brats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
 status="$(container_status "brats")"
-kubectl delete pod -n scf brats
+kubectl delete pod -n catapult brats
 exit "$status"

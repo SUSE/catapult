@@ -24,6 +24,7 @@ cat > config.json <<EOF
   "password"                        : "${CLUSTER_PASSWORD}",
   "cleanup"                         : false,
   "logging_app"                     : "",
+  "timeout_scale"                   : 3.0,
   "runtime_app"                     : "",
   "enable_windows_tests"            : false,
   "windows_stack"                   : "windows2012R2",

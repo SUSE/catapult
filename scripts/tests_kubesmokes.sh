@@ -14,7 +14,8 @@ echo "Running Smoke tests on deployed chart $DEPLOYED_CHART"
 echo "@@@@@@@@@"
 echo
 
-kubectl delete pod smokes -n scf || true 
+kubectl create namespace catapult || true
+kubectl delete pod smokes -n catapult || true
 
 export SMOKES_REPO="${SMOKES_REPO:-https://github.com/cloudfoundry/cf-smoke-tests}"
 
@@ -25,19 +26,21 @@ Will create this pod (if you see empty values, make sure you defined all the nee
 ${pod_definition}
 EOF
 
-kubectl apply -n scf -f <(echo "${pod_definition}")
+kubectl apply -n catapult -f <(echo "${pod_definition}")
 
 container_status() {
-    kubectl get --output=json -n scf pod "$1" \
+    kubectl get --output=json -n catapult pod "$1" \
         | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
 }
 
+bash ../scripts/wait_ns.sh catapult
 while [[ -z $(container_status "smokes") ]]; do
-    kubectl attach -n scf "smokes" ||:
+    kubectl attach -n catapult "smokes" ||:
 done
 
+set +e
 mkdir -p artifacts
-kubectl logs -f smokes -n scf > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_smokes.log
+kubectl logs -f smokes -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_smokes.log
 status="$(container_status "smokes")"
-kubectl delete pod -n scf smokes
+kubectl delete pod -n catapult smokes
 exit "$status"
