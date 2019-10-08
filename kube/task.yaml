@@ -13,5 +13,10 @@ spec:
       command: ["/bin/bash"]
       imagePullPolicy: Always
       args: ["-c", "while true; do sleep 50000;done"]
-
-      
+      volumeMounts:
+        - name: dockersock
+          mountPath: "/var/run/docker.sock"
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
