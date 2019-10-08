@@ -53,20 +53,8 @@ spec:
             # https://github.com/cloudfoundry/libbuildpack/pull/24/files
             export CF_STACK_DOCKER_IMAGE=registry.opensuse.org/cloud/platform/stack/rootfs/images/sle15:latest
 
-            # Mount cgroups to be able to call docker in docker
-            echo "Setup CGroups"
-            source $SCRIPT_DIR/helpers.sh
-            permit_device_control
-
-            echo "Starting docker daemon"
-            # Start docker daemon and wait until it's up
-            dockerd &> /dev/null &
-            sleep 10 # Give dockerd enough time to start
-            docker version
-            echo "Docker is up and running!"
-
             # Do not fail on integration tests at the moment
-            scripts/${BRATS_TEST_SUITE}.sh 2>&1 | tee ../mail-output/body-failed.txt
+            scripts/${BRATS_TEST_SUITE}.sh 2>&1
           fi
       env:
       - name: BRATS_CF_HOST
@@ -99,3 +87,10 @@ spec:
         value: "<%= ENV["PROXY_HOST"] %>"
       - name: CF_STACK
         value: "<%= ENV["CF_STACK"] %>"
+      volumeMounts:
+        - name: dockersock
+          mountPath: "/var/run/docker.sock"
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
