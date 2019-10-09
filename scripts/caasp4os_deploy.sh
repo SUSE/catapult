@@ -70,7 +70,7 @@ escapeSubst() {
 SSHKEY="$(ssh-add -L | head -n 1)"
 CAASP_PATTERN='patterns-caasp-Node-1.15'
 sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
-    -e "s%#~placeholder_magic_dns~#%$(escapeSubst "$DOMAIN")%g" \
+    -e "s%#~placeholder_magic_dns~#%$(escapeSubst "$MAGICDNS")%g" \
     -e "s%#~placeholder_caasp_repo~#%$(escapeSubst "$CAASP_REPO")%g" \
     -e "s%#~placeholder_sshkey~#%$(escapeSubst "$SSHKEY")%g" \
     -e "s%#~placeholder_caasp_pattern~#%$(escapeSubst "$CAASP_PATTERN")%g" \
