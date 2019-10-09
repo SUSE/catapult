@@ -7,11 +7,11 @@ if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
 fi
 
 export CLUSTER_NAME=${CLUSTER_NAME:-kind}
-export BUILD_DIR=build${CLUSTER_NAME}
 export ROOT_DIR="$(git rev-parse --show-toplevel)"
+export BUILD_DIR="$ROOT_DIR"/build${CLUSTER_NAME}
 
 # Forces our build context
-[ -d "$ROOT_DIR"/"$BUILD_DIR" ] && pushd "$ROOT_DIR"/"$BUILD_DIR"
+[ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
 
 export CHART_URL="${CHART_URL:-}"
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
