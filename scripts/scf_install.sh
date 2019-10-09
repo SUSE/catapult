@@ -8,8 +8,6 @@ set -ex
 # save CHART_URL on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$CHART_URL'"'
 
-export OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-https://s3.amazonaws.com/cf-operators/release/helm-charts/cf-operator-v0.4.0%2B1.g3d277af0.tgz}"
-
 if [[ $ENABLE_EIRINI == true ]] ; then
     [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm ls 2>/dev/null | grep -qi metrics-server ; then
@@ -37,12 +35,18 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
 
 elif [ "${SCF_OPERATOR}" == "true" ]; then
 
+    if [ -z "$OPERATOR_CHART_URL" ]; then
+        echo "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
+        OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
+    fi
+
     domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
     # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
     kubectl create namespace scf
     kubectl create secret generic -n scf scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
 
+    echo "Install cf-operator from $OPERATOR_CHART_URL"
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \
