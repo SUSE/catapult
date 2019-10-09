@@ -9,10 +9,6 @@ DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data[
 
 [ ! -d "cf-smoke-tests" ] && git clone https://github.com/cloudfoundry/cf-smoke-tests
 
-if [ "${SCF_OPERATOR}" == "true" ]; then
-    CLUSTER_PASSWORD=$(kubectl get secret -n scf scf.var-cf-admin-password -o json | jq -r .data.password | base64 -d)
-fi
-
 pushd cf-smoke-tests
 cat > config.json <<EOF
 {

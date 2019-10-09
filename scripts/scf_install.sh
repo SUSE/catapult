@@ -39,6 +39,10 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
 
     domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
+    # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
+    kubectl create namespace scf
+    kubectl create secret generic -n scf scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
+
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \

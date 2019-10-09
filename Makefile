@@ -141,6 +141,9 @@ build-scf-from-source:
 scf-klog:
 	scripts/scf_klog.sh
 
+.PHONY: deploy-scf
+deploy-scf: chart gen-config scf
+
 # stratos-only targets:
 
 .PHONY: stratos
