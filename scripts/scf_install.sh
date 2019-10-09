@@ -55,10 +55,9 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     helm upgrade scf ${SCF_CHART} \
     --install \
     --namespace scf \
-    --set "system_domain=$domain" --set "features.eirini=${ENABLE_EIRINI}"
+    --values scf-config-values.yaml
 
     sleep 900
-
 else
 
     helm install helm/cf --name susecf-scf --namespace scf \

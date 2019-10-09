@@ -50,6 +50,21 @@ END_HEREDOC
 
 fi
 
+if [ "${SCF_OPERATOR}" == "true" ]; then
+
+cat > scf-config-values.yaml <<EOF
+system_domain: $domain
+
+features:
+  eirini: ${ENABLE_EIRINI}
+
+service:
+  type: LoadBalancer
+  externalIPs: [${external_ips}]
+EOF
+
+else
+
 cat > scf-config-values.yaml <<EOF
 env:
   # Enter the domain you created for your CAP cluster
@@ -175,3 +190,4 @@ secrets:
   UAA_ADMIN_CLIENT_SECRET: ${CLUSTER_PASSWORD}
 EOF
 
+fi
