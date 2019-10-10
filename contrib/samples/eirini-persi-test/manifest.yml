@@ -1,0 +1,7 @@
+applications:
+  - name: persitest
+    stack: cflinuxfs3
+    command: ./persi-test
+    buildpack: binary_buildpack
+    memory: 20M
+    disk_quota: 20M
