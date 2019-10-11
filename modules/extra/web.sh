@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+. ../../include/common.sh
+
 echo "Building wtty image"
 pushd "$ROOT_DIR"/kube/catapult-wtty
     docker build -t catapult-wtty .

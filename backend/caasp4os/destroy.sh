@@ -8,7 +8,7 @@
 # - Key on the ssh keyring
 
 . "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 set -exuo pipefail

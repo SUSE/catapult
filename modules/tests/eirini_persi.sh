@@ -2,7 +2,7 @@
 
 set -ex
 
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 # Don't touch original copy

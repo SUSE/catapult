@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-. scripts/include/common.sh
+. ../../include/common.sh
 . .envrc
 
 # From: https://github.com/windmilleng/kind-local
@@ -40,5 +40,5 @@ done
 set -ex
 kubectl apply -f "$ROOT_DIR"/kube/registry.yaml
 sleep 10
-bash "$ROOT_DIR"/scripts/include/wait_ns.sh container-registry
+bash "$ROOT_DIR"/include/wait_ns.sh container-registry
 kubectl port-forward -n container-registry service/registry 32001:5000

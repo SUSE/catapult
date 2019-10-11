@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 set -euo pipefail

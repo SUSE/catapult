@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-. ../include/common.sh
+
+. ../../include/common.sh
 . .envrc
 
 set -Eeuxo pipefail

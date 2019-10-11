@@ -3,7 +3,7 @@
 # duplicated in s/include/common.sh, needed for bootstrapping:
 export CLUSTER_NAME=${CLUSTER_NAME:-minikube}
 
-. ../include/common.sh
+. ../../include/common.sh
 
 set -Eeuxo pipefail
 

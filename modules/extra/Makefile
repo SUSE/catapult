@@ -28,3 +28,7 @@ ingress:
 .PHONY: ingress-forward
 ingress-forward:
 	./ingress_forward.sh
+
+.PHONY: registry
+ingress-forward:
+	./registry.sh

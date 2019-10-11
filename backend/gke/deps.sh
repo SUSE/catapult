@@ -2,7 +2,7 @@
 
 set -exo pipefail
 
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 set -u

@@ -7,7 +7,7 @@ if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
 fi
 
 export CLUSTER_NAME=${CLUSTER_NAME:-kind}
-export ROOT_DIR="$(git rev-parse --show-toplevel)"
+#export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export BUILD_DIR="$ROOT_DIR"/build${CLUSTER_NAME}
 
 # Forces our build context

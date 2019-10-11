@@ -2,7 +2,7 @@
 
 set -ex
 
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 helm repo add suse https://kubernetes-charts.suse.com/
@@ -12,4 +12,4 @@ helm install suse/console \
     --namespace stratos \
     --values scf-config-values.yaml
 
-bash "$ROOT_DIR"/scripts/include/wait_ns.sh stratos
+bash "$ROOT_DIR"/include/wait_ns.sh stratos

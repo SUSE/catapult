@@ -5,7 +5,7 @@ set -x
 
 if [ -d "$BUILD_DIR" ]; then
       . .envrc
-      kind delete cluster --name="${CLUSTER_NAME}"
+      curl -X DELETE http://$EKCP_HOST/${CLUSTER_NAME}
       popd
       rm -rf "$BUILD_DIR"
 fi

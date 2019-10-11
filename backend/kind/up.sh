@@ -1,6 +1,7 @@
 #!/bin/bash
 set -x
-. ../include/common.sh
+
+. ../../include/common.sh
 . .envrc
 
 set -Eexo pipefail
@@ -22,8 +23,4 @@ extraMounts:
   # readOnly: true
 EOF
 
-if [ -n "$EKCP_HOST" ]; then
-    curl -d "name=${CLUSTER_NAME}" -X POST http://$EKCP_HOST/new
-else
-    kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
-fi
+kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}

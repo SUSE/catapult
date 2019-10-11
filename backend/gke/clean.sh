@@ -3,7 +3,7 @@
 # Requires:
 # - gcloud credentials present
 
-. ../include/common.sh
+. ../../include/common.sh
 
 set -exuo pipefail
 

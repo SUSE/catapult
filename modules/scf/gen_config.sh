@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 if [ -z "${DEFAULT_STACK}" ]; then

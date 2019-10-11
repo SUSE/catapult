@@ -4,24 +4,28 @@
 clean:
 	./clean.sh
 
-.PHONY: deps-kind
-deps-kind:
+.PHONY: deps
+deps:
 	./deps.sh
 
-.PHONY: up-kind
-up-kind:
+.PHONY: up
+up:
 	./up.sh
 
-.PHONY: kubeconfig-kind
-kubeconfig-kind:
+.PHONY: kubeconfig
+kubeconfig:
 	./kubeconfig.sh
 
-.PHONY: prepare-kind
-prepare-kind:
+.PHONY: docker-kubeconfig
+docker-kubeconfig:
+	./docker_kubeconfig.sh
+
+.PHONY: prepare
+prepare:
 	./prepare.sh
 
 .PHONY: all
-all: deps-kind up-kind kubeconfig-kind prepare-kind
+all: deps up kubeconfig prepare
 
 # one-offs:
 
@@ -29,14 +33,14 @@ all: deps-kind up-kind kubeconfig-kind prepare-kind
 up-if-not-exists:
 	./up_if_not_exists.sh
 
-.PHONY: start-kind
-start-kind:
+.PHONY: start
+start:
 	./start.sh
 
 .PHONY: stop
 stop-kind:
 	./stop.sh
 
-.PHONY: restart-kind
-restart-kind:
+.PHONY: restart
+restart:
 	./restart.sh

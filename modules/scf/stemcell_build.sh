@@ -2,7 +2,8 @@
 
 set -ex
 
-. scripts/include/common.sh
+. ../../include/common.sh
+. .envrc
 
 [ ! -d "bosh-linux-stemcell-builder" ] && \
     git clone https://github.com/SUSE/bosh-linux-stemcell-builder.git

@@ -2,7 +2,7 @@
 
 set -ex
 
-. ../include/common.sh
+. ../../include/common.sh
 
 [ ! -d "scf" ] && git clone --recurse-submodules "$SCF_REPO"
 pushd scf

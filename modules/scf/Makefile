@@ -48,3 +48,7 @@ build-scf-from-source:
 .PHONY: scf-klog
 scf-klog:
 	./klog.sh
+
+.PHONY: stemcell_build
+stemcell_build:
+	./stemcell_build.sh

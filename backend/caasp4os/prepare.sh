@@ -8,7 +8,7 @@
 # kubectl & helm binaries
 
 . "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
-. ../include/common.sh
+. ../../include/common.sh
 
 set -exuo pipefail
 . .envrc

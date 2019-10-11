@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-. ../include/common.sh
+
+. ../../include/common.sh
 
 set -Eeuxo pipefail
 
