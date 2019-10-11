@@ -25,10 +25,6 @@ all: clean chart gen-config install login
 
 ## one-offs:
 
-.PHONY: restart
-restart:
-	./restart.sh
-
 .PHONY: scf-precheck
 scf-precheck:
 	./precheck.sh

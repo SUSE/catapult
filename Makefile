@@ -149,6 +149,10 @@ scf-clean:
 scf:
 	make -C modules/scf
 
+.PHONY: scf-login
+scf-login:
+	make -C modules/scf login
+
 .PHONY: scf-gen-config
 scf-gen-config:
 	make -C modules/scf gen-config
