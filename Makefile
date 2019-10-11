@@ -1,206 +1,39 @@
+export BACKEND?=kind
+export ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+.DEFAULT_GOAL := all
+
+# Defaults non-existing make targets to the backend
+.DEFAULT:
+	make -C backend/$(BACKEND) "$@"
+
+private:
+	make -C $(filter-out $@, $(MAKECMDGOALS))
+
 .PHONY: buildir
 buildir:
 	scripts/buildir.sh
 
-# catapult-only targets:
-
-.PHONY: catapult-test
-catapult-test:
-	scripts/tests_catapult.sh
-
-.PHONY: catapult-web
-catapult-web:
-	scripts/web.sh
-
-# kind-only targets:
-
-.PHONY: deps-kind
-deps-kind: buildir
-	scripts/kind_tools.sh
-
+# General targets (Public)
 .PHONY: clean
 clean:
-	scripts/kind_clean.sh
-
-.PHONY: up
-up:
-	scripts/kind_up.sh
-
-.PHONY: up_if_not_exists
-up-if-not-exists:
-	scripts/kind_up_if_not_exists.sh
-
-.PHONY: start
-start:
-	scripts/kind_start.sh
-
-.PHONY: stop
-stop:
-	scripts/kind_stop.sh
-
-.PHONY: setup
-setup:
-	scripts/kind_setup.sh
-
-# gke-only targets:
-
-.PHONY: deps-gke
-deps-gke: buildir
-	scripts/gke_deps.sh
-
-.PHONY: clean-gke
-clean-gke:
-	scripts/gke_clean.sh
-
-.PHONY: deploy-gke
-deploy-gke:
-	scripts/gke_deploy.sh
-
-.PHONY: gke
-gke: clean-gke buildir deps-gke deploy-gke
-
-# minikube-only targets:
-
-.PHONY: deps-minikube
-deps-minikube: buildir
-	scripts/minikube_deps.sh
-
-.PHONY: clean-minikube
-clean-minikube:
-	scripts/minikube_clean.sh
-
-.PHONY: up-minikube
-up-minikube:
-	scripts/minikube_up.sh
-
-.PHONY: start-minikube
-start-minikube:
-	scripts/minikube_start.sh
-
-.PHONY: stop-minikube
-stop-minikube:
-	scripts/minikube_stop.sh
-
-.PHONY: prepare-minikube
-prepare-minikube:
-	scripts/minikube_prepare.sh
-
-.PHONY: minikube
-minikube: clean-minikube deps-minikube up-minikube prepare-minikube
-
-.PHONY: task
-task:
-	scripts/task.sh
-
-.PHONY: terminal
-terminal:
-	scripts/terminal.sh
-# scf-only targets:
-
-.PHONY: restart
-restart:
-	scripts/restart.sh
-
-.PHONY: scf-precheck
-scf-precheck:
-	scripts/scf_precheck.sh
-
-.PHONY: gen-config
-gen-config:
-	scripts/scf_gen_config.sh
-
-.PHONY: chart
-chart:
-	scripts/scf_chart.sh
-
-.PHONY: scf
-scf:
-	scripts/scf_install.sh
-
-.PHONY: scf-brats-setup
-scf-brats-setup:
-	scripts/scf_brats_setup.sh
-
-.PHONY: login
-login:
-	scripts/scf_login.sh
-
-.PHONY: upgrade
-upgrade:
-	scripts/scf_upgrade.sh
-
-.PHONY: clean-scf
-clean-scf:
-	scripts/scf_clean.sh
-
-.PHONY: build-scf-from-source
-build-scf-from-source:
-	scripts/scf_build.sh
-
-.PHONY: scf-klog
-scf-klog:
-	scripts/scf_klog.sh
-
-.PHONY: deploy-scf
-deploy-scf: chart gen-config scf
-
-# stratos-only targets:
-
-.PHONY: stratos
-stratos:
-	scripts/stratos.sh
-
-.PHONY: clean-stratos
-clean-stratos:
-	scripts/stratos_clean.sh
-
-# test-only targets:
-
-.PHONY: smoke
-smoke:
-	scripts/tests_smoke.sh
-
-.PHONY: smoke-kube
-smoke-kube:
-	scripts/tests_kubesmokes.sh
-
-.PHONY: kubecats
-kubecats:
-	scripts/tests_kubecats.sh
-
-.PHONY: brats
-brats:
-	scripts/tests_brats.sh
-
-.PHONY: test-eirini-persi
-test-eirini-persi:
-	scripts/tests_eirini_persi.sh
-
-.PHONY: smoke-scf
-smoke-scf:
-	scripts/tests_smoke_scf.sh
-
-.PHONY: cats
-cats:
-	scripts/tests_cats.sh
-
-# one-off targets:
-
-.PHONY: build-stemcell-from-source
-build-stemcell-from-source:
-	scripts/stemcell_build.sh
-
-.PHONY: docker-kubeconfig
-docker-kubeconfig:
-	scripts/docker_kubeconfig.sh
-
-.PHONY:image
-image:
-	scripts/image.sh
+	make -C backend/$(BACKEND) clean
 
 .PHONY: kubeconfig
 kubeconfig:
-	scripts/kubeconfig.sh
+	make -C backend/$(BACKEND) kubeconfig
+
+.PHONY: start
+start:
+	make -C backend/$(BACKEND) start
+
+.PHONY: stop
+stop:
+	make -C backend/$(BACKEND) stop
+
+.PHONY: restart
+restart:
+	make -C backend/$(BACKEND) restart
 
 .PHONY: recover
 recover: buildir kubeconfig
@@ -208,21 +41,184 @@ recover: buildir kubeconfig
 .PHONY: force-clean
 force-clean: buildir clean
 
-.PHONY:registry
-registry:
-	scripts/registry.sh
+.PHONY: all
+all: clean buildir
+	make -C backend/$(BACKEND)
+	make kubeconfig scf
 
-.PHONY:kwt
-kwt:
-	scripts/kwt.sh
+# platform-only targets:
+.PHONY: kind
+kind: clean buildir
+	make -C backend/kind
+	make kubeconfig
 
-.PHONY:kwt-connect
-kwt-connect:
-	scripts/kwt_connect.sh
+.PHONY: gke
+gke: clean buildir
+	make -C backend/gke
 
+.PHONY: minikube
+minikube: clean buildir
+	make -C backend/minikube
+.PHONY: all-minikube
+all-minikube: minikube scf
+
+.PHONY: all-caasp4os
+all-caasp4os: caasp4os scf
+
+.PHONY: all-gke
+all-gke: gke scf
+
+.PHONY: recover-or-kind
+recover-or-kind:
+	make -C backend/kind deps up-if-not-exists kubeconfig
+
+.PHONY: dind
+dind: kind 
+	make -C backend/kind docker-kubeconfig
+	make scf
+
+## caasp-only targets:
+
+.PHONY: caasp4os-clean
+caasp4os-clean:
+	make -C backend/caasp4os clean
+
+.PHONY: caasp4os
+caasp4os: caasp4os-clean buildir
+	make -C backend/caasp4os
+
+# catapult-only targets:
+
+.PHONY: catapult-test
+catapult-test:
+	make -C tests
+
+.PHONY: catapult-image
+catapult-image:
+	scripts/image.sh
+
+# TODO: Remove 'image', keep for legacy
+.PHONY:image
+image: catapult-image
+
+# extra targets:
+.PHONY: module-extra-ingress
+module-extra-ingress:
+	make -C modules/extra ingress
+
+.PHONY: module-extra-ingress-forward
+module-extra-ingress-forward:
+	make -C modules/extra ingress-forward
+
+.PHONY: module-extra-kwt
+module-extra-kwt:
+	make -C modules/extra kwt
+
+.PHONY: module-extra-kwt-connect
+module-extra-kwt-connect:
+	make -C modules/extra kwt-connect
+
+.PHONY: module-extra-task
+module-extra-task:
+	make -C modules/extra task
+
+.PHONY: module-extra-terminal
+module-extra-terminal:
+	make -C modules/extra terminal
+
+.PHONY: module-extra-catapult-web
+module-extra-catapult-web:
+	make -C modules/extra catapult-web
+
+.PHONY: module-extra-registry
+module-extra-registry:
+	make -C modules/extra registry
+
+## Experimental
+.PHONY: module-experimental-eirinifs
+module-experimental-eirinifs:
+	make -C modules/experimental eirinifs
+
+.PHONY: module-experimental-eirini_release
+module-experimental-eirini_release:
+	make -C modules/experimental eirini_release
+
+# scf-only targets:
+.PHONY: scf-clean
+scf-clean:
+	make -C modules/scf clean
+
+.PHONY: scf
+scf:
+	make -C modules/scf
+
+.PHONY: scf-login
+scf-login:
+	make -C modules/scf login
+
+.PHONY: scf-gen-config
+scf-gen-config:
+	make -C modules/scf gen-config
+
+.PHONY: scf-upgrade
+scf-upgrade:
+	make -C modules/scf upgrade
+
+.PHONY: scf-chart
+scf-chart:
+	make -C modules/scf chart
+
+.PHONY: scf-build
+scf-build:
+	make -C modules/scf build-scf-from-source
+
+.PHONY: scf-build-stemcell
+scf-build-stemcell:
+	make -C modules/scf stemcell_build
+
+# stratos-only targets:
+.PHONY: stratos
+stratos:
+	make -C modules/stratos
+
+.PHONY: stratos-clean
+stratos-clean:
+	make -C modules/stratos clean
+
+# test-only targets:
+.PHONY: tests
+tests:
+	make -C modules/tests
+
+.PHONY: tests-smoke
+tests-smoke:
+	make -C modules/tests smoke
+
+.PHONY: tests-smoke-kube
+tests-smoke-kube:
+	make -C modules/tests smoke-kube
+
+.PHONY: tests-kubecats
+tests-kubecats:
+	make -C modules/tests kubecats
+
+.PHONY: tests-brats
+tests-brats:
+	make -C modules/tests brats
+
+.PHONY: tests-eirini-persi
+tests-eirini-persi:
+	make -C modules/tests test-eirini-persi
+
+.PHONY: tests-smoke-scf
+tests-smoke-scf:
+	make -C modules/tests smoke-scf
+
+.PHONY: tests-cats
+tests-cats:
+	make -C modules/tests cats
 
 # Samples and fixtures
-
 .PHONY: sample
 sample:
 	scripts/sample.sh
@@ -230,64 +226,3 @@ sample:
 .PHONY: sample-ticking
 sample-ticking:
 	scripts/sample-ticking.sh
-
-# eirini-only targets:
-
-.PHONY:eirinifs
-eirinifs:
-	scripts/eirinifs.sh
-
-.PHONY: eirini-release
-eirini-release:
-	scripts/eirini_release.sh
-
-# ingress-only targets:
-
-.PHONY: ingress
-ingress:
-	scripts/ingress.sh
-
-.PHONY: ingress-forward
-ingress-forward:
-	scripts/ingress_forward.sh
-
-# caasp-only targets:
-
-.PHONY: deps-caasp4os
-deps-caasp4os: buildir
-	scripts/docker_skuba.sh
-
-.PHONY: caasp4os-deploy
-caasp4os-deploy:
-	scripts/caasp4os_deploy.sh
-
-.PHONY: caasp-prepare
-caasp-prepare:
-	scripts/caasp_prepare.sh
-
-.PHONY: clean-caasp4os
-clean-caasp4os:
-	scripts/caasp4os_destroy.sh
-
-# full targets:
-
-.PHONY: kind
-kind: clean deps-kind up kubeconfig
-
-.PHONY: recover-or-kind
-recover-or-kind: deps-kind up-if-not-exists kubeconfig
-
-.PHONY: all
-all: kind setup chart gen-config scf login
-
-.PHONY: dind
-dind: kind docker-kubeconfig setup chart gen-config scf login
-
-.PHONY: all-minikube
-all-minikube: minikube chart gen-config scf login
-
-.PHONY: all-caasp4os
-all-caasp4os: deps-caasp4os caasp4os-deploy caasp-prepare chart gen-config scf login
-
-.PHONY: all-gke
-all-gke: gke chart gen-config scf terminal

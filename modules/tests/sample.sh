@@ -2,17 +2,14 @@
 
 set -ex
 
-. ../include/common.sh
+. ../../include/common.sh
 . .envrc
 
 SAMPLE_APP_REPO="${SAMPLE_APP_REPO:-https://github.com/cloudfoundry-samples/cf-sample-app-nodejs}"
 
-# Don't touch original copy
-cp -rfv ../contrib/samples/ticking_app ./
+[ ! -d "sample" ] && git clone --recurse-submodules "$SAMPLE_APP_REPO" sample
 
-pushd ticking_app
-
-go build -o log_producing_app main.go
+pushd sample
 
 if [ -n "$EKCP_PROXY" ]; then
     export https_proxy=socks5://127.0.0.1:${KUBEPROXY_PORT}

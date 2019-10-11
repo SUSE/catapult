@@ -2,21 +2,24 @@
 set -x
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
-export CLUSTER_NAME=${CLUSTER_NAME:-kind}
-export BUILD_DIR=build${CLUSTER_NAME}
+. include/common.sh
 
 mkdir "$BUILD_DIR"
-
-. scripts/include/common.sh
+. include/common.sh # Reload, as we just created BUILD_DIR
 
 mkdir bin
+
 cat <<HEREDOC > .envrc
 export CLUSTER_NAME=${CLUSTER_NAME}
+export BACKEND=${BACKEND}
+HEREDOC
+
+cat <<'HEREDOC_LITERAL_APPEND' >> .envrc
 export KUBECONFIG="$(pwd)"/kubeconfig
 export HELM_HOME="$(pwd)"/.helm
 export CF_HOME="$(pwd)"
 export PATH="$PATH:$(pwd)"/bin
 export MINIKUBE_HOME="$(pwd)"/.minikube
-HEREDOC
+HEREDOC_LITERAL_APPEND
 
 popd

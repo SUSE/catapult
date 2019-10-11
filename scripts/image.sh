@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/include/versioning
+. ../include/versioning
 
 TAG=${TAG:-$ARTIFACT_VERSION}
 DOCKER_IMAGE=${DOCKER_IMAGE:-${DOCKER_ORG}catapult:${TAG}}
