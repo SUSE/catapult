@@ -224,7 +224,7 @@ tests-cats:
 # Samples and fixtures
 .PHONY: sample
 sample:
-	scripts/sample.sh
+	make -C modules/tests sample
 
 .PHONY: sample-ticking
 sample-ticking:

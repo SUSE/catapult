@@ -29,7 +29,7 @@ cats:
 	./cats.sh
 
 .PHONY: sample
-smoke:
+sample:
 	./sample.sh
 
 # test all the things!
