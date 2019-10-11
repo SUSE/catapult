@@ -12,9 +12,14 @@ up:
 kubeconfig:
 	./kubeconfig.sh
 
+
 .PHONY: prepare
 prepare:
-	make -C ../kind prepare
+	./prepare.sh
+
+#.PHONY: prepare
+#prepare:
+#	make -C ../kind prepare
 
 .PHONY: all
 all: up kubeconfig prepare

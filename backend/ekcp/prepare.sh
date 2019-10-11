@@ -123,13 +123,14 @@ kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
-container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
-container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
-domain="${container_ip}.nip.io"
+EKCP_DOMAIN="${EKCP_DOMAIN:-nip.io}"
+
+container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
+domain="${CLUSTER_NAME}.${container_ip}.${EKCP_DOMAIN}"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=public-ip="${container_ip}" \
             --from-literal=domain="$domain" \
-            --from-literal=platform="kind"
+            --from-literal=platform="ekcp"
 fi
