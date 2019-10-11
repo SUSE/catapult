@@ -30,5 +30,5 @@ ingress-forward:
 	./ingress_forward.sh
 
 .PHONY: registry
-ingress-forward:
+registry:
 	./registry.sh

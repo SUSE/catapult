@@ -126,7 +126,7 @@ module-extra-terminal:
 
 .PHONY: module-extra-catapult-web
 module-extra-catapult-web:
-	make -C modules/extra catapult-web
+	make -C modules/extra web
 
 .PHONY: module-extra-registry
 module-extra-registry:
