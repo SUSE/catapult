@@ -5,6 +5,7 @@ ARG TTYD_OS_TYPE=linux.x86_64
 RUN wget https://github.com/tsl0922/ttyd/releases/download/$TTYD_VERSION/ttyd_$TTYD_OS_TYPE -O /usr/bin/ttyd
 RUN chmod +x /usr/bin/ttyd
 RUN zypper install -y tmux
+ENV BACKEND=ekcp
 
 EXPOSE 8080
 WORKDIR /catapult
