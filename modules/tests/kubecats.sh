@@ -34,7 +34,7 @@ container_status() {
         | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
 }
 
-bash ../scripts/wait_ns.sh catapult
+bash ../include/wait_ns.sh catapult
 while [[ -z $(container_status "cats") ]]; do
     kubectl attach -n catapult "cats" ||:
 done
