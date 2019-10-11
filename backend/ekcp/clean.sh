@@ -9,3 +9,7 @@ if [ -d "$BUILD_DIR" ]; then
       popd
       rm -rf "$BUILD_DIR"
 fi
+
+if [ -n "$FORCE_DELETE" ]; then
+      curl -X DELETE http://$EKCP_HOST/${CLUSTER_NAME}
+fi
