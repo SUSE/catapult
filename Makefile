@@ -173,7 +173,7 @@ scf-build:
 	make -C modules/scf build-scf-from-source
 
 .PHONY: scf-build-stemcell
-scf-build:
+scf-build-stemcell:
 	make -C modules/scf stemcell_build
 
 # stratos-only targets:
