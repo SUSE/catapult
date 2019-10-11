@@ -7,6 +7,9 @@ export ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 .DEFAULT:
 	make -C backend/$(BACKEND) "$@"
 
+private:
+	make -C $(filter-out $@, $(MAKECMDGOALS))
+
 .PHONY: buildir
 buildir:
 	scripts/buildir.sh
