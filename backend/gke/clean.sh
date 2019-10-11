@@ -8,7 +8,7 @@
 set -exuo pipefail
 
 
-if [ -d "$ROOT_DIR"/"$BUILD_DIR" ]; then
+if [ -d "$BUILD_DIR" ]; then
     . .envrc
 
     pushd cap-terraform/gke
