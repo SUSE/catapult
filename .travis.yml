@@ -18,4 +18,4 @@ env:
 
 script:
 - make catapult-test
-- make kind clean-scf && make -C scripts/scf chart gen-config clean
+- make kind scf-chart scf-gen-config clean
