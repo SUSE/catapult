@@ -1,5 +1,9 @@
 .DEFAULT_GOAL := all
 
+.PHONY: kubeconfig
+kubeconfig:
+	# No-op
+
 .PHONY: clean
 clean:
 	./clean.sh
