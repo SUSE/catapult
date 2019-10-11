@@ -21,7 +21,7 @@ login:
 	./login.sh
 
 .PHONY: all
-all: clean chart gen-config install login
+all: clean chart gen-config install
 
 ## one-offs:
 

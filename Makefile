@@ -42,9 +42,7 @@ recover: buildir kubeconfig
 force-clean: buildir clean
 
 .PHONY: all
-all: clean buildir
-	make -C backend/$(BACKEND)
-	make kubeconfig scf
+all: scf-deploy scf-login
 
 # platform-only targets:
 .PHONY: kind
@@ -144,6 +142,11 @@ module-experimental-eirini_release:
 	make -C modules/experimental eirini_release
 
 # scf-only targets:
+.PHONY: scf-deploy
+scf-deploy: clean buildir
+	make -C backend/$(BACKEND)
+	make kubeconfig scf
+
 .PHONY: scf-clean
 scf-clean:
 	make -C modules/scf clean
