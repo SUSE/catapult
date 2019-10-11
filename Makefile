@@ -71,8 +71,8 @@ recover-or-kind:
 	make -C backend/kind deps up-if-not-exists kubeconfig
 
 .PHONY: dind
-dind: kind 
-	make -C backend/kind docker-kubeconfig
+dind: clean buildir
+	make -C backend/kind deps up kubeconfig docker-kubeconfig prepare
 	make scf
 
 ## caasp-only targets:
