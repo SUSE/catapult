@@ -21,4 +21,4 @@ clean:
 	./clean.sh
 
 .PHONY: all
-all: clean deps-eks eks-deploy eks-prepare
+all: deps-eks eks-deploy eks-prepare
