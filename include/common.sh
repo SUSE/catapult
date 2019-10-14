@@ -32,3 +32,8 @@ export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
 export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha2}"
 export KUBEPROXY_PORT="${KUBEPROXY_PORT:-2224}"
+export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
+
+source $ROOT_DIR/include/func.sh
+
+info "Loading"

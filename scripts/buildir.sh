@@ -4,11 +4,13 @@ set -x
 # duplicated in s/include/common.sh, needed for bootstrapping:
 . include/common.sh
 
+info "Creating $BUILD_DIR"
 mkdir "$BUILD_DIR"
 . include/common.sh # Reload, as we just created BUILD_DIR
 
 mkdir bin
 
+info "Generating .envrc"
 cat <<HEREDOC > .envrc
 export CLUSTER_NAME=${CLUSTER_NAME}
 export BACKEND=${BACKEND}

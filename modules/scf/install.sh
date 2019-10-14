@@ -36,7 +36,7 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
 elif [ "${SCF_OPERATOR}" == "true" ]; then
 
     if [ -z "$OPERATOR_CHART_URL" ]; then
-        echo "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
+        info "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
         OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
     fi
 
@@ -46,7 +46,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     kubectl create namespace scf
     kubectl create secret generic -n scf scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
 
-    echo "Install cf-operator from $OPERATOR_CHART_URL"
+    info "Install cf-operator from $OPERATOR_CHART_URL"
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \
@@ -65,7 +65,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     --namespace scf \
     --values scf-config-values.yaml
 
-    sleep 900
+    sleep 540
 else
 
     helm install helm/cf --name susecf-scf --namespace scf \
