@@ -13,7 +13,7 @@ bash "$ROOT_DIR"/include/wait_ns.sh catapult
 kubectl cp "$ROOT_DIR"/build$CLUSTER_NAME catapult/task:/catapult/
 kubectl cp "$TASK_SCRIPT" catapult/task:/catapult/build$CLUSTER_NAME/
 
-kubectl exec -ti -n catapult task -- bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir scf-login"
+kubectl exec -ti -n catapult task -- bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir scf-login" || true
 
 
 echo
