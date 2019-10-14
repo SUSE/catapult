@@ -65,7 +65,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     --namespace scf \
     --values scf-config-values.yaml
 
-    sleep 360
+    sleep 540
 else
 
     helm install helm/cf --name susecf-scf --namespace scf \
