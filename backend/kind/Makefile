@@ -38,7 +38,7 @@ start:
 	./start.sh
 
 .PHONY: stop
-stop-kind:
+stop:
 	./stop.sh
 
 .PHONY: restart
