@@ -41,16 +41,6 @@ terraform apply -auto-approve
 # or:
 terraform output kubeconfig > "$KUBECONFIG"
 
-# make worker nodes join:
-terraform output config_map_aws_auth > eks_cm.yaml
-kubectl apply -f eks_cm.yaml
-
-# wait for workers:
-while kubectl get nodes | grep "notReady" > /dev/null;
-do
-    sleep 10
-done
-
 # test deployment:
 kubectl get svc
 
