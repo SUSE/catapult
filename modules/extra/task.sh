@@ -16,11 +16,11 @@ kubectl cp "$TASK_SCRIPT" catapult/task:/catapult/build$CLUSTER_NAME/
 kubectl exec -ti -n catapult task -- bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir scf-login" || true
 
 
-echo
-echo "@@@@@@@@@@@@@@"
-echo "Running $TASK_SCRIPT in /catapult/build$CLUSTER_NAME inside the task pod (in catapult namespace)"
-echo "@@@@@@@@@@@@@@"
-echo
+info
+info "@@@@@@@@@@@@@@"
+info "Running $TASK_SCRIPT in /catapult/build$CLUSTER_NAME inside the task pod (in catapult namespace)"
+info "@@@@@@@@@@@@@@"
+info
 
 kubectl exec -ti task -n catapult -- /bin/bash -l -c "pushd build$CLUSTER_NAME && source .envrc && popd && /catapult/build$CLUSTER_NAME/$(basename $TASK_SCRIPT)"
 status=$?

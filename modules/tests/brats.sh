@@ -9,11 +9,11 @@ DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data[
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')
 
-echo
-echo "@@@@@@@@@"
-echo "Running BRATs on deployed chart $DEPLOYED_CHART"
-echo "@@@@@@@@@"
-echo
+info
+info "@@@@@@@@@"
+info "Running BRATs on deployed chart $DEPLOYED_CHART"
+info "@@@@@@@@@"
+info
 
 kubectl create namespace catapult || true
 kubectl delete pod brats -n catapult || true

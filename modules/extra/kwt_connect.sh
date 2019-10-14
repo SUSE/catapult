@@ -14,10 +14,10 @@ domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data[
 : ${API_IP:=$(kubectl get svc -n ${CF_NAMESPACE} router-gorouter-public --template '{{.spec.clusterIP}}')}
 export API_IP
 
-echo "Mapping *.${domain} to internal IP ${API_IP}..."
-echo
-echo "Login in another terminal with:"
-echo "[..] make login "
-echo
+info "Mapping *.${domain} to internal IP ${API_IP}..."
+info
+info "Login in another terminal with:"
+info "[..] make login "
+info
 
 sudo -E bin/kwt net start --dns-map ${domain}=${API_IP} --namespace scf

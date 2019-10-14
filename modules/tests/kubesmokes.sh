@@ -8,11 +8,11 @@ set -euo pipefail
 export DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')
 
-echo
-echo "@@@@@@@@@"
-echo "Running Smoke tests on deployed chart $DEPLOYED_CHART"
-echo "@@@@@@@@@"
-echo
+info
+info "@@@@@@@@@"
+info "Running Smoke tests on deployed chart $DEPLOYED_CHART"
+info "@@@@@@@@@"
+info
 
 kubectl create namespace catapult || true
 kubectl delete pod smokes -n catapult || true

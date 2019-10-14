@@ -89,10 +89,11 @@ EOF
 kubectl cp .zshrc catapult/task:/root/
 rm -rf .zshrc
 
-echo
-echo "@@@@@@@@@@@@@@"
-echo "Executing into the persistent pod"
-echo "@@@@@@@@@@@@@@"
-echo
+ok "Generation completed"
+info
+info "@@@@@@@@@@@@@@"
+info "Executing into the persistent pod"
+info "@@@@@@@@@@@@@@"
+info
 
 exec kubectl exec -ti task -n catapult -- /bin/zsh
