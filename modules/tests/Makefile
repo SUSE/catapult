@@ -32,6 +32,10 @@ cats:
 sample:
 	./sample.sh
 
+.PHONY: sample-ticking
+sample-ticking:
+	./sample-ticking.sh
+
 # test all the things!
 .PHONY: all
 # Enable only reliable ones:

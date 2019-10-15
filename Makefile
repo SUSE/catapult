@@ -228,4 +228,4 @@ sample:
 
 .PHONY: sample-ticking
 sample-ticking:
-	scripts/sample-ticking.sh
+	make -C modules/tests sample-ticking
