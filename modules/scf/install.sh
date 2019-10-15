@@ -2,10 +2,10 @@
 
 set -e
 
-debug_mode
-
 . ../../include/common.sh
 . .envrc
+
+debug_mode
 
 # save CHART_URL on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$CHART_URL'"'
