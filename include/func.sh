@@ -148,7 +148,7 @@ function err {
 }
 
 function debug_mode {
-    if [ -n "${DEBUG}" ] && [ "$DEBUG" == true ]; then
+    if [ -n "${DEBUG_MODE}" ] && [ "$DEBUG_MODE" == true ]; then
         set -x
     else
         set +x
