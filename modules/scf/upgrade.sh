@@ -1,9 +1,11 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc
+
+debug_mode
 
 if [ -n "$CHART_URL" ]; then
 # save CHART_URL on cap-values configmap
@@ -20,3 +22,5 @@ helm upgrade --recreate-pods susecf-scf helm/cf/ --values scf-config-values.yaml
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
 bash "$ROOT_DIR"/include/wait_ns.sh scf
+
+ok "SCF deployment upgraded successfully"

@@ -1,9 +1,11 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc
+
+debug_mode
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
@@ -83,3 +85,5 @@ fi
 cf create-security-group nginx_proxy securitygroup.json
 cf bind-running-security-group nginx_proxy
 cf bind-staging-security-group nginx_proxy
+
+ok "Configuration for BRATS finished"

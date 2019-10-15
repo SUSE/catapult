@@ -5,6 +5,8 @@
 
 set -euo pipefail
 
+debug_mode
+
 kubectl create namespace catapult || true
 kubectl create -f "$ROOT_DIR"/kube/task.yaml || true
 

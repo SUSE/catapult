@@ -1,5 +1,10 @@
 #!/bin/bash
 
+export DEBUG="${DEBUG:-false}"
+source $ROOT_DIR/include/func.sh
+
+debug_mode
+
 export VALUES_OVERRIDE="${VALUES_OVERRIDE:-}"
 OVERRIDE=
 if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
@@ -26,7 +31,6 @@ set +x
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
-set -x
 
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
@@ -34,6 +38,5 @@ export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha2}"
 export KUBEPROXY_PORT="${KUBEPROXY_PORT:-2224}"
 export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
 
-source $ROOT_DIR/include/func.sh
 
 info "Loading"

@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 . ../../include/common.sh
 
@@ -10,3 +9,5 @@ if [ -d "$BUILD_DIR" ]; then
       popd
       rm -rf "$BUILD_DIR"
 fi
+
+ok "Cleaned up '$CLUSTER_NAME' ($BUILD_DIR)"

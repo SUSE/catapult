@@ -1,6 +1,8 @@
 #!/bin/bash
-set -ex
+set -e
 
 . ../../include/common.sh
+
+debug_mode
 
 docker stop $CLUSTER_NAME-control-plane

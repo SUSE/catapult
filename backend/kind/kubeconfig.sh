@@ -5,3 +5,5 @@ set -ex
 . .envrc
 
 cp $(kind get kubeconfig-path --name="$CLUSTER_NAME") kubeconfig
+
+ok "Kubeconfig copied"

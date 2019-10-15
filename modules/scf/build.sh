@@ -1,8 +1,10 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 . ../../include/common.sh
+
+debug_mode
 
 [ ! -d "scf" ] && git clone --recurse-submodules "$SCF_REPO"
 pushd scf

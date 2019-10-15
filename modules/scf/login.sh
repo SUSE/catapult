@@ -1,8 +1,10 @@
 #!/bin/bash
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc
+
+debug_mode
 
 if [ -n "$EKCP_PROXY" ]; then
     export https_proxy=socks5://127.0.0.1:${KUBEPROXY_PORT}
@@ -14,3 +16,5 @@ mkdir -p "$CF_HOME"
 cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$CLUSTER_PASSWORD" -o system
 cf create-space tmp
 cf target -s tmp
+
+ok "Logged in to SCF"

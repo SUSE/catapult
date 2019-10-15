@@ -1,9 +1,12 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc
+
+debug_mode
+
 kubectl apply -f "$ROOT_DIR"/kube/socks.yaml
 
 sleep 5

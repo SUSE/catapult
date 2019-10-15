@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 . ../../include/common.sh
 . .envrc
@@ -133,3 +132,5 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=domain="$domain" \
             --from-literal=platform="kind"
 fi
+
+ok "Cluster prepared"

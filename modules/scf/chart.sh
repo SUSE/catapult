@@ -1,7 +1,9 @@
 #!/bin/bash
-set -ex
+set -e
 
 . ../../include/common.sh
+
+debug_mode
 
 if [ -z "$CHART_URL" ]; then
     warn "No chart url given - using latest public release from GH"
@@ -28,3 +30,5 @@ fi
 if  [ "${SCF_OPERATOR}" == "true" ]; then
     cp -rfv scf*/* ./
 fi
+
+ok "Chart uncompressed"

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -ex
+set -e
+
+debug_mode
 
 . ../../include/common.sh
 . .envrc
@@ -76,3 +78,5 @@ else
 fi
 
 bash "$ROOT_DIR"/include/wait_ns.sh scf
+
+ok "SCF deployed successfully"

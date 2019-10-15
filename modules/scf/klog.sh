@@ -3,7 +3,9 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuxo pipefail
+debug_mode
+
+set -Eeuo pipefail
 
 curl -Lo klog.sh "$SCF_REPO"/raw/"$SCF_BRANCH"/container-host-files/opt/scf/bin/klog.sh
 chmod +x klog.sh

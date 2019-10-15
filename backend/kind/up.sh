@@ -1,10 +1,11 @@
 #!/bin/bash
-set -x
 
 . ../../include/common.sh
 . .envrc
 
-set -Eexo pipefail
+set -Eeo pipefail
+
+debug_mode
 
 APPLICATION_PATH=$PWD
 type="Config"
@@ -24,3 +25,5 @@ extraMounts:
 EOF
 
 kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
+
+ok "Cluster is up"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc

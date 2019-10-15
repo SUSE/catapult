@@ -1,8 +1,10 @@
 #!/bin/bash
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc
+
+debug_mode
 
 # From: https://github.com/windmilleng/kind-local
 

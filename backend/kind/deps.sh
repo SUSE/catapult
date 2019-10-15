@@ -1,5 +1,6 @@
 #!/bin/bash
-set -x
+
+set -e
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
 export CLUSTER_NAME=${CLUSTER_NAME:-kind}
@@ -18,3 +19,5 @@ chmod +x kind
 mv kind bin/kind
 
 popd
+
+ok "Deps correctly downloaded"

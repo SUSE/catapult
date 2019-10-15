@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 . ../../include/common.sh
 . .envrc
@@ -9,3 +9,5 @@ export container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.
 
 # Tweaks the kubeconfig so it can be called from the docker container network (in case the cluster is created with dind)
 sed -i "s/localhost.*/${container_ip}:6443/" kubeconfig
+
+ok "Kubeconfig patched for in-docker connection"

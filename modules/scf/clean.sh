@@ -3,7 +3,9 @@
 . ../../include/common.sh
 . .envrc
 
-set -exuo pipefail
+set -euo pipefail
+
+debug_mode
 
 if [ "$EMBEDDED_UAA" != "true" ]; then
     if helm ls 2>/dev/null | grep -qi susecf-uaa ; then
@@ -34,3 +36,5 @@ rm -rf scf-config-values.yaml chart.zip helm kube "$CF_HOME"/.cf
 
 # delete CHART_URL on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "null"'
+
+ok "Cleaned up scf from the k8s cluster"
