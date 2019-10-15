@@ -48,31 +48,7 @@ force-clean: buildir clean
 .PHONY: all
 all: scf-deploy scf-login
 
-# platform-only targets:
-.PHONY: kind
-kind: clean buildir
-	make -C backend/kind
-	make kubeconfig
-
-.PHONY: gke
-gke: clean buildir
-	make -C backend/gke
-
-.PHONY: eks
-eks: clean buildir
-	make -C backend/eks
-
-.PHONY: minikube
-minikube: clean buildir
-	make -C backend/minikube
-.PHONY: all-minikube
-all-minikube: minikube scf
-
-.PHONY: all-caasp4os
-all-caasp4os: caasp4os scf
-
-.PHONY: all-gke
-all-gke: gke scf
+# kind targets:
 
 .PHONY: recover-or-kind
 recover-or-kind:
@@ -83,16 +59,6 @@ dind: clean buildir
 	make -C backend/kind deps up kubeconfig docker-kubeconfig prepare
 	make scf
 
-## caasp-only targets:
-
-.PHONY: caasp4os-clean
-caasp4os-clean:
-	make -C backend/caasp4os clean
-
-.PHONY: caasp4os
-caasp4os: caasp4os-clean buildir
-	make -C backend/caasp4os
-
 # catapult-only targets:
 
 .PHONY: catapult-test
@@ -102,10 +68,6 @@ catapult-test:
 .PHONY: catapult-image
 catapult-image:
 	scripts/image.sh
-
-# TODO: Remove 'image', keep for legacy
-.PHONY:image
-image: catapult-image
 
 # extra targets:
 .PHONY: module-extra-ingress
@@ -237,3 +199,72 @@ sample:
 .PHONY: sample-ticking
 sample-ticking:
 	make -C modules/tests sample-ticking
+
+# Deprecated targets:
+
+.PHONY: kind
+kind::
+	@echo 'This target is deprecated. Please use `make k8s` or `BACKEND=kind make k8s` instead'
+	@read -p 'Press any key to continue' any
+kind:: clean buildir
+	make -C backend/kind
+	make kubeconfig
+
+.PHONY: gke
+gke::
+	@echo 'This target is deprecated. Please use `BACKEND=gke make k8s` instead'
+	@read -p 'Press any key to continue' any
+gke:: clean buildir
+	make -C backend/gke
+
+.PHONY: eks
+eks::
+	@echo 'This target is deprecated. Please use "BACKEND=eks make k8s" instead'
+	@read -p 'Press any key to continue' any
+eks:: clean buildir
+	make -C backend/eks
+
+.PHONY: minikube
+minikube::
+	@echo 'This target is deprecated. Please use "BACKEND=minikube make k8s" instead'
+	@read -p 'Press any key to continue' any
+minikube:: clean buildir
+	make -C backend/minikube
+
+.PHONY: all-minikube
+all-minikube::
+	@echo 'This target is deprecated. Please use "BACKEND=minikube make all" instead'
+	@read -p 'Press any key to continue' any
+all-minikube:: minikube scf
+
+.PHONY: all-caasp4os
+all-caasp4os::
+	@echo 'This target is deprecated. Please use `BACKEND=caasp4os make all` instead'
+	@read -p 'Press any key to continue' any
+all-caasp4os:: caasp4os scf
+
+.PHONY: all-gke
+all-gke::
+	@echo 'This target is deprecated. Please use `BACKEND=gke make all` instead'
+	@read -p 'Press any key to continue' any
+all-gke:: gke scf
+
+.PHONY: caasp4os-clean
+caasp4os-clean::
+	@echo 'This target is deprecated. Please use `BACKEND=caasp4os make clean` instead'
+	@read -p 'Press any key to continue' any
+caasp4os-clean::
+	make -C backend/caasp4os clean
+
+.PHONY: caasp4os
+caasp4os::
+	@echo 'This target is deprecated. Please use `BACKEND=caasp4os make k8s` instead'
+	@read -p 'Press any key to continue' any
+caasp4os:: caasp4os-clean buildir
+	make -C backend/caasp4os
+
+.PHONY:image
+image::
+	@echo 'This target is deprecated. Please use `make catapult-image` instead'
+	@read -p 'Press any key to continue' any
+image:: catapult-image
