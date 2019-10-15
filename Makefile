@@ -54,6 +54,10 @@ kind: clean buildir
 gke: clean buildir
 	make -C backend/gke
 
+.PHONY: eks
+eks: clean buildir
+	make -C backend/eks
+
 .PHONY: minikube
 minikube: clean buildir
 	make -C backend/minikube
