@@ -27,10 +27,12 @@ if [ -d "$BUILD_DIR" ]; then
         wait
     fi
 
-    pushd deployment
-    # destroy terraform openstack stack
-    skuba_container terraform destroy -auto-approve
-    popd
+    if [ -d deployment ]; then
+        pushd deployment
+        # destroy terraform openstack stack
+        skuba_container terraform destroy -auto-approve
+        popd
+    fi
 
     popd
     rm -rf "$BUILD_DIR"
