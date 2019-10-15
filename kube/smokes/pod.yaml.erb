@@ -4,6 +4,7 @@ kind: Pod
 metadata:
   name: smokes
 spec:
+  restartPolicy: Never
   containers:
     - name: smokes
       image: splatform/concourse-brats
