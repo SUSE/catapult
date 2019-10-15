@@ -2,9 +2,23 @@
 #!/bin/bash
 
 set +x
+
+KUBE_IMG=$'\xE2\x98\xB8 '
+ROCKET_IMG="\U1F680"
+RECIPE_IMG="\U1F382"
+ARROW_IMG="\U27A4"
+INFO_IMG="\U2139"
+WARN_IMG="\U26A0"
+ERR_IMG="\U1F480"
+OK_IMG="\U2705"
+if ((BASH_VERSINFO[0] >= 4)) && [[ $'\u2388 ' != "\\u2388 " ]]; then
+        KUBE_IMG=$'\u2638 '
+    else
+        KUBE_IMG=$'\xE2\x98\xB8 '
+fi
+
 # Reset
 Color_Off='\033[0m'       # Text Reset
-
 # Regular Colors
 Black='\033[0;30m'        # Black
 Red='\033[0;31m'          # Red
@@ -78,7 +92,7 @@ On_IWhite='\033[0;107m'   # White
 function simple {
     local cat="$2"
     local message="$1"
-    echo "[$cat] [backend:$BACKEND] $message"
+    echo "[$cat] [backend:$BACKEND] [cluster:${CLUSTER_NAME}] $message"
 }
 
 function info {
@@ -90,7 +104,7 @@ function info {
     if [ "${QUIET_OUTPUT}" == "true" ]; then
     simple "$message" "$cat"
     else
-    printf "${BBlue}\U2139 ${BWhite}\U1F680 ${On_Black}$BACKEND${IBlue} \U1F382 ${cat}${BBlue} \U27A4 ${BWhite}${On_Black}$message$Color_Off\n"
+    printf "${BBlue}${INFO_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND ${BPurple}${KUBE_IMG}${CLUSTER_NAME} ${IBlue} ${RECIPE_IMG} ${cat}${BBlue} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
 }
 
@@ -103,7 +117,7 @@ function ok {
     if [ "${QUIET_OUTPUT}" == "true" ]; then
     simple "$message" "$cat"
     else
-    printf "${BGreen}\U2705 ${BWhite}\U1F680 ${On_Black}$BACKEND${IGreen} \U1F382 ${cat}${BGreen} \U27A4 ${BWhite}${On_Black}$message$Color_Off\n"
+    printf "${BGreen}${OK_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND${IGreen} ${KUBE_IMG}${CLUSTER_NAME} ${RECIPE_IMG} ${cat}${BGreen} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
 }
 
@@ -116,7 +130,7 @@ function warn {
     if [ "${QUIET_OUTPUT}" == "true" ]; then
     simple "$message" "$cat"
     else
-    printf "${BYellow}\U26A0 ${BWhite}\U1F680 ${On_Black}$BACKEND${IYellow} \U1F382 ${cat}${BYellow} \U27A4 ${BWhite}${On_Black}$message$Color_Off\n"
+    printf "${BYellow}${WARN_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND${IYellow} ${KUBE_IMG}${CLUSTER_NAME} ${RECIPE_IMG} ${cat}${BYellow} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
 }
 
@@ -129,8 +143,16 @@ function err {
     if [ "${QUIET_OUTPUT}" == "true" ]; then
     simple "$message" "$cat"
     else
-    printf "${BRed}\U1F480 ${BWhite}\U1F680 ${On_Black}$BACKEND${IRed} \U1F382 ${cat}${BRed} \U27A4 ${BWhite}${On_Black}$message$Color_Off\n"
+    printf "${BRed}${ERR_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND${IRed} ${KUBE_IMG}${CLUSTER_NAME} ${RECIPE_IMG} ${cat}${BRed} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
 }
 
-set -x
+function debug_mode {
+    if [ -n "${DEBUG}" ] && [ "$DEBUG" == true ]; then
+        set -x
+    else
+        set +x
+    fi
+}
+
+debug_mode
