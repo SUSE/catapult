@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
 . include/common.sh

@@ -12,7 +12,7 @@ private:
 
 .PHONY: buildir
 buildir:
-	scripts/buildir.sh
+	include/buildir.sh
 
 # General targets (Public)
 .PHONY: clean
