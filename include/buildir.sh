@@ -19,7 +19,7 @@ cat <<'HEREDOC_LITERAL_APPEND' >> .envrc
 export KUBECONFIG="$(pwd)"/kubeconfig
 export HELM_HOME="$(pwd)"/.helm
 export CF_HOME="$(pwd)"
-export PATH="$PATH:$(pwd)"/bin
+export PATH="$(pwd)"/bin:"$PATH"
 export MINIKUBE_HOME="$(pwd)"/.minikube
 HEREDOC_LITERAL_APPEND
 
