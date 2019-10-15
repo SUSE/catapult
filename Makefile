@@ -204,67 +204,67 @@ sample-ticking:
 
 .PHONY: kind
 kind::
-	@echo 'This target is deprecated. Please use `make k8s` or `BACKEND=kind make k8s` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `make k8s` or `BACKEND=kind make k8s` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 kind:: clean buildir
 	make -C backend/kind
 	make kubeconfig
 
 .PHONY: gke
 gke::
-	@echo 'This target is deprecated. Please use `BACKEND=gke make k8s` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `BACKEND=gke make k8s` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 gke:: clean buildir
 	make -C backend/gke
 
 .PHONY: eks
 eks::
-	@echo 'This target is deprecated. Please use "BACKEND=eks make k8s" instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use "BACKEND=eks make k8s" instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 eks:: clean buildir
 	make -C backend/eks
 
 .PHONY: minikube
 minikube::
-	@echo 'This target is deprecated. Please use "BACKEND=minikube make k8s" instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use "BACKEND=minikube make k8s" instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 minikube:: clean buildir
 	make -C backend/minikube
 
 .PHONY: all-minikube
 all-minikube::
-	@echo 'This target is deprecated. Please use "BACKEND=minikube make all" instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use "BACKEND=minikube make all" instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 all-minikube:: minikube scf
 
 .PHONY: all-caasp4os
 all-caasp4os::
-	@echo 'This target is deprecated. Please use `BACKEND=caasp4os make all` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `BACKEND=caasp4os make all` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 all-caasp4os:: caasp4os scf
 
 .PHONY: all-gke
 all-gke::
-	@echo 'This target is deprecated. Please use `BACKEND=gke make all` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `BACKEND=gke make all` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 all-gke:: gke scf
 
 .PHONY: caasp4os-clean
 caasp4os-clean::
-	@echo 'This target is deprecated. Please use `BACKEND=caasp4os make clean` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `BACKEND=caasp4os make clean` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 caasp4os-clean::
 	make -C backend/caasp4os clean
 
 .PHONY: caasp4os
 caasp4os::
-	@echo 'This target is deprecated. Please use `BACKEND=caasp4os make k8s` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `BACKEND=caasp4os make k8s` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 caasp4os:: caasp4os-clean buildir
 	make -C backend/caasp4os
 
 .PHONY:image
 image::
-	@echo 'This target is deprecated. Please use `make catapult-image` instead'
-	@read -p 'Press any key to continue' any
+	@echo 'WARNING: target deprecated. Please use `make catapult-image` instead.'
+	@echo 'Annoying you for^W^W^W Kindly waiting for 20s…'; sleep 20
 image:: catapult-image
