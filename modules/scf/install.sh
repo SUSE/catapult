@@ -7,8 +7,8 @@ set -e
 
 debug_mode
 
-# save CHART_URL on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$CHART_URL'"'
+# save SCF_CHART on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
 
 if [[ $ENABLE_EIRINI == true ]] ; then
     [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
