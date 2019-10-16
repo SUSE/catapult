@@ -19,6 +19,7 @@ export BUILD_DIR="$ROOT_DIR"/build${CLUSTER_NAME}
 [ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
 
 export CHART_URL="${CHART_URL:-}"
+export STRATOS_CHART="${STRATOS_CHART:-}"
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 
