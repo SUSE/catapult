@@ -179,6 +179,10 @@ scf-chart:
 scf-build:
 	make -C modules/scf build-scf-from-source
 
+.PHONY: scf-purge
+scf-purge:
+	make -C modules/scf purge
+
 .PHONY: scf-build-stemcell
 scf-build-stemcell:
 	make -C modules/scf stemcell_build

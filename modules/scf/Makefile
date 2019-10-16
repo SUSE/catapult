@@ -20,6 +20,10 @@ install:
 login:
 	./login.sh
 
+.PHONY: purge
+purge:
+	./purge.sh
+
 .PHONY: all
 all: clean chart gen-config install
 
