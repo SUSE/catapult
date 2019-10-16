@@ -42,7 +42,7 @@ tearDown() {
 
 testKind() {
     rm -rf buildtest
-    make kind
+    BACKEND=kind make k8s
     deployst=$?
     echo "DEPLOYS: $deployst"
     assertTrue 'create buildir' "[ -d 'buildtest' ]"
