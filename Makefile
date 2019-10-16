@@ -20,7 +20,7 @@ clean:
 	make -C backend/$(BACKEND) clean
 
 .PHONY: k8s
-k8s:
+k8s: clean buildir
 	make -C backend/$(BACKEND)
 
 .PHONY: kubeconfig
