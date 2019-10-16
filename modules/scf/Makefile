@@ -38,7 +38,7 @@ scf-brats-setup:
 	./brats_setup.sh
 
 .PHONY: upgrade
-upgrade:
+upgrade: chart gen-config
 	./upgrade.sh
 
 .PHONY: build-scf-from-source
