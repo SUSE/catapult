@@ -1,20 +1,15 @@
 #!/bin/bash
 
-set -Eexuo pipefail
+set -ex
 
 . ../../include/common.sh
 . .envrc
 
-# save STRATOS_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART'"'
+helm repo add suse https://kubernetes-charts.suse.com/
 
-helm install ./console \
+helm install suse/console \
     --name susecf-console \
     --namespace stratos \
-    --values scf-config-values-for-stratos.yaml
+    --values scf-config-values.yaml
 
 bash "$ROOT_DIR"/include/wait_ns.sh stratos
-
-helm status susecf-console | grep ui-ext
-
-ok "Stratos deployed successfully"
