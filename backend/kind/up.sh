@@ -17,11 +17,10 @@ kind: $type
 apiVersion: ${KIND_APIVERSION}
 nodes:
 - role: control-plane
-replicas: 1
-extraMounts:
-- containerPath: /code
-  hostPath: ${APPLICATION_PATH}
-  # readOnly: true
+  extraMounts:
+  - containerPath: /code
+    hostPath: ${APPLICATION_PATH}
+    # readOnly: true
 EOF
 
 kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
