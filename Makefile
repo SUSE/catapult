@@ -162,6 +162,18 @@ stratos:
 stratos-clean:
 	make -C modules/stratos clean
 
+.PHONY: stratos-chart
+stratos-chart:
+	make -C modules/stratos chart
+
+.PHONY: stratos-gen-config
+stratos-gen-config:
+	make -C modules/stratos gen-config
+
+.PHONY: stratos-upgrade
+stratos-upgrade:
+	make -C modules/stratos upgrade
+
 # test-only targets:
 .PHONY: tests
 tests:

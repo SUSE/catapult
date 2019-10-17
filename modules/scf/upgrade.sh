@@ -7,9 +7,9 @@ set -e
 
 debug_mode
 
-if [ -n "$CHART_URL" ]; then
-# save CHART_URL on cap-values configmap
-    kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$CHART_URL'"'
+if [ -n "$SCF_CHART" ]; then
+# save SCF_CHART on cap-values configmap
+    kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART"'
 fi
 
 SECRET=$(kubectl get pods --namespace uaa \
