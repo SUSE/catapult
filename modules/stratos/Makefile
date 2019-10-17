@@ -17,7 +17,7 @@ install:
 	./install.sh
 
 .PHONY: upgrade
-upgrade: chart gen-config
+upgrade:
 	./upgrade.sh
 
 .PHONY: all
