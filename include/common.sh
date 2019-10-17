@@ -31,7 +31,7 @@ set +x
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
-set -x
+debug_mode
 
 export MAGICDNS="${MAGICDNS:-nip.io}"
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
