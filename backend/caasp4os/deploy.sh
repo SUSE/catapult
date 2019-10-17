@@ -18,6 +18,7 @@ set -u
 
 export STACK=${STACK:-"$(whoami)-caasp4-${CAASP_VER::3}-$CLUSTER_NAME"}
 export DEBUG=${DEBUG:-0}
+# nip.io doesn't seem to work well with ECP, use omg.h.w instead:
 export MAGICDNS=${MAGICDNS:-'omg.howdoi.website'}
 
 

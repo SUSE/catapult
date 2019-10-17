@@ -53,7 +53,7 @@ bash "$ROOT_DIR"/include/wait_ns.sh kube-system
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
 PUBLIC_IP="$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address' | head -n 1)"
-DOMAIN="$PUBLIC_IP.omg.howdoi.website"
+DOMAIN="$PUBLIC_IP.$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
