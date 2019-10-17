@@ -124,7 +124,7 @@ helm init --upgrade --wait
 
 container_id=$(docker ps -f "name=${cluster_name}-control-plane" -q)
 container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)
-domain="${container_ip}.nip.io"
+domain="${container_ip}.$MAGICDNS"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \

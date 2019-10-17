@@ -7,16 +7,9 @@
 
 set -exuo pipefail
 
+info "Deleting imported k8s cluster"
 
 if [ -d "$BUILD_DIR" ]; then
-    . .envrc
-
-    if [ -d "cap-terraform/gke" ]; then
-        pushd cap-terraform/gke
-        terraform destroy -auto-approve
-        popd
-    fi
-
     popd
     rm -rf "$BUILD_DIR"
 fi

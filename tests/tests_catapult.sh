@@ -52,8 +52,25 @@ testBackend() {
   assertTrue 'create buildir' "[ -d 'buildtest' ]"
   ENVRC="$(cat "$PWD"/buildtest/.envrc)"
   assertContains 'contains BACKEND' "$ENVRC" 'BACKEND=gke'
-  make clean
+  BACKEND=gke make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+}
+
+# Tests imported backend
+testBackendImported() {
+    rm -rf buildtest
+    BACKEND=imported make buildir
+    assertTrue 'create buildir' "[ -d 'buildtest' ]"
+    ENVRC="$(cat "$PWD"/buildtest/.envrc)"
+    assertContains 'contains BACKEND' "$ENVRC" 'BACKEND=imported'
+    echo "foo" > buildtest/kubeconfig_orig
+    KUBECONFIG=$(pwd)/buildtest/kubeconfig_orig \
+              BACKEND=imported \
+              make kubeconfig
+    assertTrue 'imported kubeconfig' 'diff "$PWD"/buildtest/kubeconfig "$PWD"/buildtest/kubeconfig_orig'
+    assertFalse "BACKEND=imported make check must fail" 'BACKEND=imported make private backends/imported check'
+    BACKEND=imported make clean
+    assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 }
 
 # Load shUnit2.
