@@ -52,7 +52,7 @@ testBackend() {
   assertTrue 'create buildir' "[ -d 'buildtest' ]"
   ENVRC="$(cat "$PWD"/buildtest/.envrc)"
   assertContains 'contains BACKEND' "$ENVRC" 'BACKEND=gke'
-  make clean
+  BACKEND=gke make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 }
 

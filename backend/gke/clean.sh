@@ -11,9 +11,11 @@ set -exuo pipefail
 if [ -d "$BUILD_DIR" ]; then
     . .envrc
 
-    pushd cap-terraform/gke
-    terraform destroy -auto-approve
-    popd
+    if [ -d "cap-terraform/gke" ]; then
+        pushd cap-terraform/gke
+        terraform destroy -auto-approve
+        popd
+    fi
 
     popd
     rm -rf "$BUILD_DIR"
