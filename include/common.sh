@@ -9,6 +9,7 @@ if [ -n "$CONFIG" ]; then
   load_env_from_json "$CONFIG"
 fi
 
+export BACKEND="${BACKEND:-kind}"
 export VALUES_OVERRIDE="${VALUES_OVERRIDE:-}"
 OVERRIDE=
 if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then

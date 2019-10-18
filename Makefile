@@ -1,4 +1,6 @@
-export BACKEND?=kind
+
+# NOTE: BACKEND is dup in include/common.sh to allow BACKEND override when loading from json config files
+BACKEND?=kind
 export ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 .DEFAULT_GOAL := all
