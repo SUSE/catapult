@@ -18,6 +18,15 @@ SECRET=$(kubectl get pods --namespace uaa \
 CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
+if [ "$UAA_UPGRADE" == true ]; then
+
+    helm upgrade --recreate-pods susecf-uaa helm/uaa/ --values scf-config-values.yaml \
+    --set "secrets.UAA_CA_CERT=${CA_CERT}"
+
+    bash "$ROOT_DIR"/include/wait_ns.sh uaa
+
+fi
+
 helm upgrade --recreate-pods susecf-scf helm/cf/ --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
