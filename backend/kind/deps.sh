@@ -2,10 +2,6 @@
 
 set -e
 
-# duplicated in s/include/common.sh, needed for bootstrapping:
-export CLUSTER_NAME=${CLUSTER_NAME:-kind}
-export BUILD_DIR=build${CLUSTER_NAME}
-
 . ../../include/common.sh
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
