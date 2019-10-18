@@ -121,6 +121,17 @@ testscfChart() {
 
   make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+
+  SCF_CHART="https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
+  assertTrue 'yq was not downloaded' "[ ! -e 'buildtest/bin/yq' ]"
+  assertTrue 'chart downloaded from URL (chart is present)' "[ -e 'buildtest/chart' ]"
+  assertTrue 'chart was not generated' '[ -z "$(ls buildtest/*.tgz buildtest/*.zip)" ]'
+  assertTrue 'chart downloaded (chart_url is present)' "[ -e 'buildtest/chart_url' ]"
+  assertTrue 'chart downloaded from an http resource (chart_url contains http)' "grep 'http' 'buildtest/chart_url'"
+  assertTrue 'chart downloaded from an http resource matches' '[[ "https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" == "$(cat buildtest/chart_url)" ]]'
+
+  make clean
+  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 }
 
 # Load shUnit2.
