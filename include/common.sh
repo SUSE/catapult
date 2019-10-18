@@ -5,6 +5,10 @@ source $ROOT_DIR/include/func.sh
 
 debug_mode
 
+if [ -n "$CONFIG" ]; then
+  load_env_from_json "$CONFIG"
+fi
+
 export VALUES_OVERRIDE="${VALUES_OVERRIDE:-}"
 OVERRIDE=
 if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then

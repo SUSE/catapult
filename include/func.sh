@@ -155,4 +155,8 @@ function debug_mode {
     fi
 }
 
+function load_env_from_json {
+    eval "$(jq -r ' to_entries | .[] | "export "+ .key + "=\"" + .value + "\""' < $1)"
+}
+
 debug_mode
