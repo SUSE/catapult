@@ -22,10 +22,10 @@ testBuilddir() {
   make buildir
   assertTrue 'create buildir' "[ -d 'buildtest' ]"
   ENVRC="$(cat "$PWD"/buildtest/.envrc)"
-  assertContains 'contains KUBECONFIG' "$ENVRC" 'KUBECONFIG="$(pwd)"/kubeconfig'
+  assertContains 'contains KUBECONFIG' "$ENVRC" "KUBECONFIG=\"$PWD/buildtest\"/kubeconfig"
   assertContains 'contains CLUSTER_NAME' "$ENVRC" 'CLUSTER_NAME=test'
   assertContains 'contains BACKEND kind (default)' "$ENVRC" 'BACKEND=kind'
-  assertContains 'contains CF_HOME' "$ENVRC" 'CF_HOME="$(pwd)"'
+  assertContains 'contains CF_HOME' "$ENVRC" "CF_HOME=\"$PWD/buildtest\""
   make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 }

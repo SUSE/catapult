@@ -15,12 +15,12 @@ export CLUSTER_NAME=${CLUSTER_NAME}
 export BACKEND=${BACKEND}
 HEREDOC
 
-cat <<'HEREDOC_LITERAL_APPEND' >> .envrc
+cat <<HEREDOC_APPEND >> .envrc
 export KUBECONFIG="$(pwd)"/kubeconfig
 export HELM_HOME="$(pwd)"/.helm
 export CF_HOME="$(pwd)"
 export PATH="$(pwd)"/bin:"$PATH"
 export MINIKUBE_HOME="$(pwd)"/.minikube
-HEREDOC_LITERAL_APPEND
+HEREDOC_APPEND
 
 popd
