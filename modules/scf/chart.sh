@@ -63,11 +63,11 @@ if [ -n "$SCF_HELM_VERSION" ]; then
     popd
 fi
 
-rm -rf chart_url || true
+rm -rf scf_chart_url || true
 
 if echo "$SCF_CHART" | grep -q "http"; then
     wget "$SCF_CHART" -O chart
-    echo "$SCF_CHART" > chart_url
+    echo "$SCF_CHART" > scf_chart_url
 else
     cp -rfv "$SCF_CHART" chart
 fi
