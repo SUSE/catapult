@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
-. include/common.sh
+. $ROOT_DIR/include/common.sh
 
 info "Creating $BUILD_DIR"
 mkdir "$BUILD_DIR"
-. include/common.sh # Reload, as we just created BUILD_DIR
+. $ROOT_DIR/include/common.sh # Reload, as we just created BUILD_DIR
 
 mkdir bin
 

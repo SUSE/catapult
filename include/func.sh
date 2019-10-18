@@ -155,4 +155,9 @@ function debug_mode {
     fi
 }
 
+function load_env_from_json {
+    # Export but preserve one that are passed explictly
+    eval "$(jq -r ' to_entries | .[] | "export "+ .key + "=\"${"+ .key + ":-" + .value + "}\""' < $1)"
+}
+
 debug_mode
