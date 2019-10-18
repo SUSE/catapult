@@ -32,7 +32,7 @@ if [[ "$ENABLE_EIRINI" == true ]] ; then
     fi
 fi
 
-rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf
+rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
 
 # delete SCF_CHART on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "null"'
