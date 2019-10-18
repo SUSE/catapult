@@ -63,9 +63,11 @@ if [ -n "$SCF_HELM_VERSION" ]; then
     popd
 fi
 
+rm -rf chart_url || true
+
 if echo "$SCF_CHART" | grep -q "http"; then
-    info "Downloading $SCF_CHART"
     wget "$SCF_CHART" -O chart
+    echo "$SCF_CHART" > chart_url
 else
     cp -rfv "$SCF_CHART" chart
 fi
@@ -80,4 +82,4 @@ if  [ "${SCF_OPERATOR}" == "true" ]; then
     cp -rfv scf*/* ./
 fi
 
-ok "Chart uncompressed from $SCF_CHART"
+ok "Chart uncompressed"
