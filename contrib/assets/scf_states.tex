@@ -1,0 +1,31 @@
+% create a png with latexmk scf_states.tex -shell-escape
+
+% \documentclass[12pt]{article} % use this one for pdf output
+\documentclass[preview,border=4mm,convert={density=600,outext=.png}]{standalone} % use this one for png output
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\begin{document}
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3.5cm,
+        scale = 1,transform shape, thick]
+
+  \node[state] (k8s) {$k8s$};
+  \node[state] (scf-chart) [below of=k8s] {$scf_0$};
+  \node[state] (scf-gen-config) [below of=scf-chart] {$scf_1$};
+  \node[state] (scf-install) [below of=scf-gen-config] {$scf_2$};
+  \node[state] (scf-login) [below of=scf-install] {$scf$};
+  \node        (all) [below right of=k8s] {$all$};
+
+  \path
+    (k8s)              edge[bend right, left]   node {make\ scf-chart} (scf-chart)
+    (scf-chart)        edge[bend right, left]   node {make\ scf-gen-config} (scf-gen-config)
+    (scf-gen-config)   edge[bend right, left]   node {make\ scf-install} (scf-install)
+    (scf-install)      edge[bend right, left]   node {make\ scf-login} (scf-login)
+    (all)              edge[bend right, right]  node {make\ scf-clean} (k8s);
+
+\end{tikzpicture}
+\end{document}
