@@ -64,7 +64,7 @@ testBackendImported() {
     ENVRC="$(cat "$PWD"/buildtest/.envrc)"
     assertContains 'contains BACKEND' "$ENVRC" 'BACKEND=imported'
     echo "foo" > buildtest/kubeconfig_orig
-    KUBECONFIG=$(pwd)/buildtest/kubeconfig_orig \
+    KUBECFG=$(pwd)/buildtest/kubeconfig_orig \
               BACKEND=imported \
               make kubeconfig
     assertTrue 'imported kubeconfig' 'diff "$PWD"/buildtest/kubeconfig "$PWD"/buildtest/kubeconfig_orig'

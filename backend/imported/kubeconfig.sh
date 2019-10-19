@@ -4,9 +4,9 @@
 
 set -Eexo pipefail
 
-if [ -z "$KUBECONFIG" ] || [ ! -f "$KUBECONFIG" ]; then
-    err "No KUBECONFIG given - you need to pass one!"
+if [ -z "$KUBECFG" ] || [ ! -f "$KUBECFG" ]; then
+    err "No KUBECFG given - you need to pass one!"
     exit 1
 fi
 
-cp "$KUBECONFIG" kubeconfig
+cp "$KUBECFG" kubeconfig
