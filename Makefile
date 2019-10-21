@@ -23,6 +23,7 @@ clean:
 
 .PHONY: k8s
 k8s: clean buildir
+	make -C backend/general
 	make -C backend/$(BACKEND)
 
 .PHONY: kubeconfig
@@ -116,8 +117,7 @@ module-experimental-eirini_release:
 # scf-only targets:
 .PHONY: scf-deploy
 scf-deploy: clean buildir
-	make -C backend/$(BACKEND)
-	make kubeconfig scf
+	make k8s kubeconfig scf
 
 .PHONY: scf-clean
 scf-clean:
