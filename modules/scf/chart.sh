@@ -2,6 +2,7 @@
 set -e
 
 . ../../include/common.sh
+. .envrc
 
 debug_mode
 

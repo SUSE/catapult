@@ -7,9 +7,6 @@ set -exo pipefail
 
 set -u
 
-curl -o helm https://get.helm.sh/helm-v2.12.3-linux-amd64.tar.gz
-chmod +x helm && mv helm bin/
-
 curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz
 tar -xvf google-cloud-sdk.tar.gz
 rm google-cloud-sdk.tar.gz
