@@ -23,7 +23,7 @@ clean:
 
 .PHONY: k8s
 k8s: clean buildir
-	make -C backend/general
+	make -C modules/common
 	make -C backend/$(BACKEND)
 
 .PHONY: kubeconfig
@@ -141,7 +141,7 @@ scf-upgrade:
 
 .PHONY: scf-chart
 scf-chart:
-	make -C backend/general
+	make -C modules/common
 	make -C modules/scf chart
 
 .PHONY: scf-build

@@ -137,7 +137,7 @@ testscfChart() {
 testCommonDeps() {
   rm -rf buildtest
   make buildir
-  make private backend/general
+  make private modules/common
 
   assertTrue 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
   assertTrue 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
