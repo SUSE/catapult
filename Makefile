@@ -141,6 +141,7 @@ scf-upgrade:
 
 .PHONY: scf-chart
 scf-chart:
+	make -C backend/general
 	make -C modules/scf chart
 
 .PHONY: scf-build

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . ../../include/common.sh
+. .envrc
 
 if [ -d "$BUILD_DIR" ]; then
       info "Cleaning up $BUILD_DIR"
