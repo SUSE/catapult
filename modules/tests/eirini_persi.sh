@@ -29,7 +29,7 @@ kubectl get pvc -n eirini || true
 cf push --no-start
 cf bind-service persitest eirini-persi-mount
 cf start persitest
-url=http://"$(cf a | grep "persitest" | awk '{ print $6 }')"
+url=http://"$(cf a | grep "persitest" | gawk '{ print $6 }')"
 [[ $(curl "$url") == "1" ]] || exit 1
 cf restage persitest
 [[ $(curl "$url") == "0" ]] || exit 1
