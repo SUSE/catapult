@@ -48,6 +48,10 @@ if [ -n "$SCF_HELM_VERSION" ]; then
         VERSION=$(../bin/yq r helm/cf/Chart.yaml version)
         API_VERSION=$(../bin/yq r helm/cf/Chart.yaml apiVersion)
 
+        if [ "${API_VERSION}" == "v1" ]; then
+            API_VERSION=$(../bin/yq r helm/cf/Chart.yaml scfVersion)
+        fi
+
         if [ -z "$VERSION" ]; then
             err "No version found from the chart"
             exit 1
