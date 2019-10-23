@@ -25,4 +25,8 @@ EOF
 
 kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
 
+# Trust the kubernetes ca on the node so CF application containers can be pulled
+# from the registry (otherwise it fails because the ca is not trusted).
+docker exec -it ${CLUSTER_NAME} bash -c 'cp /etc/kubernetes/pki/ca.crt /etc/ssl/certs/ && update-ca-certificates && systemctl restart containerd'
+
 ok "Cluster is up"
