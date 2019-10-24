@@ -16,6 +16,7 @@ minikube config set WantUpdateNotification false
 minikube config set memory 8192
 minikube config set cpus $(($(nproc) - 2))
 minikube config set disk-size 60g
+minikube config set kubernetes-version 1.15.4
 
 minikube start \
          --container-runtime="$MINIKUBE_RUNTIME" \
