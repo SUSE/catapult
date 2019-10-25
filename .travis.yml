@@ -10,6 +10,7 @@ before_install:
   - curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
   - sudo mv cf /usr/local/bin
   - sudo chmod +x /usr/local/bin/cf
+  - sudo pip install yamllint
 
 script:
 - make catapult-test

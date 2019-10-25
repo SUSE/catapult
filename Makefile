@@ -68,6 +68,10 @@ dind: clean buildir
 catapult-test:
 	make -C tests
 
+.PHONY: catapult-lint
+catapult-lint:
+	make -C tests lint
+
 .PHONY: catapult-image
 catapult-image:
 	scripts/image.sh
