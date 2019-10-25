@@ -59,7 +59,8 @@ cat > scf-config-values.yaml <<EOF
 system_domain: $domain
 
 features:
-  eirini: ${ENABLE_EIRINI}
+  eirini:
+    enabled: ${ENABLE_EIRINI}
 
 service:
   type: LoadBalancer
