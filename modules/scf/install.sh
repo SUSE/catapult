@@ -48,7 +48,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     kubectl create namespace scf
     kubectl create secret generic -n scf scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
 
-    info "Install cf-operator from $OPERATOR_CHART_URL"
+    info "Installing cf-operator"
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \
