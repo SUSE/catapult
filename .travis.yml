@@ -4,7 +4,9 @@ services:
   - docker
 
 before_install:
-  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - |
+    STABLE=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$STABLE/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
   - curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
@@ -13,4 +15,4 @@ before_install:
   - sudo pip install yamllint
 
 script:
-- make catapult-test
+  - make catapult-test

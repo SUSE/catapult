@@ -61,8 +61,8 @@ roleRef:
   kind: Role
   name: hostpath-provisioner
 subjects:
-- kind: ServiceAccount
-  name: hostpath-provisioner
+  - kind: ServiceAccount
+    name: hostpath-provisioner
 ---
 
 # -- Create a pod in the kube-system namespace to run the host path provisioner

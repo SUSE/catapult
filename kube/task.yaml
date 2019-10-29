@@ -1,4 +1,3 @@
-
 #https://github.com/weaveworks/build-tools/blob/master/socks/connect.sh
 ---
 apiVersion: v1
@@ -17,6 +16,6 @@ spec:
         - name: dockersock
           mountPath: "/var/run/docker.sock"
   volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
+    - name: dockersock
+      hostPath:
+        path: /var/run/docker.sock
