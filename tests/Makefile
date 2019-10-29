@@ -8,4 +8,9 @@ tests-catapult-integration:
 tests-catapult:
 	./tests_catapult.sh
 
-all: tests-catapult tests-catapult-integration
+.PHONY: lint
+lint:
+	./lint.sh
+
+.PHONY: all
+all: lint tests-catapult tests-catapult-integration
