@@ -8,13 +8,9 @@ kubeconfig:
 clean:
 	./clean.sh
 
-.PHONY: deps
-deps:
-	./deps.sh
-
 .PHONY: check
 check:
 	./check.sh
 
 .PHONY: all
-all: deps kubeconfig check
+all: kubeconfig check
