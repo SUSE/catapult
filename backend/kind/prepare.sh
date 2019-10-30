@@ -7,6 +7,11 @@ kubectl create clusterrolebinding admin --clusterrole=cluster-admin --user=syste
 kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=system:serviceaccount:uaa:default
 kubectl create clusterrolebinding scfadmin --clusterrole=cluster-admin --user=system:serviceaccount:scf:default
 
+# Trust the kubernetes ca on the node so CF application containers can be pulled
+# from the registry (otherwise it fails because the ca is not trusted).
+info "Trusting the Kubernetes certificate on nodes"
+docker exec -it "${CLUSTER_NAME}-control-plane" bash -c 'cp /etc/kubernetes/pki/ca.crt /etc/ssl/certs/ && update-ca-certificates && (systemctl list-units | grep containerd > /dev/null && systemctl restart containerd)'
+
 cat > storageclass.yaml <<EOF
 apiVersion: v1
 kind: ServiceAccount
