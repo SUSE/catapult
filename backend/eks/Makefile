@@ -5,7 +5,7 @@ kubeconfig:
 	# No-op
 
 .PHONY: deps
-deps
+deps:
 	./deps.sh
 
 .PHONY: deploy
