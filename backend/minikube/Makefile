@@ -8,27 +8,27 @@ kubeconfig:
 clean:
 	./clean.sh
 
-.PHONY: deps-minikube
-deps-minikube:
+.PHONY: deps
+deps:
 	./deps.sh
 
-.PHONY: up-minikube
-up-minikube:
+.PHONY: up
+up:
 	./up.sh
 
-.PHONY: prepare-minikube
-prepare-minikube:
+.PHONY: prepare
+prepare:
 	./prepare.sh
 
 .PHONY: all
-all: deps-minikube up-minikube prepare-minikube
+all: deps up prepare
 
 # one-offs:
 
-.PHONY: start-minikube
-start-minikube:
+.PHONY: start
+start:
 	./start.sh
 
-.PHONY: stop-minikube
-stop-minikube:
+.PHONY: stop
+stop:
 	./stop.sh
