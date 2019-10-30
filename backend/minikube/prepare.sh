@@ -9,43 +9,23 @@ kubectl create clusterrolebinding uaaadmin --clusterrole=cluster-admin --user=sy
 kubectl create clusterrolebinding scfadmin --clusterrole=cluster-admin --user=system:serviceaccount:scf:default
 
 cat > storageclass.yaml <<EOF
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: hostpath-provisioner
-  namespace: kube-system
----
-
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: hostpath-provisioner
-  namespace: kube-system
-rules:
-  - apiGroups: [""]
-    resources: ["persistentvolumes"]
-    verbs: ["get", "list", "watch", "create", "delete"]
-  - apiGroups: [""]
-    resources: ["persistentvolumeclaims"]
-    verbs: ["get", "list", "watch", "update"]
-  - apiGroups: ["storage.k8s.io"]
-    resources: ["storageclasses"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["list", "watch", "create", "update", "patch"]
----
-
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: standard
-provisioner: docker.io/hostpath
-reclaimPolicy: Retain
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+  name: persistent
+  resourceVersion: "352"
+  selfLink: /apis/storage.k8s.io/v1/storageclasses/standard
+provisioner: k8s.io/minikube-hostpath
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
 EOF
 
+kubectl create -f ./storageclass.yaml
 kubectl delete storageclass standard
-kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
 container_ip=$(minikube ip)
