@@ -28,4 +28,7 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=platform=imported
 fi
 
+info "Initializing helm client"
+helm init --client-only
+
 ok "k8s cluster imported successfully"
