@@ -4,21 +4,17 @@
 kubeconfig:
 	# No-op
 
-.PHONY: deps-eks
-deps-eks:
+.PHONY: deps
+deps
 	./deps.sh
 
-.PHONY: eks-deploy
-eks-deploy:
+.PHONY: deploy
+deploy:
 	./deploy.sh
-
-.PHONY: eks-prepare
-eks-prepare:
-	./prepare.sh
 
 .PHONY: clean
 clean:
 	./clean.sh
 
 .PHONY: all
-all: deps-eks eks-deploy eks-prepare
+all: deps deploy
