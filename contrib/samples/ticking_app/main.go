@@ -15,7 +15,7 @@ func main() {
 	go func() {
 		for t := range ticker.C {
 
-			fmt.Printf("[%s] Ticking %s\n", instanceGuid, t.Format("2006-01-01 15:04:05"))
+			fmt.Printf("[%s] Ticking %s\n", instanceGuid, t.Format("2006-01-02 15:04:05"))
 		}
 	}()
 
