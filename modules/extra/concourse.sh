@@ -6,6 +6,8 @@ set -e
 . .envrc
 
 LOCAL_ACCESS=${LOCAL_ACCESS:-true}
+CONCOURSE_PASSWORD="${CONCOURSE_PASSWORD:-password}"
+CONCOURSE_USER="${CONCOURSE_USER:-admin}"
 
 info "Deploying concourse from the helm charts"
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
@@ -15,7 +17,6 @@ external_ips+="\"$public_ip\""
 for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
 external_ips+=", \"${aux_external_ips[$i]}\""
 done
-set -x
 
 if [ "${LOCAL_ACCESS}" == "true" ]; then
     domain="127.0.0.1:8080"
@@ -30,9 +31,20 @@ concourse:
   web:
     externalUrl: http://${domain}
     bindPort: 80
-    service:
-      type: LoadBalancer
-      loadBalancerIP: ${public_ip}
+    auth:
+      cookieSecure: false
+      duration: 24h
+      mainTeam:
+        localUser: "${CONCOURSE_USER}"
+  worker:
+    baggageclaim:
+      driver: overlay
+web:
+  service:
+    type: LoadBalancer
+    loadBalancerIP: ${public_ip}
+secrets:
+  localUsers: "${CONCOURSE_USER}:${CONCOURSE_PASSWORD}"
 EOF
 
 helm install --name catapult-concourse -f concourse-values.yml \
@@ -46,7 +58,7 @@ if [ "${LOCAL_ACCESS}" == "true" ]; then
 
     info "After exiting, if you want to access Concourse, do: 'kubectl port-forward --namespace default $POD_NAME 8080:80'"
     ok "All done"
-    info "Now you can visit http://${domain} to use Concourse and login with test:test,"
+    info "Now you can visit http://${domain} to use Concourse and login with ${CONCOURSE_USER}:${CONCOURSE_PASSWORD},"
     info "or use the cli and login with: fly -t local login -c http://$domain/"
 
     kubectl port-forward --namespace default $POD_NAME 8080:80
