@@ -77,6 +77,10 @@ catapult-image:
 	scripts/image.sh
 
 # extra targets:
+.PHONY: module-extra-concourse
+module-extra-concourse:
+	make -C modules/extra concourse
+
 .PHONY: module-extra-ingress
 module-extra-ingress:
 	make -C modules/extra ingress

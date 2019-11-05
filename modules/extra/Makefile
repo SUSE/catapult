@@ -32,3 +32,7 @@ ingress-forward:
 .PHONY: registry
 registry:
 	./registry.sh
+
+.PHONY: concourse
+concourse:
+	./concourse.sh
