@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"net/http"
@@ -11,11 +12,13 @@ func main() {
 
 	ticker := time.NewTicker(2 * time.Second)
 	instanceGuid := os.Getenv("CF_INSTANCE_GUID") + ":" + os.Getenv("CF_INSTANCE_INDEX")
+	count := 0
 
 	go func() {
 		for t := range ticker.C {
 
-			fmt.Printf("[%s] Ticking %s\n", instanceGuid, t.Format("2006-01-02 15:04:05"))
+			fmt.Printf("[%s] Ticking %s %d\n", instanceGuid, t.Format("2006-01-02 15:04:05"), count)
+			count++
 		}
 	}()
 
