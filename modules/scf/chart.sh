@@ -84,7 +84,7 @@ else
 fi
 
 if  [ "${SCF_OPERATOR}" == "true" ]; then
-    cp -rfv scf*/* ./
+    cp -rfv kubecf*/* ./
 fi
 
 ok "Chart uncompressed"
