@@ -8,6 +8,7 @@ set -e
 LOCAL_ACCESS=${LOCAL_ACCESS:-true}
 CONCOURSE_PASSWORD="${CONCOURSE_PASSWORD:-password}"
 CONCOURSE_USER="${CONCOURSE_USER:-admin}"
+CONCOURSE_DRIVER="${CONCOURSE_DRIVER:-btrfs}"
 
 info "Deploying concourse from the helm charts"
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
@@ -38,7 +39,7 @@ concourse:
         localUser: "${CONCOURSE_USER}"
   worker:
     baggageclaim:
-      driver: overlay
+      driver: ${CONCOURSE_DRIVER}
 web:
   service:
     type: LoadBalancer
