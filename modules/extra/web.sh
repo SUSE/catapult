@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-debug_mode
-
 . ../../include/common.sh
+
+debug_mode
 
 info "Building wtty image"
 pushd "$ROOT_DIR"/kube/catapult-wtty
