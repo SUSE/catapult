@@ -88,7 +88,7 @@ const Index = `
 	<p class="lead">Here you can find web ttys for clusters deployed in {{.ApiURL}}</p>
 	<hr class="my-4">
 	<p>It uses catapult terminal module to bring your cluster to the browser.</p>
-	<a class="btn btn-primary btn-lg" href="http://{{.ApiURL}}" role="button" target='_blank'>EKCP Dashboard</a>
+	<a class="btn btn-primary btn-lg" href="http://{{.ApiURL}}/ui" role="button" target='_blank'>EKCP Dashboard</a>
 	</div>
 
     <!-- Optional JavaScript -->
