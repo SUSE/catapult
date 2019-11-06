@@ -23,7 +23,9 @@ popd
 docker rm --force catapult-sync || true
 docker rm --force catapult-web || true
 
-docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock --name catapult-sync catapult-sync
-docker run -d -p 7060:8080 --restart=always -v /var/run/docker.sock:/var/run/docker.sock:ro --name catapult-web catapult-web
+docker rm --force $(docker ps -f name=catapult-wtty --format={{.Names}}) || true
 
-ok "Now you can head with your browser to 127.0.0.1:7060/clustername to have a web tty!"
+docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock --name catapult-sync catapult-sync
+docker run -e EKCP_HOST="$EKCP_HOST" -d -p 7060:8080 --restart=always -v /var/run/docker.sock:/var/run/docker.sock:ro --name catapult-web catapult-web
+
+ok "Now you can head with your browser to http://127.0.0.1:7060!"
