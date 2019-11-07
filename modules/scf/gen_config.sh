@@ -18,6 +18,7 @@ else
 fi
 
 DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
+STORAGECLASS="${STORAGECLASS:-persistent}"
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
@@ -79,7 +80,7 @@ env:
         name: "default"
         description: "Eirini persistence broker"
         free: true
-        kube_storage_class: "persistent"
+        kube_storage_class: "${STORAGECLASS}"
         default_size: "2Gi"
 
   # UAA host and port
@@ -173,8 +174,8 @@ kube:
   # Run kubectl get storageclasses
   # to view your available storage classes
   storage_class:
-    persistent: "persistent"
-    shared: "shared"
+    persistent: "${STORAGECLASS}"
+    shared: "${STORAGECLASS}"
 
   # The registry the images will be fetched from.
   # The values below should work for
