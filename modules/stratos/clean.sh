@@ -13,6 +13,9 @@ if kubectl get namespaces 2>/dev/null | grep -qi stratos ; then
 fi
 
 # delete STRATOS_CHART on cap-values configmap
+if [[ -n "$(kubectl get -n kube-system configmap cap-values | jq -r '.data["stratos-chart"]')" ]]; then
+    kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/stratos-chart"}]'
+fi
 kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "null"'
 
 rm -rf console scf-config-values-for-stratos.yaml
