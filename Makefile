@@ -113,6 +113,10 @@ module-extra-catapult-web:
 module-extra-registry:
 	make -C modules/extra registry
 
+.PHONY: module-extra-brats-setup
+module-extra-brats-setup:
+	make -C modules/scf scf-brats-setup
+
 ## Experimental
 .PHONY: module-experimental-eirinifs
 module-experimental-eirinifs:
