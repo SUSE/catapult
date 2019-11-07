@@ -5,6 +5,8 @@ set -e
 
 debug_mode
 
+TMPDIR="${TMPDIR:-/tmp}" # required to be able to mount configs in deployments containers (dind mount )
+
 info "Building wtty image"
 pushd "$ROOT_DIR"/kube/catapult-wtty
     docker build -t catapult-wtty .
@@ -26,6 +28,6 @@ docker rm --force catapult-web || true
 docker rm --force $(docker ps -f name=catapult-wtty --format={{.Names}}) || true
 
 docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock --name catapult-sync catapult-sync
-docker run -e EKCP_HOST="$EKCP_HOST" -d -p 7060:8080 --restart=always -v /var/run/docker.sock:/var/run/docker.sock:ro --name catapult-web catapult-web
+docker run -e TMPDIR=$TMPDIR -v $TMPDIR:$TMPDIR -e EKCP_HOST="$EKCP_HOST" -d -p 7060:8080 --restart=always -v /var/run/docker.sock:/var/run/docker.sock --name catapult-web catapult-web
 
 ok "Now you can head with your browser to http://127.0.0.1:7060!"
