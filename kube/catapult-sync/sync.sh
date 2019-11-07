@@ -15,7 +15,7 @@ for i in $ACTIVE_TTYS; do
 done
 
 echo "Creating new ttys"
-v=0
+v=$(($(echo $ACTIVE_TTYS | wc -w)+1))
 for i in $CLUSTERS; do
   if echo $ACTIVE_TTYS | grep -q -v $i;
   then
