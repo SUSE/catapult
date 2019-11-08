@@ -2,18 +2,24 @@
 
 set +x
 
-KUBE_IMG=$'\xE2\x98\xB8 '
-ROCKET_IMG="\U1F680"
-RECIPE_IMG="\U1F382"
-ARROW_IMG="\U27A4"
-INFO_IMG="\U2139"
-WARN_IMG="\U26A0"
-ERR_IMG="\U1F480"
-OK_IMG="\U2705"
 if ((BASH_VERSINFO[0] >= 4)) && [[ $'\u2388 ' != "\\u2388 " ]]; then
         KUBE_IMG=$'\u2638 '
+        ROCKET_IMG=$'\U1F680 '
+        RECIPE_IMG=$'\U1F382 '
+        ARROW_IMG=$'\U27A4 '
+        INFO_IMG=$'\U2139 '
+        WARN_IMG=$'\U26A0 '
+        ERR_IMG=$'\U1F480 '
+        OK_IMG=$'\U2705 '
     else
         KUBE_IMG=$'\xE2\x98\xB8 '
+        ROCKET_IMG=$'\xF0\x9F\x9A\x80 '
+        RECIPE_IMG=$'\xF0\x9F\x8E\x82 '
+        ARROW_IMG=$'\xE2\x9E\xA4 '
+        INFO_IMG=$'\xE2\x84\xB9 '
+        WARN_IMG=$'\xE2\x9A\xA0 '
+        ERR_IMG=$'\xF0\x9F\x92\x80 '
+        OK_IMG=$'\xE2\x9C\x85 '
 fi
 
 # Reset
