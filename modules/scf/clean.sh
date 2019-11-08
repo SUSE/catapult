@@ -35,6 +35,8 @@ fi
 rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
 
 # delete SCF_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "null"'
+if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data.chart // empty')" ]]; then
+    kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/chart"}]'
+fi
 
 ok "Cleaned up scf from the k8s cluster"
