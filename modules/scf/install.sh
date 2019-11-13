@@ -56,14 +56,13 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     "$OPERATOR_CHART_URL"
 
     bash "$ROOT_DIR"/include/wait_ns.sh scf
-
-    SCF_CHART="scf"
+    sleep 10
+    SCF_CHART="kubecf"
     if [ -d "deploy/helm/scf" ]; then
         SCF_CHART="deploy/helm/scf"
     fi
 
-    helm upgrade scf ${SCF_CHART} \
-    --install \
+    helm install --name scf ${SCF_CHART} \
     --namespace scf \
     --values scf-config-values.yaml
 
