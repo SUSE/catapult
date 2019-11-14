@@ -11,7 +11,7 @@ debug_mode
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
 
 if [[ $ENABLE_EIRINI == true ]] ; then
-    [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
+   # [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm ls 2>/dev/null | grep -qi metrics-server ; then
         helm install stable/metrics-server --name=metrics-server \
              --set args[0]="--kubelet-preferred-address-types=InternalIP" \
@@ -36,17 +36,31 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
     --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
 elif [ "${SCF_OPERATOR}" == "true" ]; then
+    SCF_CHART="kubecf"
+    if [ -d "deploy/helm/scf" ]; then
+        SCF_CHART="deploy/helm/scf"
+    fi
 
     if [ -z "$OPERATOR_CHART_URL" ]; then
+        info "Sourcing operator from kubecf charts"
+        # FIXME: Platform dipendent for now
         info "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
-        OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
+        [ ! -e "bin/yq" ] && wget https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64 -O bin/yq && chmod +x bin/yq
+
+        OPERATOR_CHART_URL=$(yq r $SCF_CHART/Metadata.yaml operatorChartUrl)
+
+        # If still empty, grab latest one
+        if [ -z "$OPERATOR_CHART_URL" ]; then
+         info "Fallback to use latest GH release of cf-operator"
+         OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
+        fi
     fi
 
     domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
     # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
     kubectl create namespace scf
-    kubectl create secret generic -n scf scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
+    kubectl create secret generic -n scf kubecf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
 
     info "Installing cf-operator"
     # Install the operator
@@ -57,10 +71,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
 
     bash "$ROOT_DIR"/include/wait_ns.sh scf
     sleep 10
-    SCF_CHART="kubecf"
-    if [ -d "deploy/helm/scf" ]; then
-        SCF_CHART="deploy/helm/scf"
-    fi
+
 
     helm install --name scf ${SCF_CHART} \
     --namespace scf \

@@ -159,6 +159,8 @@ scf-chart:
 .PHONY: scf-build
 scf-build:
 	make -C modules/scf build-scf-from-source
+	make scf-gen-config
+	make -C modules/scf install
 
 .PHONY: scf-purge
 scf-purge:
