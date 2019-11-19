@@ -9,8 +9,7 @@ debug_mode
 [ ! -d "scf" ] && git clone --recurse-submodules "$SCF_REPO" scf
 
 pushd scf
-    git checkout "$SCF_BRANCH"
-    git pull
+    git reset --hard "$SCF_BRANCH"
     git submodule sync --recursive && \
     git submodule update --init --recursive && \
     git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"
