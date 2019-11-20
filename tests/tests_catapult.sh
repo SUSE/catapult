@@ -46,6 +46,11 @@ testConfig() {
   assertContains 'generates correctly STORAGECLASS (1)' "$VALUES_FILE" "kube_storage_class: \"our-storage\""
   assertContains 'generates correctly STORAGECLASS (2)' "$VALUES_FILE" "persistent: \"our-storage\""
   assertContains 'generates correctly STORAGECLASS (3)' "$VALUES_FILE" "shared: \"our-storage\""
+  assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: false"
+
+  AUTOSCALER=true make scf-gen-config
+  VALUES_FILE="$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)"
+  assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: true"
 }
 
 # Tests backend switch
