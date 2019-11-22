@@ -8,6 +8,7 @@ spec:
   containers:
     - name: brats
       image: splatform/concourse-brats
+      imagePullPolicy: Always
       command:
         - /bin/sh
         - -ec
