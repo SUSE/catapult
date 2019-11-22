@@ -2,7 +2,7 @@
 # EXAMPLE:
 # image_name = "SLE-15-SP1-JeOS-GMC"
 # JeOS needs default kernel for the nfs modules
-image_name = "SLE-15-SP1-JeOS-GMC"
+image_name = "SLES15-SP1-JeOS.x86_64-QU1"
 
 # Name of the internal network to be created
 # EXAMPLE:
