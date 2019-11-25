@@ -33,7 +33,7 @@ spec:
 
           git clone --recurse-submodules https://github.com/SUSE/cf-${BRATS_BUILDPACK}-buildpack.git
           pushd cf-${BRATS_BUILDPACK}-buildpack
-          git reset --hard "${BRATS_BUILDPACK_VERSION}"
+          git checkout "${BRATS_BUILDPACK_VERSION}"
           git submodule sync --recursive && \
           git submodule update --init --recursive && \
           git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"
