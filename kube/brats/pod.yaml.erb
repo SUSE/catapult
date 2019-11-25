@@ -31,7 +31,7 @@ spec:
           git config --global user.email "johndoe@example.com"
           git config --global user.name "johndoe"
 
-          git clone https://github.com/SUSE/cf-${BRATS_BUILDPACK}-buildpack.git
+          git clone --recurse-submodules https://github.com/SUSE/cf-${BRATS_BUILDPACK}-buildpack.git
           pushd cf-${BRATS_BUILDPACK}-buildpack
           git checkout ${BRATS_BUILDPACK_VERSION}
 
