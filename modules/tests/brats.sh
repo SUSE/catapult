@@ -37,8 +37,9 @@ export BRATS_BUILDPACK_URL="${BRATS_BUILDPACK_URL}"
 export BRATS_BUILDPACK_VERSION="${BRATS_BUILDPACK_VERSION}"
 
 pod_definition=$(erb "$ROOT_DIR"/kube/brats/pod.yaml.erb)
+pod_definition=$(echo -e "$pod_definition" | sed -e '/COMPOSER/,+1d')
 cat <<EOF
-Will create this pod (if you see empty values, make sure you defined all the needed env variables):
+Will create this pod (if you see empty values, make sure you defined all the needed env variables) Note: the COMPOSER_GITHUB_OAUTH_TOKEN is redacted:
 
 ${pod_definition}
 EOF
