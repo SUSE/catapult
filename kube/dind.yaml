@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dind
+  namespace: catapult
+  labels:
+    app: catapult-dind
+spec:
+  containers:
+    - name: dind-daemon
+      image: docker:1.12.6-dind
+      resources:
+        requests:
+          cpu: 20m
+          memory: 512Mi
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: docker-graph-storage
+          mountPath: /var/lib/docker
+  volumes:
+    - name: docker-graph-storage
+      emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dind
+  namespace: catapult
+spec:
+  selector:
+    app: catapult-dind
+  ports:
+    - protocol: TCP
+      port: 2375
+      targetPort: 2375

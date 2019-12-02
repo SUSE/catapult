@@ -19,6 +19,7 @@ info
 
 kubectl create namespace catapult || true
 kubectl delete pod brats -n catapult || true
+kubectl create -f "$ROOT_DIR"/kube/dind.yaml -n catapult || true
 
 export BRATS_CF_HOST="${BRATS_CF_HOST:-api.$DOMAIN}"
 export PROXY_HOST="${PROXY_HOST:-${public_ip}}"
@@ -53,12 +54,12 @@ container_status() {
 
 bash ../include/wait_ns.sh catapult
 while [[ -z $(container_status "brats") ]]; do
-    kubectl logs -f -c "brats" -n catapult "brats" ||:
+    kubectl attach -n catapult "brats" ||:
 done
 
 set +e
 mkdir -p artifacts
-kubectl logs -c brats -f brats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
+kubectl logs -f brats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
 status="$(container_status "brats")"
 kubectl delete pod -n catapult brats
 exit "$status"
