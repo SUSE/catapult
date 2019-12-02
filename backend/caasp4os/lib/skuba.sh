@@ -7,9 +7,9 @@ SKUBA_CLUSTER_NAME="my-cluster" #default from caasp
 
 _set_env_vars() {
     JSON=$(skuba_container terraform output -json)
-    export LB=$(echo "$JSON" | jq -r '.ip_load_balancer.value')
-    export MASTERS=$(echo "$JSON" | jq -r '.ip_masters.value[]')
-    export WORKERS=$(echo "$JSON" | jq -r '.ip_workers.value[]')
+    export LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value')"
+    export MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|@tsv')"
+    export WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|@tsv')"
     export ALL="$MASTERS $WORKERS"
 }
 
