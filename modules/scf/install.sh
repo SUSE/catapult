@@ -15,7 +15,7 @@ if [[ $ENABLE_EIRINI == true ]] ; then
     if ! helm ls 2>/dev/null | grep -qi metrics-server ; then
         helm install stable/metrics-server --name=metrics-server \
              --set args[0]="--kubelet-preferred-address-types=InternalIP" \
-             --set args[1]="--kubelet-insecure-tls"
+             --set args[1]="--kubelet-insecure-tls" || true
     fi
 fi
 
