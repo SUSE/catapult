@@ -94,10 +94,19 @@ spec:
         value: "<%= ENV["PROXY_HOST"] %>"
       - name: CF_STACK
         value: "<%= ENV["CF_STACK"] %>"
+      - name: DOCKER_HOST
+        value: "tcp://localhost:2375"
+    - name: dind-daemon
+      image: docker:1.12.6-dind
+      resources:
+          requests:
+              cpu: 20m
+              memory: 512Mi
+      securityContext:
+          privileged: true
       volumeMounts:
-        - name: dockersock
-          mountPath: "/var/run/docker.sock"
+        - name: docker-graph-storage
+          mountPath: /var/lib/docker
   volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
+    - name: docker-graph-storage
+      emptyDir: {}

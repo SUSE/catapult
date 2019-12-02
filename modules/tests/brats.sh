@@ -53,12 +53,12 @@ container_status() {
 
 bash ../include/wait_ns.sh catapult
 while [[ -z $(container_status "brats") ]]; do
-    kubectl attach -n catapult "brats" ||:
+    kubectl logs -f -c "brats" -n catapult "brats" ||:
 done
 
 set +e
 mkdir -p artifacts
-kubectl logs -f brats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
+kubectl logs -c brats -f brats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_brats.log
 status="$(container_status "brats")"
 kubectl delete pod -n catapult brats
 exit "$status"
