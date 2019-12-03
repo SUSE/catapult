@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export DEBUG_MODE="${DEBUG_MODE:-false}"
-source $ROOT_DIR/include/func.sh
+source "$ROOT_DIR"/include/func.sh
 
 debug_mode
 
@@ -13,7 +13,7 @@ export BACKEND="${BACKEND:-kind}"
 export VALUES_OVERRIDE="${VALUES_OVERRIDE:-}"
 OVERRIDE=
 if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
-  OVERRIDE=$(cat $VALUES_OVERRIDE)
+  OVERRIDE=$(cat "$VALUES_OVERRIDE")
 fi
 
 export CLUSTER_NAME=${CLUSTER_NAME:-$BACKEND}
@@ -31,7 +31,11 @@ export SCF_BRANCH="${SCF_BRANCH:-develop}"
 
 export KIND_VERSION="${KIND_VERSION:-0.2.1}"
 export HA="${HA:-false}"
-export SIZING="${SIZING:-1}"
+if [ "$HA" = "true" ]; then
+    export SIZING="${SIZING:-2}"
+else
+    export SIZING="${SIZING:-1}"
+fi
 export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
 export DOCKER_ORG="${DOCKER_ORG:-cap}"
 set +x
