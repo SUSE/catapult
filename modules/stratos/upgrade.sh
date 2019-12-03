@@ -14,7 +14,7 @@ fi
 
 helm upgrade susecf-console ./console \
      --recreate-pods \
-     --values scf-config-values.yaml
+     --values scf-config-values-for-stratos.yaml
 
 bash "$ROOT_DIR"/include/wait_ns.sh stratos
 
