@@ -191,6 +191,27 @@ stratos-gen-config:
 stratos-upgrade:
 	make -C modules/stratos upgrade
 
+# metrics-only targets:
+.PHONY: metrics
+metrics:
+	make -C modules/metrics
+
+.PHONY: metrics-clean
+metrics-clean:
+	make -C modules/metrics clean
+
+.PHONY: metrics-chart
+metrics-chart:
+	make -C modules/metrics chart
+
+.PHONY: metrics-gen-config
+metrics-gen-config:
+	make -C modules/metrics gen-config
+
+.PHONY: metrics-upgrade
+metrics-upgrade:
+	make -C modules/metrics upgrade
+
 # test-only targets:
 .PHONY: tests
 tests:
