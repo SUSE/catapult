@@ -18,3 +18,5 @@ if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.da
 fi
 
 rm -rf console scf-config-values-for-stratos.yaml
+
+ok "Stratos removed"
