@@ -187,6 +187,10 @@ stratos-chart:
 stratos-gen-config:
 	make -C modules/stratos gen-config
 
+.PHONY: stratos-install
+stratos-install:
+	make -C modules/stratos install
+
 .PHONY: stratos-upgrade
 stratos-upgrade:
 	make -C modules/stratos upgrade
