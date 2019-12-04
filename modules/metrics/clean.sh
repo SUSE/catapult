@@ -3,7 +3,7 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eexuo pipefail
+set -Eeuo pipefail
 
 if helm ls 2>/dev/null | grep -qi susecf-metrics ; then
     helm del --purge susecf-metrics

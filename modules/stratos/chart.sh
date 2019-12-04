@@ -3,7 +3,7 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eexuo pipefail
+set -Eeuo pipefail
 debug_mode
 
 if [ -z "$STRATOS_CHART" ]; then

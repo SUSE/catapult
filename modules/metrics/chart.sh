@@ -3,7 +3,7 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eexuo pipefail
+set -Eeuo pipefail
 debug_mode
 
 if echo "$METRICS_CHART" | grep -q "http"; then
