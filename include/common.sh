@@ -29,7 +29,7 @@ export STRATOS_CHART="${STRATOS_CHART:-}"
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
 
-export KIND_VERSION="${KIND_VERSION:-0.2.1}"
+export KIND_VERSION="${KIND_VERSION:-0.6.1}"
 export HA="${HA:-false}"
 if [ "$HA" = "true" ]; then
     export SIZING="${SIZING:-2}"
@@ -47,7 +47,7 @@ debug_mode
 export MAGICDNS="${MAGICDNS:-nip.io}"
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
-export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha2}"
+export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha3}"
 export KUBEPROXY_PORT="${KUBEPROXY_PORT:-2224}"
 export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
 
