@@ -4,6 +4,9 @@ set -ex
 . ../../include/common.sh
 . .envrc
 
-cp $(kind get kubeconfig-path --name="$CLUSTER_NAME") kubeconfig
+# Kind above version 0.6.0 generates the config itself
+if [ ! -f kubeconfig ]; then
+  cp $(kind get kubeconfig-path --name="$CLUSTER_NAME") kubeconfig
 
-ok "Kubeconfig copied"
+  ok "Kubeconfig copied"
+fi
