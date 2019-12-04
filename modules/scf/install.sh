@@ -17,6 +17,9 @@ if [[ $ENABLE_EIRINI == true ]] ; then
              --set args[0]="--kubelet-preferred-address-types=InternalIP" \
              --set args[1]="--kubelet-insecure-tls" || true
     fi
+
+    echo "Waiting for metrics server to come up..."
+    bash "$ROOT_DIR"/include/wait_ns.sh default
 fi
 
 if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
