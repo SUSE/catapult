@@ -3,10 +3,8 @@
 . ../../include/common.sh
 . .envrc
 
-if [ -n "$STRATOS_CHART" ]; then
-    # save STRATOS_CHART on cap-values configmap
-    kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART'"'
-fi
+# save STRATOS_CHART on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART'"'
 
 helm upgrade susecf-console ./console \
      --recreate-pods \
