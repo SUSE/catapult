@@ -5,7 +5,9 @@
 if [ -d "$BUILD_DIR" ]; then
       info "Cleaning up $BUILD_DIR"
       . .envrc
-      kind delete cluster --name="${CLUSTER_NAME}"
+      if kind get clusters | grep -qi "${CLUSTER_NAME}" ; then
+          kind delete cluster --name="${CLUSTER_NAME}"
+      fi
       popd
       rm -rf "$BUILD_DIR"
 fi
