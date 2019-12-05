@@ -111,6 +111,7 @@ function info {
     else
     printf "${BBlue}${INFO_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND ${BPurple}${KUBE_IMG}${CLUSTER_NAME} ${IBlue} ${RECIPE_IMG} ${cat}${BBlue} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
+    debug_mode
 }
 
 function ok {
@@ -124,6 +125,7 @@ function ok {
     else
     printf "${BGreen}${OK_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND${IGreen} ${KUBE_IMG}${CLUSTER_NAME} ${RECIPE_IMG} ${cat}${BGreen} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
+    debug_mode
 }
 
 function warn {
@@ -137,6 +139,7 @@ function warn {
     else
     printf "${BYellow}${WARN_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND${IYellow} ${KUBE_IMG}${CLUSTER_NAME} ${RECIPE_IMG} ${cat}${BYellow} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
+    debug_mode
 }
 
 function err {
@@ -150,6 +153,7 @@ function err {
     else
     printf "${BRed}${ERR_IMG} ${BWhite}${ROCKET_IMG} ${On_Black}$BACKEND${IRed} ${KUBE_IMG}${CLUSTER_NAME} ${RECIPE_IMG} ${cat}${BRed} ${ARROW_IMG} ${BWhite}${On_Black}$message$Color_Off\n"
     fi
+    debug_mode
 }
 
 function debug_mode {
@@ -164,5 +168,3 @@ function load_env_from_json {
     # Export but preserve one that are passed explictly
     eval "$(jq -r ' to_entries | .[] | "export "+ .key + "=\"${"+ .key + ":-" + .value + "}\""' < $1)"
 }
-
-debug_mode
