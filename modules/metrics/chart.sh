@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
