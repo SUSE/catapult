@@ -1,11 +1,7 @@
 #!/bin/bash
 
-set -e
-
 . ../../include/common.sh
 . .envrc
-
-debug_mode
 
 kubectl apply -f "$ROOT_DIR"/kube/socks.yaml
 

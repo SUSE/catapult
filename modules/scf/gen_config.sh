@@ -1,10 +1,8 @@
 #!/bin/bash
-set -e
 
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 info "Generating SCF config values"
 if [ -z "${DEFAULT_STACK}" ]; then

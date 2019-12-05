@@ -5,8 +5,6 @@
 
 . ../../include/common.sh
 
-set -exuo pipefail
-
 info "Deleting imported k8s cluster"
 
 if [ -d "$BUILD_DIR" ]; then

@@ -1,10 +1,8 @@
 #!/bin/bash
-set -e
 
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 if [ -z "$SCF_CHART" ] && [ -z "$SCF_HELM_VERSION" ]; then
     warn "No chart url given - using latest public release from GH"

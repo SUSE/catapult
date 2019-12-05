@@ -1,10 +1,7 @@
 #!/bin/bash
-set -e
 
 . ../../include/common.sh
 . .envrc
-
-debug_mode
 
 APPLICATION_PATH=$PWD
 type="Config"

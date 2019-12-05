@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -euo pipefail
-
-debug_mode
 
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')

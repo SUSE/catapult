@@ -6,8 +6,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eexuo pipefail
-
 # check gcloud credentials:
 if [[ $(gcloud auth list  --format="value(account)" | wc -l ) -le 0 ]]; then
     echo ">>> Missing gcloud credentials, aborting" && exit 1

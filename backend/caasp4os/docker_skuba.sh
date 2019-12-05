@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
+set -Eexuo pipefail
 
 . "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
 

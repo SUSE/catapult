@@ -5,9 +5,6 @@
 
 . ../../include/common.sh
 
-set -exuo pipefail
-
-
 if [ -d "$BUILD_DIR" ]; then
     . .envrc
 

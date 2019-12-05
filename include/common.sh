@@ -53,3 +53,7 @@ export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
 
 
 info "Loading"
+
+# set as much restrictive bash options as possible for following scripts.
+# If needed, relax options in the specific script.
+set -Eeuo pipefail

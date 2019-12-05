@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 info "Generating stratos-metrics config values"
 
 cat <<HEREDOC_APPEND >> scf-config-values-for-stratos.yaml

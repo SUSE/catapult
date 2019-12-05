@@ -6,8 +6,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eexuo pipefail
-
 if ! aws sts get-caller-identity ; then
     echo ">>> Missing aws credentials, run aws configure, aborting" && exit 1
 fi

@@ -3,7 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 info "Purging all apps, buildpacks and services from the CF instance"
 

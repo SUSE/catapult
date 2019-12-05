@@ -7,14 +7,10 @@
 # - Sourced openrc.sh
 # - Key on the ssh keyring. If not, will put one
 
-set -exo pipefail
-
 . "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
 . "$( dirname "${BASH_SOURCE[0]}" )"/lib/skuba.sh
 . ../../include/common.sh
 . .envrc
-
-set -u
 
 export STACK=${STACK:-"$(whoami)-caasp4-${CAASP_VER::3}-$CLUSTER_NAME"}
 export DEBUG=${DEBUG:-0}

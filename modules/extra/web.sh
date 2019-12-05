@@ -1,9 +1,6 @@
 #!/bin/bash
-set -e
 
 . ../../include/common.sh
-
-debug_mode
 
 TMPDIR="${TMPDIR:-/tmp}" # required to be able to mount configs in deployments containers (dind mount )
 

@@ -1,11 +1,7 @@
 #!/bin/bash
 
-set -e
-
 . ../../include/common.sh
 . .envrc
-
-debug_mode
 
 if [ -n "$STRATOS_CHART" ]; then
     # save STRATOS_CHART on cap-values configmap

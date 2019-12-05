@@ -3,7 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuxo pipefail
 
 MINIKUBE_RUNTIME=${MINIKUBE_RUNTIME:-docker} #options: containerd, cri-o
 if [[ "$OSTYPE" == "darwin"* ]]; then

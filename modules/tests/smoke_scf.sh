@@ -3,7 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -exuo pipefail
 
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 generated_secrets_secret="$(kubectl get pod api-group-0 -n scf -o jsonpath='{@.spec.containers[0].env[?(@.name=="MONIT_PASSWORD")].valueFrom.secretKeyRef.name}')"

@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 info "Deploying stratos-metrics"
 
 # save METRICS_CHART on cap-values configmap

@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 if [ -z "$STRATOS_CHART" ]; then
     warn "No stratos chart url given - using latest public release from GH"
         STRATOS_CHART=$(curl -s https://api.github.com/repos/cloudfoundry/stratos/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | tr -d " ")

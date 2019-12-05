@@ -1,10 +1,8 @@
 #!/bin/bash
 
-set -e
-
 . ../../include/common.sh
 . .envrc
-debug_mode
+
 
 [ ! -d "scf" ] && git clone --recurse-submodules "$SCF_REPO" scf
 

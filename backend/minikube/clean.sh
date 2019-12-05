@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-
 . ../../include/common.sh
 
-set -Eeuxo pipefail
 
 if [ -d "$BUILD_DIR" ]; then
     . .envrc

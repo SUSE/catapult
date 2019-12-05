@@ -1,10 +1,7 @@
 #!/bin/bash
-set -e
 
 . ../../include/common.sh
 . .envrc
-
-debug_mode
 
 # Credits to drnic
 # https://github.com/starkandwayne/bootstrap-gke#cloud-foundry--eirini--quarks

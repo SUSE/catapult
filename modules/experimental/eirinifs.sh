@@ -1,5 +1,4 @@
 #!/bin/bash
-set -ex 
 
 # Builds and patch eirinifs in a live cluster
 . ../../include/common.sh

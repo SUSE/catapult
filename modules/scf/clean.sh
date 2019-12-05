@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -euo pipefail
-
-debug_mode
 
 if [ "$EMBEDDED_UAA" != "true" ]; then
     if helm ls 2>/dev/null | grep -qi susecf-uaa ; then

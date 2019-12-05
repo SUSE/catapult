@@ -1,11 +1,8 @@
 #!/bin/bash
 
-set -e
-
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 # save SCF_CHART on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'

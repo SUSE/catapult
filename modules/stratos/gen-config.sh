@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 info "Generating stratos config values from scf values"
 
 cp scf-config-values.yaml scf-config-values-for-stratos.yaml

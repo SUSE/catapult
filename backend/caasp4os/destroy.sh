@@ -12,9 +12,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -exuo pipefail
-
-
 if [ -d "$BUILD_DIR" ]; then
     if [[ ! -v OS_PASSWORD ]]; then
         echo ">>> Missing openstack credentials" && exit 1

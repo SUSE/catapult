@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -euo pipefail
-
-debug_mode
 
 export DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')

@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 info "Deploying stratos"
 
 # save STRATOS_CHART on cap-values configmap

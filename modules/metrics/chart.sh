@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 if echo "$METRICS_CHART" | grep -q "http"; then
     curl -L "$METRICS_CHART" -o stratos-metrics-chart
 else

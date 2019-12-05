@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-set -exo pipefail
-
 . ../../include/common.sh
 . .envrc
-
-set -u
 
 curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz
 tar -xvf google-cloud-sdk.tar.gz

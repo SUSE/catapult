@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 . ../../include/common.sh
 . .envrc
 HELM_VERSION="${HELM_VERSION:-v2.16.1}"

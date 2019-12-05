@@ -2,6 +2,7 @@
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
 . $ROOT_DIR/include/common.sh
+set +Eeuo pipefail # unset options as we will call include/common.sh again
 
 info "Creating $BUILD_DIR"
 mkdir "$BUILD_DIR"

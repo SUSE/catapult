@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-set -exo pipefail
-
 . ../../include/common.sh
 . .envrc
-
-set -u
 
 # pin the kubectl to eks default version
 curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/kubectl
