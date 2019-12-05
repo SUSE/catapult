@@ -96,11 +96,11 @@ config:
 
 sizing:
   uaa:
-   count: ${SIZING}
+    count: ${SIZING}
   tcp_router:
-   count: ${SIZING}
+    count: ${SIZING}
   syslog_scheduler:
-   count: ${SIZING}
+    count: ${SIZING}
   adapter:
     count: ${SIZING}
   api_group:
