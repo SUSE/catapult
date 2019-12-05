@@ -2,8 +2,6 @@
 
 . ../../include/common.sh
 
-set -Eeuo pipefail
-
 if [ -d "$BUILD_DIR" ]; then
       info "Cleaning up $BUILD_DIR"
       . .envrc
