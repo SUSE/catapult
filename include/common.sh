@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 export DEBUG_MODE="${DEBUG_MODE:-false}"
 source "$ROOT_DIR"/include/func.sh
 
