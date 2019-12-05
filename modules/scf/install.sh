@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
@@ -41,7 +42,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
         SCF_CHART="deploy/helm/scf"
     fi
 
-    if [ -z "$OPERATOR_CHART_URL" ]; then
+    if [ "$OPERATOR_CHART_URL" = latest ]; then
         info "Sourcing operator from kubecf charts"
         # FIXME: Platform dipendent for now
         info "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
@@ -50,7 +51,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
         OPERATOR_CHART_URL=$(yq r $SCF_CHART/Metadata.yaml operatorChartUrl)
 
         # If still empty, grab latest one
-        if [ -z "$OPERATOR_CHART_URL" ]; then
+        if [ "$OPERATOR_CHART_URL" = latest ]; then
          info "Fallback to use latest GH release of cf-operator"
          OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
         fi
