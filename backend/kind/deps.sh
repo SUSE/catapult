@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 
 if [[ "$OSTYPE" == "darwin"* ]]; then

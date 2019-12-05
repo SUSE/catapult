@@ -35,7 +35,6 @@ debug_mode
 
 export MAGICDNS="${MAGICDNS:-nip.io}"
 export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
-export KIND_APIVERSION="${KIND_APIVERSION:-kind.sigs.k8s.io/v1alpha3}"
 export KUBEPROXY_PORT="${KUBEPROXY_PORT:-2224}"
 export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
 
