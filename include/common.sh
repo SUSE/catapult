@@ -25,7 +25,6 @@ export BUILD_DIR="$ROOT_DIR"/build${CLUSTER_NAME}
 
 export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
 export SCF_BRANCH="${SCF_BRANCH:-develop}"
-export KIND_VERSION="${KIND_VERSION:-0.6.1}"
 export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
 export DOCKER_ORG="${DOCKER_ORG:-cap}"
 set +x
