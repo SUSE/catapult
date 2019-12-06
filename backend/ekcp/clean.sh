@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 
 if [ -d "$BUILD_DIR" ]; then

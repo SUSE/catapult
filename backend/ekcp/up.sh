@@ -1,4 +1,6 @@
 #!/bin/bash
+
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
