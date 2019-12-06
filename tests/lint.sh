@@ -2,6 +2,7 @@
 
 . ../include/common.sh
 
+retcode=0
 BUILDDIR_REGEXP="^$ROOT_DIR/build"
 
 info "Linting shell scripts" && debug_mode
