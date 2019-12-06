@@ -30,6 +30,7 @@ export DOCKER_ORG="${DOCKER_ORG:-cap}"
 set +x
 export DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 export DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
+export CLUSTER_PASSWORD="${CLUSTER_PASSWORD:-password}"
 debug_mode
 
 export MAGICDNS="${MAGICDNS:-nip.io}"
