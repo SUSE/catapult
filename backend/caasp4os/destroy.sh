@@ -7,10 +7,9 @@
 # - Sourced openrc.sh
 # - Key on the ssh keyring
 
-. "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
-. "$( dirname "${BASH_SOURCE[0]}" )"/lib/skuba.sh
+. ./defaults.sh
+. ./lib/skuba.sh
 . ../../include/common.sh
-. .envrc
 
 if [ -d "$BUILD_DIR" ]; then
     if [[ ! -v OS_PASSWORD ]]; then

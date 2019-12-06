@@ -7,7 +7,7 @@
 # Requires:
 # kubectl & helm binaries
 
-. "$( dirname "${BASH_SOURCE[0]}" )"/caasp4os.sh
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
