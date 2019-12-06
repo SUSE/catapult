@@ -7,6 +7,7 @@ if [ "$KIND_VERSION" != "v0.4.0" ]; then
 
 fi
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
@@ -69,10 +70,6 @@ bits:
     external_ips: *external_ips
 EOF
 
-
-
-export EIRINI_RELEASE_REPO="${EIRINI_RELEASE_REPO:-https://github.com/mudler/eirini-release}"
-export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_CHECKOUT:-eirini_logging}"
 
 helm repo add eirini https://cloudfoundry-incubator.github.io/eirini-release
 #helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
