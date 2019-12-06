@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
@@ -17,7 +18,6 @@ kubectl create namespace catapult || true
 kubectl delete pod cats -n catapult || true
 
 export DEFAULT_STACK="${DEFAULT_STACK:-cflinuxfs3}"
-export CATS_REPO="${CATS_REPO:-https://github.com/cloudfoundry/cf-acceptance-tests}"
 
 pod_definition=$(erb "$ROOT_DIR"/kube/cats/pod.yaml.erb)
 cat <<EOF

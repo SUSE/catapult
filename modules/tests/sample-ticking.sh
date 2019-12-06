@@ -3,8 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-SAMPLE_APP_REPO="${SAMPLE_APP_REPO:-https://github.com/cloudfoundry-samples/cf-sample-app-nodejs}"
-
 # Don't touch original copy
 cp -rfv ../contrib/samples/ticking_app ./
 

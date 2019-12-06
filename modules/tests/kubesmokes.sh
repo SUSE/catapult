@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
@@ -15,8 +16,6 @@ info
 
 kubectl create namespace catapult || true
 kubectl delete pod smokes -n catapult || true
-
-export SMOKES_REPO="${SMOKES_REPO:-https://github.com/cloudfoundry/cf-smoke-tests}"
 
 pod_definition=$(erb "$ROOT_DIR"/kube/smokes/pod.yaml.erb)
 cat <<EOF
