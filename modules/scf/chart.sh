@@ -86,4 +86,7 @@ if  [ "${SCF_OPERATOR}" == "true" ]; then
     cp -rfv kubecf*/* ./
 fi
 
+# save SCF_CHART on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
+
 ok "Chart uncompressed"

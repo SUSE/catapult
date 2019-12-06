@@ -5,9 +5,6 @@
 . .envrc
 
 
-# save SCF_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
-
 if [[ $ENABLE_EIRINI == true ]] ; then
    # [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm ls 2>/dev/null | grep -qi metrics-server ; then
