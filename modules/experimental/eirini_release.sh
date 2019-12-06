@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# TODO KIND_VERSION from kind/defaults.sh will not get read
 if [ "$KIND_VERSION" != "v0.4.0" ]; then
  err "We only support Kind version 0.4.0 for now"
 
