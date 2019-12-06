@@ -25,4 +25,7 @@ else
 fi
 rm stratos-chart
 
+# save STRATOS_CHART on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART'"'
+
 ok "Stratos chart uncompressed"
