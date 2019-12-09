@@ -5,6 +5,7 @@ ROOT_DIR="$(git rev-parse --show-toplevel)"
 [ ! -d "shunit2" ] && git clone https://github.com/kward/shunit2.git
 
 setUp() {
+    export PATH=$ROOT_DIR/tests/mocks:"$PATH"
     export CLUSTER_NAME=test
     export ROOT_DIR="$(git rev-parse --show-toplevel)"
     pushd "$ROOT_DIR"
