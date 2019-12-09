@@ -63,7 +63,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
 
     # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
     kubectl create namespace scf
-    kubectl create secret generic -n scf kubecf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
+    kubectl create secret generic -n scf scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD
 
     info "Installing cf-operator"
     # Install the operator
