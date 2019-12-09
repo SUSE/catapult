@@ -25,7 +25,7 @@ export MINIKUBE_HOME="$(pwd)"/.minikube
 HEREDOC_APPEND
 
 info "Generating default options file"
-echo > defaults.sh
+rm -rf defaults.sh
 echo '#!/usr/bin/env bash' >> defaults.sh
 echo '# DISCLAIMER!' >> defaults.sh
 echo '# DEFAULT VALUES. DO NOT CHANGE THIS FILE' >> defaults.sh
