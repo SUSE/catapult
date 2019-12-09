@@ -19,8 +19,8 @@ kubectl create namespace catapult || true
 kubectl delete pod brats -n catapult || true
 kubectl create -f "$ROOT_DIR"/kube/dind.yaml -n catapult || true
 
-export BRATS_CF_HOST="$BRATS_CF_HOST"
-export PROXY_HOST="$PROXY_HOST"
+export BRATS_CF_HOST="api.$DOMAIN"
+export PROXY_HOST="$public_ip"
 export PROXY_SCHEME="$PROXY_SCHEME"
 export BRATS_CF_USERNAME="$BRATS_CF_USERNAME"
 export BRATS_CF_PASSWORD="$BRATS_CF_PASSWORD"

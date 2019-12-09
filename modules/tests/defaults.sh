@@ -13,8 +13,6 @@ CATS_REPO="${CATS_REPO:-https://github.com/cloudfoundry/cf-acceptance-tests}"
 # BRATS options
 ###############
 
-BRATS_CF_HOST="${BRATS_CF_HOST:-api.$DOMAIN}"
-PROXY_HOST="${PROXY_HOST:-${public_ip}}"
 PROXY_SCHEME="${PROXY_SCHEME:-http}"
 BRATS_CF_USERNAME="${BRATS_CF_USERNAME:-admin}"
 BRATS_CF_PASSWORD="${BRATS_CF_PASSWORD:-$CLUSTER_PASSWORD}"
