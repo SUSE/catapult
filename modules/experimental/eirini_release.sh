@@ -8,6 +8,9 @@ if [ -f "$BUILD_DIR"/bin/kind ] && [ "$("BUILD_DIR"/bin/kind version)" != "v0.4.
     err "We only support Kind version 0.4.0 for now"
 fi
 
+DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+container_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
+
 cat > eirini-values.yaml <<EOF
 env:
   DOMAIN: &DOMAIN ${DOMAIN}
