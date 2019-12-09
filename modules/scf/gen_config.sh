@@ -64,9 +64,19 @@ features:
   eirini:
     enabled: ${ENABLE_EIRINI}
 
-service:
-  type: LoadBalancer
-  externalIPs: [${external_ips}]
+services:
+  router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+  ssh-proxy:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+  tcp-router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    port_range:
+      start: 20000
+      end: 20008
 EOF
 
 else
