@@ -3,5 +3,5 @@
 # EKCP options
 ##############
 
-EKCP=${EKCP:-}
+EKCP_HOST=${EKCP_HOST:-}
 FORCE_DELETE=${FORCE_DELETE:-"false"}
