@@ -113,35 +113,35 @@ testJsonOverrides() {
   rm -rf test.json
 }
 
-testscfChart() {
-  rm -rf buildtest
-  DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
-  assertTrue 'yq was not downloaded' "[ ! -e 'buildtest/bin/yq' ]"
-  assertTrue 'chart downloaded from URL (chart is present)' "[ -e 'buildtest/chart' ]"
-  assertTrue 'chart was not generated' '[ -z "$(ls buildtest/*.tgz buildtest/*.zip)" ]'
-  assertTrue 'chart downloaded (scf_chart_url is present)' "[ -e 'buildtest/scf_chart_url' ]"
-  assertTrue 'chart downloaded from an http resource (scf_chart_url contains http)' "grep 'http' 'buildtest/scf_chart_url'"
+# testscfChart() {
+#   rm -rf buildtest
+#   DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
+#   assertTrue 'yq was not downloaded' "[ ! -e 'buildtest/bin/yq' ]"
+#   assertTrue 'chart downloaded from URL (chart is present)' "[ -e 'buildtest/chart' ]"
+#   assertTrue 'chart was not generated' '[ -z "$(ls buildtest/*.tgz buildtest/*.zip)" ]'
+#   assertTrue 'chart downloaded (scf_chart_url is present)' "[ -e 'buildtest/scf_chart_url' ]"
+#   assertTrue 'chart downloaded from an http resource (scf_chart_url contains http)' "grep 'http' 'buildtest/scf_chart_url'"
 
-  SCF_HELM_VERSION="2.14.5" DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
-  assertTrue 'yq was downloaded' "[ -e 'buildtest/bin/yq' ]"
-  assertTrue 'chart was generated (tgz present)' "[ -e 'buildtest/scf-sle-2.14.5+cf2.7.0.0.g6360c016.tgz' ]"
-  assertTrue 'chart was generated (zip present)' "[ -e 'buildtest/scf-sle-2.14.5+cf2.7.0.0.g6360c016.zip' ]"
-  assertTrue 'chart not downloaded' "[ ! -e 'buildtest/scf_chart_url' ]"
+#   SCF_HELM_VERSION="2.14.5" DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
+#   assertTrue 'yq was downloaded' "[ -e 'buildtest/bin/yq' ]"
+#   assertTrue 'chart was generated (tgz present)' "[ -e 'buildtest/scf-sle-2.14.5+cf2.7.0.0.g6360c016.tgz' ]"
+#   assertTrue 'chart was generated (zip present)' "[ -e 'buildtest/scf-sle-2.14.5+cf2.7.0.0.g6360c016.zip' ]"
+#   assertTrue 'chart not downloaded' "[ ! -e 'buildtest/scf_chart_url' ]"
 
-  make clean
-  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+#   make clean
+#   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 
-  SCF_CHART="https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
-  assertTrue 'yq was not downloaded' "[ ! -e 'buildtest/bin/yq' ]"
-  assertTrue 'chart downloaded from URL (chart is present)' "[ -e 'buildtest/chart' ]"
-  assertTrue 'chart was not generated' '[ -z "$(ls buildtest/*.tgz buildtest/*.zip)" ]'
-  assertTrue 'chart downloaded (scf_chart_url is present)' "[ -e 'buildtest/scf_chart_url' ]"
-  assertTrue 'chart downloaded from an http resource (scf_chart_url contains http)' "grep 'http' 'buildtest/scf_chart_url'"
-  assertTrue 'chart downloaded from an http resource matches' '[[ "https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" == "$(cat buildtest/scf_chart_url)" ]]'
+#   SCF_CHART="https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" DEFAULT_STACK=sle15 CLUSTER_PASSWORD=test123 make buildir scf-chart scf-gen-config
+#   assertTrue 'yq was not downloaded' "[ ! -e 'buildtest/bin/yq' ]"
+#   assertTrue 'chart downloaded from URL (chart is present)' "[ -e 'buildtest/chart' ]"
+#   assertTrue 'chart was not generated' '[ -z "$(ls buildtest/*.tgz buildtest/*.zip)" ]'
+#   assertTrue 'chart downloaded (scf_chart_url is present)' "[ -e 'buildtest/scf_chart_url' ]"
+#   assertTrue 'chart downloaded from an http resource (scf_chart_url contains http)' "grep 'http' 'buildtest/scf_chart_url'"
+#   assertTrue 'chart downloaded from an http resource matches' '[[ "https://github.com/SUSE/scf/releases/download/2.16.4/scf-sle-2.16.4+cf6.10.0.2.g5abdb16f.zip" == "$(cat buildtest/scf_chart_url)" ]]'
 
-  make clean
-  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
-}
+#   make clean
+#   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+# }
 
 testCommonDeps() {
   rm -rf buildtest
