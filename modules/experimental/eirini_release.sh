@@ -1,16 +1,12 @@
 #!/bin/bash
 
-# TODO KIND_VERSION from kind/defaults.sh will not get read
-if [ "$KIND_VERSION" != "v0.4.0" ]; then
- err "We only support Kind version 0.4.0 for now"
-
- exit 1
-
-fi
-
 . ./defaults.sh
 . ../../include/common.sh
 . .envrc
+
+if [ -f "$BUILD_DIR"/bin/kind ] && [ "$("BUILD_DIR"/bin/kind version)" != "v0.4.0" ]; then
+    err "We only support Kind version 0.4.0 for now"
+fi
 
 cat > eirini-values.yaml <<EOF
 env:
