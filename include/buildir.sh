@@ -27,7 +27,8 @@ HEREDOC_APPEND
 info "Generating default options file"
 touch defaults.sh
 echo '#!/usr/bin/env bash' >> defaults.sh
-echo 'DEFAULT VALUES. DO NOT CHANGE THIS FILE' >> defaults.sh
+echo '# DISCLAIMER!'
+echo '# DEFAULT VALUES. DO NOT CHANGE THIS FILE' >> defaults.sh
 sed '1d' "$ROOT_DIR"/include/defaults_global.sh >> defaults.sh
 set +x
 sed '1d' "$ROOT_DIR"/include/defaults_global_private.sh >> defaults.sh
