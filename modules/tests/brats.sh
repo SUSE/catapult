@@ -1,7 +1,8 @@
 #!/bin/bash
 
-. ./defaults.sh
 . ../../include/common.sh
+# defaults.sh needs CLUSTER_PASSWORD:
+. "$ROOT_DIR"/modules/tests/defaults.sh
 . .envrc
 
 
