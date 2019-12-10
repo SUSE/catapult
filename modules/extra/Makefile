@@ -36,3 +36,7 @@ registry:
 .PHONY: concourse
 concourse:
 	./concourse.sh
+
+.PHONY: log
+log:
+	./log.sh

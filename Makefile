@@ -100,6 +100,10 @@ module-extra-kwt:
 module-extra-kwt-connect:
 	$(MAKE) -C modules/extra kwt-connect
 
+.PHONY: module-extra-log
+module-extra-log:
+	$(MAKE) -C modules/extra log
+
 .PHONY: module-extra-task
 module-extra-task:
 	$(MAKE) -C modules/extra task
