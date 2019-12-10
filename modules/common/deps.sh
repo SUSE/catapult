@@ -1,10 +1,8 @@
 #!/bin/bash
 
-set -e
-
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
-HELM_VERSION="${HELM_VERSION:-v2.16.1}"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export HELM_OS_TYPE="${HELM_OS_TYPE:-darwin-amd64}"

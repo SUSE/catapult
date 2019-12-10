@@ -1,15 +1,10 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
 info "Deploying stratos-metrics"
-
-# save METRICS_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n metrics-chart: "'$METRICS_CHART'"'
 
 helm install ./metrics \
      --name susecf-metrics \

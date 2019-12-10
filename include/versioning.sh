@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -Eeo pipefail
+
 GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
 GIT_DESCRIBE=${GIT_DESCRIBE:-$(git describe --tags --long)}
 GIT_BRANCH=${GIT_BRANCH:-$(git name-rev --name-only HEAD)}

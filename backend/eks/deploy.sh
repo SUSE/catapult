@@ -3,10 +3,9 @@
 # Requires:
 # - aws credentials present
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
-
-set -Eexuo pipefail
 
 if ! aws sts get-caller-identity ; then
     echo ">>> Missing aws credentials, run aws configure, aborting" && exit 1
@@ -18,10 +17,6 @@ pushd cap-terraform/eks
 # terraform needs helm client installed and configured:
 helm init --client-only
 
-EKS_LOCATION="${EKS_LOCATION:-us-west-2}"
-EKS_KEYPAIR="${EKS_KEYPAIR:-$(whoami)-terraform}"
-EKS_VERS="${EKS_VERS:-1.14}"
-EKS_CLUSTER_LABEL=${EKS_CLUSTER_LABEL:-{key = \"$(whoami)-eks-cluster\"}}
 cat <<HEREDOC > terraform.tfvars
 region = "$EKS_LOCATION"
 workstation_cidr_block = "0.0.0.0/0"

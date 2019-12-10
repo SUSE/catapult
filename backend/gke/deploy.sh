@@ -3,10 +3,9 @@
 # Requires:
 # - gcloud credentials present
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
-
-set -Eexuo pipefail
 
 # check gcloud credentials:
 if [[ $(gcloud auth list  --format="value(account)" | wc -l ) -le 0 ]]; then
@@ -20,11 +19,6 @@ fi
 
 git clone https://github.com/SUSE/cap-terraform.git
 pushd cap-terraform/gke
-
-GKE_PROJECT="${GKE_PROJECT:-suse-css-platform}"
-GKE_LOCATION="${GKE_LOCATION:-europe-west4-a}"
-GKE_CLUSTER_NAME="${GKE_CLUSTER_NAME:-$(whoami)-cap}"
-GKE_CRED_JSON="${GKE_CRED_JSON:-}"
 
 cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"

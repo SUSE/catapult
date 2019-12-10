@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-debug_mode
-
-set -Eeuo pipefail
 
 curl -Lo kube-ready-state-check.sh "$SCF_REPO"/raw/"$SCF_BRANCH"/bin/dev/kube-ready-state-check.sh
 chmod +x kube-ready-state-check.sh

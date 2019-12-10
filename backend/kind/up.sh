@@ -1,11 +1,9 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-set -Eeo pipefail
-
-debug_mode
 
 APPLICATION_PATH=$PWD
 type="Config"

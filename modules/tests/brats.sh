@@ -1,11 +1,10 @@
 #!/bin/bash
 
 . ../../include/common.sh
+# defaults.sh needs CLUSTER_PASSWORD:
+. "$ROOT_DIR"/modules/tests/defaults.sh
 . .envrc
 
-set -euo pipefail
-
-debug_mode
 
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
@@ -21,21 +20,20 @@ kubectl create namespace catapult || true
 kubectl delete pod brats -n catapult || true
 kubectl create -f "$ROOT_DIR"/kube/dind.yaml -n catapult || true
 
-export BRATS_CF_HOST="${BRATS_CF_HOST:-api.$DOMAIN}"
-export PROXY_HOST="${PROXY_HOST:-${public_ip}}"
-export PROXY_SCHEME="${PROXY_SCHEME:-http}"
-export BRATS_CF_USERNAME="${BRATS_CF_USERNAME:-admin}"
-export BRATS_CF_PASSWORD="${BRATS_CF_PASSWORD:-$CLUSTER_PASSWORD}"
-export PROXY_PORT="${PROXY_PORT:-9002}"
-export PROXY_USERNAME="${PROXY_USERNAME:-username}"
-export PROXY_PASSWORD="${PROXY_PASSWORD:-password}"
-export BRATS_TEST_SUITE="${BRATS_TEST_SUITE:-brats}"
-export CF_STACK="${CF_STACK:-sle15}"
-export GINKGO_ATTEMPTS="${GINKGO_ATTEMPTS:-3}"
-
-export BRATS_BUILDPACK="${BRATS_BUILDPACK}"
-export BRATS_BUILDPACK_URL="${BRATS_BUILDPACK_URL}"
-export BRATS_BUILDPACK_VERSION="${BRATS_BUILDPACK_VERSION}"
+export BRATS_CF_HOST="api.$DOMAIN"
+export PROXY_HOST="$public_ip"
+export PROXY_SCHEME="$PROXY_SCHEME"
+export BRATS_CF_USERNAME="$BRATS_CF_USERNAME"
+export BRATS_CF_PASSWORD="$BRATS_CF_PASSWORD"
+export PROXY_PORT="$PROXY_PORT"
+export PROXY_USERNAME="$PROXY_USERNAME"
+export PROXY_PASSWORD="$PROXY_PASSWORD"
+export BRATS_TEST_SUITE="$BRATS_TEST_SUITE"
+export CF_STACK="$CF_STACK"
+export GINKGO_ATTEMPTS="$GINKGO_ATTEMPTS"
+export BRATS_BUILDPACK="$BRATS_BUILDPACK"
+export BRATS_BUILDPACK_URL="$BRATS_BUILDPACK_URL"
+export BRATS_BUILDPACK_VERSION="$BRATS_BUILDPACK_VERSION"
 
 pod_definition=$(erb "$ROOT_DIR"/kube/brats/pod.yaml.erb)
 redacted_pod_definition=$(echo -e "$pod_definition" | sed -e '/COMPOSER/,+1d')

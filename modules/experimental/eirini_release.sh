@@ -1,15 +1,15 @@
 #!/bin/bash
-set -ex 
 
-if [ "$KIND_VERSION" != "v0.4.0" ]; then
- err "We only support Kind version 0.4.0 for now"
-
- exit 1
-
-fi
-
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
+
+if [ -f "$BUILD_DIR"/bin/kind ] && [ "$("BUILD_DIR"/bin/kind version)" != "v0.4.0" ]; then
+    err "We only support Kind version 0.4.0 for now"
+fi
+
+DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+container_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 
 cat > eirini-values.yaml <<EOF
 env:
@@ -70,10 +70,6 @@ bits:
     external_ips: *external_ips
 EOF
 
-
-
-export EIRINI_RELEASE_REPO="${EIRINI_RELEASE_REPO:-https://github.com/mudler/eirini-release}"
-export EIRINI_RELEASE_CHECKOUT="${EIRINI_RELEASE_CHECKOUT:-eirini_logging}"
 
 helm repo add eirini https://cloudfoundry-incubator.github.io/eirini-release
 #helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm

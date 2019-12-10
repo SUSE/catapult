@@ -1,11 +1,9 @@
 #!/bin/bash
 
-set -e
-
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 if [ -n "$SCF_CHART" ]; then
 # save SCF_CHART on cap-values configmap

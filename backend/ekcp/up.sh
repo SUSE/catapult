@@ -1,9 +1,7 @@
 #!/bin/bash
-set -x
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
-
-set -Eexo pipefail
 
 curl -d "name=${CLUSTER_NAME}" -X POST http://$EKCP_HOST/new

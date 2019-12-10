@@ -5,7 +5,6 @@ export CLUSTER_NAME=${CLUSTER_NAME:-minikube}
 
 . ../../include/common.sh
 
-set -Eeuxo pipefail
 
 MINIKUBE_VERSION=latest
 

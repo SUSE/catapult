@@ -1,11 +1,8 @@
 #!/bin/bash
 
-set -e
-
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
-
-debug_mode
 
 info "Upgrading stratos-metrics"
 

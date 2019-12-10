@@ -1,25 +1,18 @@
 #!/bin/bash
-set -e
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 info "Generating SCF config values"
-if [ -z "${DEFAULT_STACK}" ]; then
+if [ "${DEFAULT_STACK}" = "from_chart" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
 fi
 
 if [ "$ENABLE_EIRINI" = false ]; then
   GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
-else
-  GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-btrfs}"
 fi
-
-DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
-STORAGECLASS="${STORAGECLASS:-persistent}"
-AUTOSCALER="${AUTOSCALER:-false}"
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
@@ -113,11 +106,11 @@ config:
 
 sizing:
   uaa:
-   count: ${SIZING}
+    count: ${SIZING}
   tcp_router:
-   count: ${SIZING}
+    count: ${SIZING}
   syslog_scheduler:
-   count: ${SIZING}
+    count: ${SIZING}
   adapter:
     count: ${SIZING}
   api_group:

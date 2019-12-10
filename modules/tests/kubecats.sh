@@ -1,11 +1,9 @@
 #!/bin/bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-set -euo pipefail
-
-debug_mode
 
 export DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')
@@ -20,8 +18,8 @@ kubectl create namespace catapult || true
 kubectl delete pod cats -n catapult || true
 
 export DEFAULT_STACK="${DEFAULT_STACK:-cflinuxfs3}"
-export CATS_REPO="${CATS_REPO:-https://github.com/cloudfoundry/cf-acceptance-tests}"
 
+export CATS_REPO=$CATS_REPO
 pod_definition=$(erb "$ROOT_DIR"/kube/cats/pod.yaml.erb)
 cat <<EOF
 Will create this pod (if you see empty values, make sure you defined all the needed env variables):

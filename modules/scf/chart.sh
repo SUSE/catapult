@@ -1,10 +1,9 @@
 #!/bin/bash
-set -e
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-debug_mode
 
 if [ -z "$SCF_CHART" ] && [ -z "$SCF_HELM_VERSION" ]; then
     warn "No chart url given - using latest public release from GH"
@@ -86,5 +85,8 @@ fi
 if  [ "${SCF_OPERATOR}" == "true" ]; then
     cp -rfv kubecf*/* ./
 fi
+
+# save SCF_CHART on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
 
 ok "Chart uncompressed"

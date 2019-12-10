@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 . ../../include/common.sh
 . .envrc
 

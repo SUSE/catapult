@@ -3,9 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -euo pipefail
-
-debug_mode
 kubectl create namespace catapult || true
 kubectl create -f "$ROOT_DIR"/kube/dind.yaml -n catapult || true
 kubectl create -f "$ROOT_DIR"/kube/task.yaml -n catapult || true

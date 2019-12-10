@@ -2,6 +2,7 @@
 
 # duplicated in s/include/common.sh, needed for bootstrapping:
 . $ROOT_DIR/include/common.sh
+set +Eeuo pipefail # unset options as we will call include/common.sh again
 
 info "Creating $BUILD_DIR"
 mkdir "$BUILD_DIR"
@@ -22,5 +23,26 @@ export CF_HOME="$(pwd)"
 export PATH="$(pwd)"/bin:"$PATH"
 export MINIKUBE_HOME="$(pwd)"/.minikube
 HEREDOC_APPEND
+
+info "Generating default options file"
+rm -rf defaults.sh
+echo '#!/usr/bin/env bash' >> defaults.sh
+echo '# DISCLAIMER!' >> defaults.sh
+echo '# DEFAULT VALUES. DO NOT CHANGE THIS FILE' >> defaults.sh
+sed '1d' "$ROOT_DIR"/include/defaults_global.sh >> defaults.sh
+set +x
+sed '1d' "$ROOT_DIR"/include/defaults_global_private.sh >> defaults.sh
+debug_mode
+
+for d in "$ROOT_DIR"/backend/*/ ; do
+    if [ -f "$d"/defaults.sh ]; then
+        sed '1d' "$d"/defaults.sh >> defaults.sh
+    fi
+done
+for d in "$ROOT_DIR"/modules/*/ ; do
+    if [ -f "$d"/defaults.sh ]; then
+        sed '1d' "$d"/defaults.sh >> defaults.sh
+    fi
+done
 
 popd

@@ -3,8 +3,6 @@
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-
 if helm ls 2>/dev/null | grep -qi susecf-console ; then
     helm del --purge susecf-console
 fi

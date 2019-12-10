@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
+. ./defaults.sh
 . ../../include/common.sh
 . .envrc
 
-set -Eeuo pipefail
-debug_mode
-
-if [ -z "$STRATOS_CHART" ]; then
+if [ "$METRICS_CHART" = "latest" ]; then
     warn "No stratos chart url given - using latest public release from GH"
         STRATOS_CHART=$(curl -s https://api.github.com/repos/cloudfoundry/stratos/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
 fi
@@ -26,5 +24,8 @@ else
     unzip -o stratos-chart
 fi
 rm stratos-chart
+
+# save STRATOS_CHART on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART'"'
 
 ok "Stratos chart uncompressed"

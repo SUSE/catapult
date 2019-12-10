@@ -1,11 +1,7 @@
 #!/bin/bash
-set -e
 
+. ./defaults.sh
 . ../../include/common.sh
-
-debug_mode
-
-TMPDIR="${TMPDIR:-/tmp}" # required to be able to mount configs in deployments containers (dind mount )
 
 info "Building wtty image"
 pushd "$ROOT_DIR"/kube/catapult-wtty

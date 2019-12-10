@@ -31,6 +31,12 @@ _define_node_group() {
     esac
 }
 
+DEBUG_MODE=${DEBUG_MODE:-false}
+if [ DEBUG_MODE = true ]; then
+    DEBUG=1
+else
+    DEBUG=0
+fi
 
 skuba_container() {
     # Usage:
