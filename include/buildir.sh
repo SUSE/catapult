@@ -8,7 +8,9 @@ info "Creating $BUILD_DIR"
 mkdir "$BUILD_DIR"
 . $ROOT_DIR/include/common.sh # Reload, as we just created BUILD_DIR
 
-mkdir bin
+if [ ! -d "bin" ]; then
+    mkdir bin
+fi
 
 info "Generating .envrc"
 cat <<HEREDOC > .envrc
