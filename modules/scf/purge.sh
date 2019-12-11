@@ -3,6 +3,8 @@
 . ../../include/common.sh
 . .envrc
 
+# Purging it's a best-effort action
+set +e
 
 info "Purging all apps, buildpacks and services from the CF instance"
 
