@@ -4,29 +4,38 @@
 . ../../include/common.sh
 . .envrc
 
-if [ "$METRICS_CHART" = "latest" ]; then
-    warn "No metrics chart url given - using latest public release from GH"
-    # TODO consume chart from assets and not the github zipfile
-    METRICS_CHART=$(curl -s https://api.github.com/repos/SUSE/stratos-metrics/releases/latest | grep "zipball_url" | cut -d : -f 2,3 | tr -d \" | tr -d " " | tr -d ,)
-fi
-
-if echo "$METRICS_CHART" | grep -q "http"; then
-    curl -L "$METRICS_CHART" -o stratos-metrics-chart
-else
-    cp -rfv "$METRICS_CHART" stratos-metrics-chart
-fi
-
 # remove old uncompressed chart
 rm -rf metrics
 
-if echo "$METRICS_CHART" | grep -q "tgz"; then
-    tar -xvf stratos-metrics-chart -C ./
+if [ "$METRICS_CHART" = "latest" ]; then
+    warn "No metrics chart url given - using latest public release from kubernetes-charts.suse.com"
+    HELM_REPO="https://kubernetes-charts.suse.com/"
+    HELM_REPO_NAME="suse"
+
+    helm init --client-only
+    helm repo add "$HELM_REPO_NAME" $HELM_REPO
+    helm repo update
+    helm fetch "$HELM_REPO_NAME"/metrics
+    tar -xvf metrics-*
+    rm metrics-*.tgz
+    METRICS_CHART_NAME=$(cat metrics/values.yaml | grep imageTag | cut -d " " -f2)
 else
-    unzip -o stratos-metrics-chart
+    if echo "$METRICS_CHART" | grep -q "http"; then
+        curl -L "$METRICS_CHART" -o stratos-metrics-chart
+    else
+        cp -rfv "$STRATOS_CHART" stratos-metrics-chart
+    fi
+
+    if echo "$METRICS_CHART" | grep -q "tgz"; then
+        tar -xvf stratos-metrics-chart -C ./
+    else
+        unzip -o stratos-metrics-chart
+    fi
+    rm metrics-chart
+    METRICS_CHART_NAME="$METRICS_CHART"
 fi
 
-# TODO consume from github assets not the github zipfile
-mv SUSE-stratos-metrics-* metrics
-rm stratos-metrics-chart
+# save STRATOS_CHART_NAME on cap-values configmap
+kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$METRICS_CHART_NAME'"'
 
 ok "Stratos-metrics chart uncompressed"
