@@ -5,7 +5,11 @@
 set +Eeuo pipefail # unset options as we will call include/common.sh again
 
 info "Creating $BUILD_DIR"
-mkdir "$BUILD_DIR"
+
+if [ ! -d "$BUILD_DIR" ]; then
+    mkdir "$BUILD_DIR"
+fi
+
 . $ROOT_DIR/include/common.sh # Reload, as we just created BUILD_DIR
 
 if [ ! -d "bin" ]; then
