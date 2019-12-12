@@ -15,3 +15,9 @@ KWT_OS_TYPE="${KWT_OS_TYPE:-linux-amd64}"
 ## Catapult-web
 # required to be able to mount configs in deployments containers (dind mount for deployments from web interface)
 TMPDIR="${TMPDIR:-/tmp}"
+
+## Fissile
+FISSILE_BOSH_RELEASE="${FISSILE_BOSH_RELEASE:-}"
+FISSILE_STEMCELL="${FISSILE_STEMCELL:-splatform/fissile-stemcell-sle:SLE_15_SP1-15.1}"
+FISSILE_RELEASE_NAME="${FISSILE_RELEASE_NAME:-fissile-release}"
+FISSILE_RELEASE_VERSION="${FISSILE_RELEASE_VERSION:-0.1}"
