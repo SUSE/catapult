@@ -96,6 +96,10 @@ module-extra-ingress-forward:
 module-extra-kwt:
 	$(MAKE) -C modules/extra kwt
 
+.PHONY: module-extra-fissile
+module-extra-fissile:
+	$(MAKE) -C modules/extra fissile
+
 .PHONY: module-extra-kwt-connect
 module-extra-kwt-connect:
 	$(MAKE) -C modules/extra kwt-connect

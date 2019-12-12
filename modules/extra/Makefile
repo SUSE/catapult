@@ -40,3 +40,7 @@ concourse:
 .PHONY: log
 log:
 	./log.sh
+
+.PHONY: fissile
+fissile:
+	./fissile.sh
