@@ -154,6 +154,10 @@ scf-login:
 scf-gen-config:
 	$(MAKE) -C modules/scf gen-config
 
+.PHONY: scf-install
+scf-install:
+	$(MAKE) -C modules/scf install
+
 .PHONY: scf-upgrade
 scf-upgrade:
 	$(MAKE) -C modules/scf upgrade
