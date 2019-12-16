@@ -86,8 +86,7 @@ packages = [
   "kernel-default",
   "-kernel-default-base",
   "ca-certificates-suse",
-  "nfs-client",
-  "#~placeholder_caasp_pattern~#"
+  "nfs-client"
 ]
 
 # ssh keys to inject into all the nodes
