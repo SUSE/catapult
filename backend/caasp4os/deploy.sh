@@ -50,10 +50,11 @@ case "$CAASP_VER" in
          CAASP_REPO='caasp_40_staging_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40/staging/"'
          ;;
     "product")
-         CAASP_REPO='caasp_40_product_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40/standard/"'
+         # Already on terraform.tfvars
+         CAASP_REPO=
          ;;
     "update")
-         CAASP_REPO='caasp_40_update_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40:/Update/standard/"'
+         CAASP_REPO='caasp_40_update_sle15sp1 = "http://download.suse.de/ibs/SUSE/Updates/SUSE-CAASP/4.0/x86_64/update/"',
          ;;
 esac
 escapeSubst() {
