@@ -13,7 +13,7 @@
 . .envrc
 
 # nip.io doesn't seem to work well with ECP, use omg.h.w instead:
-export MAGICDNS=${MAGICDNS:-'omg.howdoi.website'}
+export MAGICDNS=omg.howdoi.website
 
 
 if [[ ! -v OS_PASSWORD ]]; then
