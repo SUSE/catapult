@@ -81,18 +81,14 @@ skuba_container terraform init
 skuba_container terraform plan -out my-plan
 skuba_container terraform apply -auto-approve my-plan
 
-# Bootstrap k8s with skuba
-skuba_container skuba version
-skuba_deploy
+# Install caasp product on all nodes
+skuba_run_cmd all "sudo zypper in -y -l --auto-agree-with-product-licenses -t product caasp"
 wait
-cp -f ./my-cluster/admin.conf ../kubeconfig
-
-# Disable annoying k8s cluster options
-skuba_updates all disable
+# Update all nodes
+skuba_run_cmd all "sudo zypper ref && sudo zypper up -y -l --auto-agree-with-product-licenses"
 wait
-skuba_reboots disable
+skuba_run_cmd all "sudo zypper in -y -t pattern SUSE-CaaSP-Node"
 wait
-
 # Enable swapaccount on all k8s nodes
 skuba_run_cmd all "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 cgroup_enable=memory swapaccount=1 \"|' /etc/default/grub"
 wait
@@ -102,6 +98,18 @@ skuba_run_cmd all 'sleep 2 && sudo nohup shutdown -r now > /dev/null 2>&1 &'
 wait
 # skuba_wait_ssh all 100
 sleep 100
+
+# Bootstrap k8s with skuba
+skuba_container skuba version
+skuba_deploy
+wait
+cp -f ./my-cluster/admin.conf ../kubeconfig
+
+# Disable annoying k8s cluster options
+skuba_updates all disable
+wait
+# skuba_reboots disable
+# wait
 
 # Create k8s configmap
 PUBLIC_IP="$(skuba_container terraform output ip_workers | cut -d, -f1 | head -n1)"
