@@ -29,30 +29,37 @@ fi
 info "Building bosh release"
 # Keep fissile generated cache inside our build dir
 export HOME=$PWD
-pushd ${FISSILE_BOSH_RELEASE}
+pushd ${FISSILE_OPT_BOSH_RELEASE}
 
 GIT_COMMIT=$(git rev-parse --short HEAD)
-BOSH_REL="${FISSILE_RELEASE_NAME}"-dev-"${GIT_COMMIT}".tgz
+BOSH_REL="${FISSILE_OPT_RELEASE_NAME}"-dev-"${GIT_COMMIT}".tgz
 
-docker run --rm -ti -v ${FISSILE_BOSH_RELEASE}:/bosh-release \
+docker run --rm -ti -v ${FISSILE_OPT_BOSH_RELEASE}:/bosh-release \
             splatform/bosh-cli \
             /bin/bash -c "cd /bosh-release && bosh reset-release"
 
-docker run --rm -ti -v ${FISSILE_BOSH_RELEASE}:/bosh-release \
+docker run --rm -ti -v ${FISSILE_OPT_BOSH_RELEASE}:/bosh-release \
             splatform/bosh-cli \
-            /bin/bash -c "cd /bosh-release && bosh create-release --force --tarball=${BOSH_REL} --name=${FISSILE_RELEASE_NAME}"
+            /bin/bash -c "cd /bosh-release && bosh create-release --force --tarball=${BOSH_REL} --name=${FISSILE_OPT_RELEASE_NAME} --version=${FISSILE_OPT_RELEASE_VERSION} && chmod 777 ${BOSH_REL}"
 
 #git submodule sync --recursive && git submodule update --init --recursive && git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"
 popd
 
-mv ${FISSILE_BOSH_RELEASE}/"${BOSH_REL}" ./
+mv ${FISSILE_OPT_BOSH_RELEASE}/"${BOSH_REL}" ./
 SHA=$(sha1sum ${PWD}/${BOSH_REL} | cut -d' ' -f1)
 
 info "Fissilizing it!"
-bin/fissile build release-images --stemcell="${FISSILE_STEMCELL}" \
+docker pull "${FISSILE_OPT_STEMCELL}"
+
+out=$(fissile build release-images --stemcell="${FISSILE_OPT_STEMCELL}" \
                                  --url "file://${PWD}/${BOSH_REL}" \
-                                 --name "${FISSILE_RELEASE_NAME}" \
+                                 --name=${FISSILE_OPT_RELEASE_NAME} \
                                  --sha1="${SHA}" \
                                  -w="$PWD" \
-                                 --version="${FISSILE_RELEASE_VERSION}"
+                                 --version="${FISSILE_OPT_RELEASE_VERSION}")
 # Load image to cluster
+name=$(echo $out | awk 'NR==1 {print; exit}' | grep -oh "${FISSILE_OPT_RELEASE_NAME}:.*$")
+
+ok "Image available as $name"
+
+kind load docker-image --name=${CLUSTER_NAME} $name
