@@ -70,8 +70,6 @@ sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_sshkey~#%$(escapeSubst "$SSHKEY")%g" \
     "$ROOT_DIR"/backend/caasp4os/terraform-os/terraform.tfvars.skel > \
     deployment/terraform.tfvars
-sed -i '/\"\${openstack_networking_secgroup_v2\.common\.name}\",/a \ \ \ \ "\${openstack_compute_secgroup_v2.secgroup_cap.name}",' \
-    deployment/worker-instance.tf
 cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
 pushd deployment
