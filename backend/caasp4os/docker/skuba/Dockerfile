@@ -21,7 +21,7 @@ RUN zypper --gpg-auto-import-keys ref -s
 RUN zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/SUSE:CA.repo"
 # RUN zypper ref
 RUN zypper in --auto-agree-with-licenses --no-confirm -t product caasp
-RUN zypper in --auto-agree-with-licenses --no-confirm ca-certificates-suse
+RUN zypper in --auto-agree-with-licenses --no-confirm ca-certificates-suse openssh
 RUN zypper -n in -t pattern SUSE-CaaSP-Management
 RUN zypper up
 RUN zypper clean -a
