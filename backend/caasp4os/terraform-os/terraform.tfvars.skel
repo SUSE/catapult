@@ -69,11 +69,15 @@ dnsentry = 0
 # }
 repositories = {
      #~placeholder_caasp_repo~#
-     sle15sp1_pool = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/GA/standard/"
-     sle15sp1_update = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update/standard/"
-     sle15_pool = "http://download.suse.de/ibs/SUSE:/SLE-15:/GA/standard/"
-     sle15_update = "http://download.suse.de/ibs/SUSE:/SLE-15:/Update/standard/"
-     suse_ca = "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/"
+    "caasp_product" = "http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/",
+    "suse_ca" = "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/",
+    "sle_server_pool" = "http://download.suse.de/ibs/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/",
+    "basesystem_pool" = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/",
+    "containers_pool" = "http://download.suse.de/ibs/SUSE/Products/SLE-Module-Containers/15-SP1/x86_64/product/",
+    "sle_server_updates" = "http://download.suse.de/ibs/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/",
+    "basesystem_updates" = "http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/",
+    "containers_updates" = "http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/",
+    "serverapps_updates" = "http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Server-Applications/15-SP1/x86_64/update/"
 }
 
 # Minimum required packages. Do not remove them.
@@ -82,8 +86,7 @@ packages = [
   "kernel-default",
   "-kernel-default-base",
   "ca-certificates-suse",
-  "nfs-client",
-  "#~placeholder_caasp_pattern~#"
+  "nfs-client"
 ]
 
 # ssh keys to inject into all the nodes

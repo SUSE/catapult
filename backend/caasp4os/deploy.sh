@@ -13,7 +13,7 @@
 . .envrc
 
 # nip.io doesn't seem to work well with ECP, use omg.h.w instead:
-export MAGICDNS=${MAGICDNS:-'omg.howdoi.website'}
+export MAGICDNS=omg.howdoi.website
 
 
 if [[ ! -v OS_PASSWORD ]]; then
@@ -50,10 +50,11 @@ case "$CAASP_VER" in
          CAASP_REPO='caasp_40_staging_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40/staging/"'
          ;;
     "product")
-         CAASP_REPO='caasp_40_product_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40/standard/"'
+         # Already on terraform.tfvars
+         CAASP_REPO=
          ;;
     "update")
-         CAASP_REPO='caasp_40_update_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40:/Update/standard/"'
+         CAASP_REPO='caasp_40_update_sle15sp1 = "http://download.suse.de/ibs/SUSE/Updates/SUSE-CAASP/4.0/x86_64/update/"',
          ;;
 esac
 escapeSubst() {
@@ -63,16 +64,12 @@ escapeSubst() {
 }
 # save only first ssh key, caasp4 terraform script constraints:
 SSHKEY="$(ssh-add -L | head -n 1)"
-CAASP_PATTERN='patterns-caasp-Node-1.15'
 sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_magic_dns~#%$(escapeSubst "$MAGICDNS")%g" \
     -e "s%#~placeholder_caasp_repo~#%$(escapeSubst "$CAASP_REPO")%g" \
     -e "s%#~placeholder_sshkey~#%$(escapeSubst "$SSHKEY")%g" \
-    -e "s%#~placeholder_caasp_pattern~#%$(escapeSubst "$CAASP_PATTERN")%g" \
     "$ROOT_DIR"/backend/caasp4os/terraform-os/terraform.tfvars.skel > \
     deployment/terraform.tfvars
-sed -i '/\"\${openstack_networking_secgroup_v2\.common\.name}\",/a \ \ \ \ "\${openstack_compute_secgroup_v2.secgroup_cap.name}",' \
-    deployment/worker-instance.tf
 cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
 pushd deployment
@@ -91,18 +88,8 @@ cp -f ./my-cluster/admin.conf ../kubeconfig
 # Disable annoying k8s cluster options
 skuba_updates all disable
 wait
-skuba_reboots disable
-wait
-
-# Enable swapaccount on all k8s nodes
-skuba_run_cmd all "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 cgroup_enable=memory swapaccount=1 \"|' /etc/default/grub"
-wait
-skuba_run_cmd all 'sudo grub2-mkconfig -o /boot/grub2/grub.cfg'
-wait
-skuba_run_cmd all 'sleep 2 && sudo nohup shutdown -r now > /dev/null 2>&1 &'
-wait
-# skuba_wait_ssh all 100
-sleep 100
+# skuba_reboots disable
+# wait
 
 # Create k8s configmap
 PUBLIC_IP="$(skuba_container terraform output ip_workers | cut -d, -f1 | head -n1)"
