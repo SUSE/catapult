@@ -4,21 +4,25 @@
 . ../../include/common.sh
 . .envrc
 
-if [ -e "bin/fissile" ]; then
+supported_backend "kind"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+if [ ! -e "bin/fissile" ]; then
     # Takes a dev bosh release checkout and make it an image. Upload it also to the kind cluster
     info "Building fissile from develop"
     mkdir -p buildfissile
     pushd buildfissile
     mkdir -p src                                  # make the directory src in your workspace
     export GOPATH=$PWD                            # set GOPATH to current working directory
-    go get -d code.cloudfoundry.org/fissile       # Download sources
+    go get -d code.cloudfoundry.org/fissile || true      # Download sources
     pushd $GOPATH/src/code.cloudfoundry.org/fissile
     make tools                              # install required tools; only needed first time
     make docker-deps                        # pull docker images required to build
     make build
     popd
     popd
-    mv buildfissile/$GOPATH/src/code.cloudfoundry.org/fissile/build/linux-amd64/fissile bin/
+    mv $GOPATH/src/code.cloudfoundry.org/fissile/build/linux-amd64/fissile bin/
     rm -rf buildfissile
 fi
 
