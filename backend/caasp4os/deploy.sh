@@ -81,24 +81,6 @@ skuba_container terraform init
 skuba_container terraform plan -out my-plan
 skuba_container terraform apply -auto-approve my-plan
 
-# Install caasp product on all nodes
-skuba_run_cmd all "sudo zypper in -y -l --auto-agree-with-product-licenses -t product caasp"
-wait
-# Update all nodes
-skuba_run_cmd all "sudo zypper ref && sudo zypper up -y -l --auto-agree-with-product-licenses"
-wait
-skuba_run_cmd all "sudo zypper in -y -t pattern SUSE-CaaSP-Node"
-wait
-# Enable swapaccount on all k8s nodes
-skuba_run_cmd all "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 cgroup_enable=memory swapaccount=1 \"|' /etc/default/grub"
-wait
-skuba_run_cmd all 'sudo grub2-mkconfig -o /boot/grub2/grub.cfg'
-wait
-skuba_run_cmd all 'sleep 2 && sudo nohup shutdown -r now > /dev/null 2>&1 &'
-wait
-# skuba_wait_ssh all 100
-sleep 100
-
 # Bootstrap k8s with skuba
 skuba_container skuba version
 skuba_deploy
