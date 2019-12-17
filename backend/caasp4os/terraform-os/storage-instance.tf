@@ -11,19 +11,19 @@
 # Warning: This receipt consumes caasp4 templates and will not work outside
 # the caasp4 terraform environment.
 
-
 locals {
-  image = "openSUSE-Leap-15.1-JeOS.x86_64-OpenStack-Cloud"
-  flavor = "c4.large"
-  user = "opensuse"
+  image      = "openSUSE-Leap-15.1-JeOS.x86_64-OpenStack-Cloud"
+  flavor     = "c4.large"
+  user       = "opensuse"
   nfs_config = "rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure"
-  nfs_share = "/srv/nfs/kubedata"
+  nfs_share  = "/srv/nfs/kubedata"
+
   storage_packages = [
     "kernel-default",
     "-kernel-default-base",
     "nfs-client",
     "nfs-kernel-server",
-    "yast2-nfs-server"
+    "yast2-nfs-server",
   ]
 }
 
@@ -72,7 +72,7 @@ data "template_file" "storage-cloud-init" {
     register_scc    = ""
     register_rmt    = ""
     commands        = "${join("\n", data.template_file.storage_commands.*.rendered)}"
-    username        = "${local.user}" 
+    username        = "${local.user}"
     ntp_servers     = "${join("\n", formatlist ("    - %s", var.ntp_servers))}"
   }
 }
@@ -107,7 +107,7 @@ resource "openstack_networking_floatingip_v2" "storage_ext" {
 }
 
 resource "openstack_compute_floatingip_associate_v2" "storage_ext_ip" {
-  count       = 1 
+  count       = 1
   floating_ip = "${element(openstack_networking_floatingip_v2.storage_ext.*.address, count.index)}"
   instance_id = "${element(openstack_compute_instance_v2.storage.*.id, count.index)}"
 }
@@ -224,7 +224,7 @@ resource "openstack_compute_secgroup_v2" "storage" {
 
   rule {
     from_port   = 2049
-    to_port     = 2049 
+    to_port     = 2049
     ip_protocol = "udp"
     cidr        = "0.0.0.0/0"
   }
@@ -237,7 +237,7 @@ resource "openstack_compute_secgroup_v2" "storage" {
   }
 
   rule {
-    from_port   = 33904 
+    from_port   = 33904
     to_port     = 33904
     ip_protocol = "udp"
     cidr        = "0.0.0.0/0"
@@ -255,4 +255,3 @@ output "ip_storage_int" {
 output "storage_share" {
   value = "${local.nfs_share}"
 }
-
