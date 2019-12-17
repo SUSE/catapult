@@ -4,12 +4,27 @@ ARG VERSION
 ARG REPO_ENV
 ARG REPO
 
-RUN zypper ar --no-gpgcheck "${REPO}" "skuba-${REPO_ENV}" && \
-    zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/" caasp-product && \
-    zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/SUSE:CA.repo" && \
-    zypper ref && \
-    zypper in --auto-agree-with-licenses --no-confirm "skuba-${VERSION}" terraform ca-certificates-suse openssh && \
-    zypper clean -a
+ARG IBS="http://download.suse.de/ibs/SUSE"
+RUN for repo in SLE-Product-SLES SLE-Module-Basesystem SLE-Module-Containers; do \
+    zypper ar $IBS/Products/$repo/15-SP1/x86_64/product ${repo}_pool; \
+    zypper ar $IBS/Updates/$repo/15-SP1/x86_64/update ${repo}_updates; \
+done
+RUN zypper ar $IBS/Products/SUSE-CAASP/4.0/x86_64/product CAASP_pool
+# RUN zypper ar $IBS/Updates/SUSE-CAASP/4.0/x86_64/update CAASP_updates
+RUN zypper ar --no-gpgcheck "${REPO}" "skuba-${REPO_ENV}"
+
+RUN zypper refresh; zypper -n dist-upgrade
+RUN zypper --gpg-auto-import-keys ref -s
+
+
+# RUN zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/" caasp-product
+RUN zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/SUSE:CA.repo"
+# RUN zypper ref
+RUN zypper in --auto-agree-with-licenses --no-confirm -t product caasp
+RUN zypper in --auto-agree-with-licenses --no-confirm ca-certificates-suse
+RUN zypper -n in -t pattern SUSE-CaaSP-Management
+RUN zypper up
+RUN zypper clean -a
 
 VOLUME ["/app"]
 
