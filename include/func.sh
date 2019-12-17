@@ -168,3 +168,11 @@ function load_env_from_json {
     # Export but preserve one that are passed explictly
     eval "$(jq -r ' to_entries | .[] | "export "+ .key + "=\"${"+ .key + ":-" + .value + "}\""' < $1)"
 }
+
+function supported_backend {
+    local backend=$1
+    if [[ "$backend" != "$BACKEND" ]]; then
+        err "Incompatible backend. Required backend $backend, while $BACKEND was provided."
+        exit 1
+    fi
+}
