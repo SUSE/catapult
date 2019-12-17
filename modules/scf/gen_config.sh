@@ -57,6 +57,8 @@ features:
   eirini:
     enabled: ${ENABLE_EIRINI}
 
+${CONFIG_OVERRIDE}
+
 services:
   router:
     type: LoadBalancer
@@ -94,7 +96,7 @@ env:
   GARDEN_ROOTFS_DRIVER: "${GARDEN_ROOTFS_DRIVER}"
   KUBE_CSR_AUTO_APPROVAL: true
 
-${OVERRIDE}
+${CONFIG_OVERRIDE}
 
 ${VALUES}
 enable:

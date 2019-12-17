@@ -17,6 +17,11 @@ fi
 if helm ls 2>/dev/null | grep -qi susecf-scf ; then
     helm del --purge susecf-scf
 fi
+
+if helm ls 2>/dev/null | grep -qi cf-operator ; then
+    helm del --purge cf-operator
+fi
+
 if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
     kubectl delete namespace scf
 fi
