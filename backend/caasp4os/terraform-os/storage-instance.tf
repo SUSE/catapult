@@ -55,6 +55,10 @@ data "template_file" "storage_register_rmt" {
   }
 }
 
+data "template_file" "storage_register_ibs" {
+  template = "${file("cloud-init/register-ibs.tpl")}"
+}
+
 data "template_file" "storage_commands" {
   template = "${file("cloud-init/commands.tpl")}"
 
@@ -71,6 +75,7 @@ data "template_file" "storage-cloud-init" {
     repositories    = ""
     register_scc    = ""
     register_rmt    = ""
+    register_ibs    = ""
     commands        = "${join("\n", data.template_file.storage_commands.*.rendered)}"
     username        = "${local.user}"
     ntp_servers     = "${join("\n", formatlist ("    - %s", var.ntp_servers))}"
