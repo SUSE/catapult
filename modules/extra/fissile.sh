@@ -34,8 +34,15 @@ pushd ${FISSILE_BOSH_RELEASE}
 GIT_COMMIT=$(git rev-parse --short HEAD)
 BOSH_REL="${FISSILE_RELEASE_NAME}"-dev-"${GIT_COMMIT}".tgz
 
+docker run --rm -ti -v ${FISSILE_BOSH_RELEASE}:/bosh-release \
+            splatform/bosh-cli \
+            /bin/bash -c "cd /bosh-release && bosh reset-release"
+
+docker run --rm -ti -v ${FISSILE_BOSH_RELEASE}:/bosh-release \
+            splatform/bosh-cli \
+            /bin/bash -c "cd /bosh-release && bosh create-release --force --tarball=${BOSH_REL} --name=${FISSILE_RELEASE_NAME}"
+
 #git submodule sync --recursive && git submodule update --init --recursive && git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"
-bosh create-release --force --tarball="${BOSH_REL}"
 popd
 
 mv ${FISSILE_BOSH_RELEASE}/"${BOSH_REL}" ./
