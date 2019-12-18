@@ -63,3 +63,20 @@ name=$(echo $out | awk 'NR==1 {print; exit}' | grep -oh "${FISSILE_OPT_RELEASE_N
 ok "Image available as $name"
 
 kind load docker-image --name=${CLUSTER_NAME} $name
+
+
+info "You might want to regenerate the scf-configs with an override to use this build, and upgrade/redeploy scf, e.g:"
+info
+cat <<EOFOUT
+OVERRIDE=$(cat <<EOF
+releases:
+  eirini:
+    version: $FISSILE_OPT_RELEASE_VERSION
+    stemcell:
+      os: SLE_15_SP1
+      version: 15.1-7.0.0_374.gb8e8e6af
+EOF
+)
+EOFOUT
+
+info 'make scf-build'
