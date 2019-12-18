@@ -64,7 +64,10 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     if helm ls 2>/dev/null | grep -qi cf-operator ; then
         helm del --purge cf-operator
     fi
-
+    if helm ls 2>/dev/null | grep -qi susecf-scf ; then
+        helm del --purge susecf-scf
+        kubectl delete namespace scf
+    fi
     # Install the operator
     helm install --namespace scf \
     --name cf-operator \
@@ -74,9 +77,6 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     bash "$ROOT_DIR"/include/wait_ns.sh scf
     sleep 10
 
-    if helm ls 2>/dev/null | grep -qi susecf-scf ; then
-        helm del --purge susecf-scf
-    fi
     helm install --name susecf-scf ${SCF_CHART} \
     --namespace scf \
     --values scf-config-values.yaml
