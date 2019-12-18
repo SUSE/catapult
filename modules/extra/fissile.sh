@@ -54,6 +54,8 @@ docker pull "${FISSILE_OPT_STEMCELL}"
 out=$(fissile build release-images --stemcell="${FISSILE_OPT_STEMCELL}" \
                                  --url "file://${PWD}/${BOSH_REL}" \
                                  --name=${FISSILE_OPT_RELEASE_NAME} \
+                                 --docker-registry=${FISSILE_OPT_DOCKER_REGISTRY} \
+                                 --docker-organization=${FISSILE_OPT_DOCKER_ORG} \
                                  --sha1="${SHA}" \
                                  -w="$PWD" \
                                  --version="${FISSILE_OPT_RELEASE_VERSION}")
