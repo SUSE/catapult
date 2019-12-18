@@ -70,7 +70,7 @@ kind load docker-image --name=${CLUSTER_NAME} $name
 info "You might want to regenerate the scf-configs with an override to use this build, and upgrade/redeploy scf, e.g:"
 info
 cat <<EOFOUT
-OVERRIDE=$(cat <<EOF
+CONFIG_OVERRIDE=\$(cat <<EOF
 releases:
   eirini:
     version: $FISSILE_OPT_RELEASE_VERSION
