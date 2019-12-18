@@ -44,3 +44,7 @@ log:
 .PHONY: fissile
 fissile:
 	./fissile.sh
+
+.PHONY: top
+top:
+	./top.sh
