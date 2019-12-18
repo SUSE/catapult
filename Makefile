@@ -108,6 +108,10 @@ module-extra-kwt-connect:
 module-extra-log:
 	$(MAKE) -C modules/extra log
 
+.PHONY: module-extra-top
+module-extra-top:
+	$(MAKE) -C modules/extra top
+
 .PHONY: module-extra-task
 module-extra-task:
 	$(MAKE) -C modules/extra task
