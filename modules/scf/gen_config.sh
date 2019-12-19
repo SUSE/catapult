@@ -26,7 +26,7 @@ VALUES=
 if [ "$ENABLE_EIRINI" = true ] ; then
   AUTH="rbac"
 else
-  AUTH="none"
+  AUTH="rbac"
   VALUES=$(cat <<'END_HEREDOC'
 sizing:
   cc_uploader:
