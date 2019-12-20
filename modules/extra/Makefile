@@ -48,3 +48,12 @@ fissile:
 .PHONY: top
 top:
 	./top.sh
+
+.PHONY: drone
+drone:
+	./drone.sh
+
+
+.PHONY: gitea
+gitea:
+	./gitea.sh

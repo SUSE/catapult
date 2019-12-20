@@ -84,6 +84,14 @@ catapult-image:
 module-extra-concourse:
 	$(MAKE) -C modules/extra concourse
 
+.PHONY: module-extra-drone
+module-extra-drone:
+	$(MAKE) -C modules/extra drone
+
+.PHONY: module-extra-gitea
+module-extra-gitea:
+	$(MAKE) -C modules/extra gitea
+
 .PHONY: module-extra-ingress
 module-extra-ingress:
 	$(MAKE) -C modules/extra ingress

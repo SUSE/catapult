@@ -27,3 +27,10 @@ FISSILE_OPT_DOCKER_ORG="${FISSILE_OPT_DOCKER_ORG:-cfcontainerization}"
 ## K9s
 K9S_VERSION="${K9S_VERSION:-0.9.3}"
 K9S_OS_TYPE="${K9S_OS_TYPE:-Linux_x86_64}"
+
+## DRONE
+DRONE_CLIENT_ID="${DRONE_CLIENT_ID:-foo}"
+DRONE_CLIENT_SECRET="${DRONE_CLIENT_SECRET:-foo}"
+
+# Defines if should port-forward locally after an action
+LOCAL_ACCESS=${LOCAL_ACCESS:-true}
