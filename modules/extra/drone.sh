@@ -37,4 +37,11 @@ helm upgrade drone \
 
 bash "$ROOT_DIR"/include/wait_ns.sh drone
 
-echo "Drone endpoint is: http://${domain}:32011"
+if [ "$BACKEND" == "ekcp" ]; then
+  PODNAME=$(kubectl get pods -n drone -l app=drone -o jsonpath="{.items[0].metadata.name}")
+  info "Inside the cluster, drone is reachable at http://${domain}:32011"
+  info "To access it from your local machine, run:"
+  info "for http access (to local http://127.0.0.1:32011): kubectl port-forward --namespace drone $PODNAME 32011:80"
+else
+  info "Drone endpoint is: http://${domain}:32011"
+fi
