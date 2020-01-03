@@ -19,4 +19,4 @@ info "Login in another terminal with:"
 info "[..] make login "
 info
 
-sudo -E bin/kwt net start --dns-map ${domain}=${API_IP} --namespace scf
+sudo -E bin/kwt net start --dns-map ${domain}=${API_IP} --namespace $CF_NAMESPACE
