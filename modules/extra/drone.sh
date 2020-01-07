@@ -68,6 +68,7 @@ kubectl create secret generic drone-server-secrets \
 
 helm upgrade drone \
   --reuse-values --set 'service.type=LoadBalancer' \
+  --set "server.adminUser=${DRONE_ADMIN}" \
   --set "service.nodePort=32011" --set 'sourceControl.provider=gitea' \
   --set "sourceControl.gitea.clientID=${DRONE_CLIENT_ID}" \
   --set "sourceControl.gitea.server=http://${domain}:30080" \

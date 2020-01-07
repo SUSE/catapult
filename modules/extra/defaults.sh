@@ -31,6 +31,7 @@ K9S_OS_TYPE="${K9S_OS_TYPE:-Linux_x86_64}"
 ## DRONE
 DRONE_CLIENT_ID="${DRONE_CLIENT_ID:-foo}"
 DRONE_CLIENT_SECRET="${DRONE_CLIENT_SECRET:-foo}"
+DRONE_ADMIN="${DRONE_ADMIN:-test}"
 
 # Defines if should port-forward locally after an action
 LOCAL_ACCESS=${LOCAL_ACCESS:-true}
