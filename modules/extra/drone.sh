@@ -77,6 +77,81 @@ helm upgrade drone \
   stable/drone
 
 bash "$ROOT_DIR"/include/wait_ns.sh drone
+RPC_SECRET=$(kubectl get secrets -n drone drone-drone -o json | jq -r '.data["secret"]')
+
+cat <<EOF | kubectl apply -n drone -f -
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: drone
+  name: drone
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - get
+  - create
+  - delete
+  - list
+  - watch
+  - update
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: drone
+  namespace: drone
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: drone
+roleRef:
+  kind: Role
+  name: drone
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone
+  labels:
+    app.kubernetes.io/name: drone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: drone
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: drone
+    spec:
+      containers:
+      - name: runner
+        image: drone/drone-runner-kube:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DRONE_RPC_HOST
+          value: ${domain}
+        - name: DRONE_RPC_PROTO
+          value: http
+        - name: DRONE_RPC_SECRET
+          value: $RPC_SECRET
+EOF
+
+bash "$ROOT_DIR"/include/wait_ns.sh drone
 
 if [ "$BACKEND" == "ekcp" ]; then
   PODNAME=$(kubectl get pods -n drone -l app=drone -o jsonpath="{.items[0].metadata.name}")
