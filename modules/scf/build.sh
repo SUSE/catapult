@@ -19,7 +19,7 @@ GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
 if [ "$SCF_OPERATOR" == "true" ]; then
     bazelpath="$BUILD_DIR"/bin/bazel
     if [ ! -e "$bazelpath" ]; then
-        wget "https://github.com/bazelbuild/bazel/releases/download/1.1.0/bazel-1.1.0-linux-x86_64" -O $bazelpath
+        wget "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64" -O $bazelpath
         chmod +x $bazelpath
     fi
     rm -rfv bazel-bin/deploy/helm/kubecf/* || true
