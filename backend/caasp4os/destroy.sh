@@ -13,7 +13,7 @@
 
 if [ -d "$BUILD_DIR" ]; then
     if [[ ! -v OS_PASSWORD ]]; then
-        echo ">>> Missing openstack credentials" && exit 1
+        err "Missing openstack credentials" && exit 1
     fi
 
     . .envrc
@@ -25,12 +25,15 @@ if [ -d "$BUILD_DIR" ]; then
 
     if [ -d deployment ]; then
         pushd deployment
-        # destroy terraform openstack stack
+        info "Destroying infrastructure with Terraform…"
         skuba_container terraform destroy -auto-approve
+        info "Terraform infrastructure destroyed"
         popd
+    else
+        info "No Terraform infrastructure present"
     fi
 
     popd
     rm -rf "$BUILD_DIR"
 fi
-
+ok "CaaSP4 on Openstack succesfully destroyed!"

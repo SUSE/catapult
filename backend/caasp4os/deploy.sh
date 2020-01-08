@@ -17,8 +17,10 @@ export MAGICDNS=omg.howdoi.website
 
 
 if [[ ! -v OS_PASSWORD ]]; then
-    echo ">>> Missing openstack credentials" && exit 1
+    err "Missing openstack credentials" && exit 1
 fi
+
+info "Extracting terraform files from skuba/$CAASP_VER image…"
 
 # Add ssh key if not present, needed for terraform
 if ! ssh-add -L | grep -q 'ssh' ; then
@@ -41,7 +43,8 @@ docker cp \
        deployment
 docker rm -f skuba-"$CAASP_VER"
 
-# Inject our terraform files
+info "Injecting CAP terraform files…"
+
 case "$CAASP_VER" in
     "devel")
          CAASP_REPO='caasp_40_devel_sle15sp1 = "http://download.suse.de/ibs/Devel:/CaaSP:/4.0/SLE_15_SP1/"'
@@ -74,20 +77,24 @@ cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
 pushd deployment
 
-# Deploy infra with terraform
+info "Deploying infrastructure with terraform…"
+
 skuba_container terraform init
 skuba_container terraform plan -out my-plan
 skuba_container terraform apply -auto-approve my-plan
 
-# Bootstrap k8s with skuba
+info "Bootstrapping k8s with skuba…"
+
+skuba_container zypper version
 skuba_container skuba version
 skuba_deploy
 wait
 cp -f ./my-cluster/admin.conf ../kubeconfig
 
-# Disable annoying k8s cluster options
+info "Disabling node updates…"
 skuba_updates all disable
 wait
+
 # skuba_reboots disable
 # wait
 
@@ -107,3 +114,4 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=nfs-path="${NFS_PATH}" \
             --from-literal=platform=caasp4
 fi
+ok "CaaSP4 on Openstack succesfully deployed!"
