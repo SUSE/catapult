@@ -81,3 +81,5 @@ create_nfs_storageclass() {
 create_rolebinding
 install_helm_and_tiller
 create_nfs_storageclass
+
+ok "CaaSP4 on Openstack succesfully prepared!"
