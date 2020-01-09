@@ -4,6 +4,11 @@
 . ../../include/common.sh
 . .envrc
 
+if [[ "$DOWNLOAD_BINS" == "false" ]]; then
+    ok "Skipping downloading deps, using host binaries"
+    exit 0
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export HELM_OS_TYPE="${HELM_OS_TYPE:-darwin-amd64}"
 else
