@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. "$ROOT_DIR/backend/$BACKEND/defaults.sh"
 . ./defaults.sh
 . ../../include/common.sh
 . .envrc
