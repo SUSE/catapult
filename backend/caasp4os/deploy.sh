@@ -85,7 +85,6 @@ skuba_container terraform apply -auto-approve my-plan
 
 info "Bootstrapping k8s with skuba…"
 
-skuba_container zypper version
 skuba_container skuba version
 skuba_deploy
 wait
