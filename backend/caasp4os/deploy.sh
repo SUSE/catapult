@@ -100,8 +100,6 @@ wait
 # Create k8s configmap
 PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_workers.value|to_entries|map(.value)|first')"
 ROOTFS=overlay-xfs
-NFS_SERVER_IP="$(skuba_container terraform output ip_storage_int)"
-NFS_PATH="$(skuba_container terraform output storage_share)"
 DOMAIN="$PUBLIC_IP"."$MAGICDNS"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
@@ -109,8 +107,6 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=public-ip="${PUBLIC_IP}" \
             --from-literal=domain="${DOMAIN}" \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
-            --from-literal=nfs-server-ip="${NFS_SERVER_IP}" \
-            --from-literal=nfs-path="${NFS_PATH}" \
             --from-literal=platform=caasp4
 fi
 ok "CaaSP4 on Openstack succesfully deployed!"

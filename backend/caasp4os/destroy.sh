@@ -14,7 +14,6 @@
 if [ -d "$BUILD_DIR" ]; then
     . .envrc
     if kubectl get storageclass 2>/dev/null | grep -qi persistent; then
-        # destroy storageclass, allowing nfs server to delete the share
         kubectl delete storageclass persistent
         wait
     fi
