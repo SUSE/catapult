@@ -106,6 +106,9 @@ enable:
 config:
   HA: ${HA}
 
+EOF
+if [ "${HA}" != "true" ]; then
+cat >> scf-config-values <<EOF
 sizing:
   uaa:
     count: ${SIZING}
@@ -174,6 +177,9 @@ sizing:
   secret_generation:
     count: 1
 
+EOF
+fi
+cat >> scf-config-values.yaml <<EOF
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
   external_ips: [${external_ips}]
