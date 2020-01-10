@@ -63,17 +63,5 @@ testKind() {
     assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 }
 
-
-testCommonDeps() {
-  rm -rf buildtest
-  make k8s
-
-  assertTrue 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
-  assertTrue 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
-
-  make clean
-  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
-}
-
 # Load shUnit2.
 . ./shunit2/shunit2
