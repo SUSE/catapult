@@ -12,10 +12,6 @@
 . ../../include/common.sh
 
 if [ -d "$BUILD_DIR" ]; then
-    if [[ ! -v OS_PASSWORD ]]; then
-        err "Missing openstack credentials" && exit 1
-    fi
-
     . .envrc
     if kubectl get storageclass 2>/dev/null | grep -qi persistent; then
         # destroy storageclass, allowing nfs server to delete the share
@@ -26,6 +22,9 @@ if [ -d "$BUILD_DIR" ]; then
     if [ -d deployment ]; then
         pushd deployment
         info "Destroying infrastructure with Terraform…"
+        if [[ ! -v OS_PASSWORD ]]; then
+            err "Missing openstack credentials" && exit 1
+        fi
         skuba_container terraform destroy -auto-approve
         info "Terraform infrastructure destroyed"
         popd
