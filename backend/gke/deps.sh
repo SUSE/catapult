@@ -3,6 +3,11 @@
 . ../../include/common.sh
 . .envrc
 
+if [[ "$DOWNLOAD_BINS" == "false" ]]; then
+    ok "Skipping downloading deps, using host binaries"
+    exit 0
+fi
+
 curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz
 tar -xvf google-cloud-sdk.tar.gz
 rm google-cloud-sdk.tar.gz

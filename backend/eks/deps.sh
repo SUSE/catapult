@@ -3,6 +3,11 @@
 . ../../include/common.sh
 . .envrc
 
+if [[ "$DOWNLOAD_BINS" == "false" ]]; then
+    ok "Skipping downloading deps, using host binaries"
+    exit 0
+fi
+
 # pin the kubectl to eks default version
 curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/kubectl
 chmod +x kubectl && mv kubectl bin/
