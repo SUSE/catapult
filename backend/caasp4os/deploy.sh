@@ -14,7 +14,7 @@
 
 # nip.io doesn't seem to work well with ECP, use omg.h.w instead:
 export MAGICDNS=omg.howdoi.website
-
+STACK=${STACK:-"$(whoami)-caasp4-${CAASP_VER::3}-$CLUSTER_NAME"}
 
 if [[ ! -v OS_PASSWORD ]]; then
     err "Missing openstack credentials" && exit 1
