@@ -5,6 +5,7 @@ ARG REPO_ENV
 ARG REPO
 
 ARG IBS="http://download.suse.de/ibs/SUSE"
+# ARG IBS="http://ibs-mirror.prv.suse.net/ibs/SUSE"
 RUN for repo in SLE-Product-SLES SLE-Module-Basesystem SLE-Module-Containers; do \
     zypper ar $IBS/Products/$repo/15-SP1/x86_64/product ${repo}_pool; \
     zypper ar $IBS/Updates/$repo/15-SP1/x86_64/update ${repo}_updates; \
@@ -18,7 +19,7 @@ RUN zypper --gpg-auto-import-keys ref -s
 
 
 # RUN zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/" caasp-product
-RUN zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/SUSE:CA.repo"
+RUN zypper ar --no-gpgcheck "$IBS:/CA/SLE_15_SP1/SUSE:CA.repo"
 # RUN zypper ref
 RUN zypper in --auto-agree-with-licenses --no-confirm -t product caasp
 RUN zypper in --auto-agree-with-licenses --no-confirm ca-certificates-suse openssh
