@@ -114,12 +114,10 @@ skuba_run_cmd() {
     # run_cmd masters "sudo ..."
 
     local target="${1:-all}"
-    local action="${2:-disable}"
 
     _define_node_group "$target"
-    CMD="$action"
     for n in $GROUP; do
-        _ssh2 "$n" "$CMD"
+        _ssh2 "$n" "$@"
     done
 }
 
