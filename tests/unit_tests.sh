@@ -168,6 +168,10 @@ testCommonDeps() {
   assertTrue 'kubectl downloaded' "[ -e 'buildtest/bin/kubectl' ]"
   assertTrue 'cfcli downloaded' "[ -e 'buildtest/bin/cf' ]"
 
+  DOWNLOADED_KUBECTLVER=$(./buildtest/bin/kubectl version -o json --client=true | jq -r '.clientVersion.gitVersion')
+  . "$ROOT_DIR"/backend/kind/defaults.sh # load expected $KUBECTL_VERSION
+  assertEquals 'kubectl versions match' "$DOWNLOADED_KUBECTLVER" "$KUBECTL_VERSION"
+
   make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 }
