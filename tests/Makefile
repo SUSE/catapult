@@ -1,16 +1,16 @@
 .DEFAULT_GOAL := all
 
-.PHONY: tests-catapult-integration
-tests-catapult-integration:
-	./tests_catapult_integration.sh
+.PHONY: integration-tests
+integration-tests:
+	./integration_tests.sh
 
-.PHONY: tests-catapult
-tests-catapult:
-	./tests_catapult.sh
+.PHONY: unit-tests
+unit-tests:
+	./unit_tests.sh
 
 .PHONY: lint
 lint:
 	./lint.sh
 
 .PHONY: all
-all: lint tests-catapult tests-catapult-integration
+all: lint unit-tests integration-tests

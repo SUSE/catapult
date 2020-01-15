@@ -3,6 +3,11 @@
 . ./defaults.sh
 . ../../include/common.sh
 
+if [[ "$DOWNLOAD_BINS" == "false" ]]; then
+    ok "Skipping downloading deps, using host binaries"
+    exit 0
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export KIND_OS_TYPE="${KIND_OS_TYPE:-kind-darwin-amd64}"
 else

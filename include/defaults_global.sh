@@ -14,3 +14,6 @@ export ENABLE_EIRINI="${ENABLE_EIRINI:-true}"
 export EKCP_PROXY="${EKCP_PROXY:-}"
 export KUBEPROXY_PORT="${KUBEPROXY_PORT:-2224}"
 export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
+
+# Download binaries of helm, kubectl, cf, etc
+DOWNLOAD_BINS="${DOWNLOAD_BINS:-true}"

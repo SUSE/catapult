@@ -56,13 +56,17 @@ testConfig() {
 
 # Tests backend switch
 testBackend() {
-  rm -rf buildtest
-  BACKEND=gke make buildir
-  assertTrue 'create buildir' "[ -d 'buildtest' ]"
-  ENVRC="$(cat "$PWD"/buildtest/.envrc)"
-  assertContains 'contains BACKEND' "$ENVRC" 'BACKEND=gke'
-  BACKEND=gke make clean
-  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+    for b in kind caasp4os eks gke imported minikube; do
+        if [ -d "$ROOT_DIR/backend/$b" ]; then
+            rm -rf buildtest
+            BACKEND="$b" make buildir
+            assertTrue 'create buildir' "[ -d 'buildtest' ]"
+            ENVRC="$(cat "$PWD"/buildtest/.envrc)"
+            assertContains 'contains BACKEND' "$ENVRC" BACKEND="$b"
+            BACKEND="$b" make clean
+            assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+        fi
+    done
 }
 
 # Tests imported backend
@@ -88,12 +92,12 @@ testJson() {
   unset BACKEND
   rm -rf buildjson
   echo '{ "BACKEND": "gke", "CLUSTER_NAME": "json" }' > test.json
-  CONFIG=$PWD/test.json make buildir
+  BACKEND=gke CONFIG=$PWD/test.json make buildir
   assertTrue 'create buildir' "[ -d 'buildjson' ]"
   ENVRC="$(cat "$PWD"/buildjson/.envrc)"
   assertContains 'contains BACKEND' "$ENVRC" 'BACKEND=gke'
   assertContains 'contains CLUSTER_NAME' "$ENVRC" 'CLUSTER_NAME=json'
-  CONFIG=$PWD/test.json make clean
+  BACKEND=gke CONFIG=$PWD/test.json make clean
   assertTrue 'clean buildir' "[ ! -d 'buildjson' ]"
   rm -rf test.json
 }
@@ -146,10 +150,27 @@ testJsonOverrides() {
 testCommonDeps() {
   rm -rf buildtest
   make buildir
+  DOWNLOAD_BINS=false make private modules/common
+
+  assertFalse 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
+  assertFalse 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
+  assertFalse 'kubectl downloaded' "[ -e 'buildtest/bin/kubectl' ]"
+  assertFalse 'cfcli downloaded' "[ -e 'buildtest/bin/cf' ]"
+
+  make clean
+  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+
+  make buildir
   make private modules/common
 
   assertTrue 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
   assertTrue 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
+  assertTrue 'kubectl downloaded' "[ -e 'buildtest/bin/kubectl' ]"
+  assertTrue 'cfcli downloaded' "[ -e 'buildtest/bin/cf' ]"
+
+  DOWNLOADED_KUBECTLVER=$(./buildtest/bin/kubectl version -o json --client=true | jq -r '.clientVersion.gitVersion')
+  . "$ROOT_DIR"/backend/kind/defaults.sh # load expected $KUBECTL_VERSION
+  assertEquals 'kubectl versions match' "$DOWNLOADED_KUBECTLVER" "$KUBECTL_VERSION"
 
   make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
