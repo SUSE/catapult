@@ -75,6 +75,8 @@ create_nfs_storageclass() {
              --set storageClass.name=persistent \
              --set storageClass.reclaimPolicy=Delete \
              --set storageClass.archiveOnDelete=false
+        kubectl patch storageclass persistent \
+                -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
     fi
 }
 
