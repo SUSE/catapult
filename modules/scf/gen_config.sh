@@ -108,7 +108,7 @@ config:
 
 EOF
 if [ "${HA}" != "true" ]; then
-cat >> scf-config-values <<EOF
+cat >> scf-config-values.yaml <<EOF
 sizing:
   uaa:
     count: ${SIZING}
