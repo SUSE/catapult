@@ -6,8 +6,7 @@
 
 SAMPLE_FOLDER=$(basename "$SAMPLE_APP_REPO")
 
-[ ! -d "sample" ] && git clone --recurse-submodules "$SAMPLE_APP_REPO" "$SAMPLE_FOLDER"
-
+[ ! -d "$SAMPLE_FOLDER" ] && git clone --recurse-submodules "$SAMPLE_APP_REPO" "$SAMPLE_FOLDER"
 
 pushd "$SAMPLE_FOLDER"
 
