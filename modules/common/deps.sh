@@ -24,6 +24,7 @@ if [ ! -e "bin/helm" ]; then
     curl -L https://get.helm.sh/helm-${HELM_VERSION}-${HELM_OS_TYPE}.tar.gz | tar zxf -
     mv $HELM_OS_TYPE/helm bin/
     mv $HELM_OS_TYPE/tiller bin/
+    rm -rf "$HELM_OS_TYPE"
     helm version --client
 fi
 
@@ -37,7 +38,7 @@ fi
 if [ ! -e "bin/cf" ]; then
     curl -L "https://packages.cloudfoundry.org/stable?release=${CFCLI_OS_TYPE}-binary&source=github" | tar -zx
     mv cf bin/
-    rm -rf "$CFCLI_OS_TYPE"
+    rm -rf "$CFCLI_OS_TYPE" LICENSE NOTICE
     chmod +x bin/cf
     cf version
 fi
