@@ -43,7 +43,7 @@ if [ ! -e "bin/cf" ]; then
     cf version
 fi
 
-bazelpath="$BUILD_DIR"/bin/bazel
+bazelpath=bin/bazel
 if [ ! -e "$bazelpath" ]; then
     wget "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64" -O $bazelpath
     chmod +x $bazelpath

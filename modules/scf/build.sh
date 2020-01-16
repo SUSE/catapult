@@ -17,9 +17,8 @@ fi
 
 GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
 if [ "$SCF_OPERATOR" == "true" ]; then
-    bazelpath="$BUILD_DIR"/bin/bazel
     rm -rfv bazel-bin/deploy/helm/kubecf/* || true
-    $bazelpath build //deploy/helm/kubecf:chart
+    bazel build //deploy/helm/kubecf:chart
     tar -xvf bazel-bin/deploy/helm/kubecf/kubecf-*.tgz -C "$BUILD_DIR"
     SCF_CHART=kubecf-"$GIT_HEAD"
 else
