@@ -49,9 +49,9 @@ END_HEREDOC
 fi
 
 if [ "${SCF_OPERATOR}" == "true" ]; then
-$CLUSTER_IP_RANGE="$(kubectl cluster-info dump --output yaml | awk 'match($0, /service-cluster-ip-range=(.*)/, range) { print range[1] }' | uniq)"
+CLUSTER_IP_RANGE="$(kubectl cluster-info dump --output yaml | awk 'match($0, /service-cluster-ip-range=(.*)/, range) { print range[1] }' | uniq)"
 
-$CIDR="$(kubectl cluster-info dump --output yaml | awk 'match($0, /cluster-cidr=(.*)/, range) { print range[1] }')"
+CIDR="$(kubectl cluster-info dump --output yaml | awk 'match($0, /cluster-cidr=(.*)/, range) { print range[1] }')"
 
 if [ -z "$CLUSTER_IP_RANGE" ];
 then
