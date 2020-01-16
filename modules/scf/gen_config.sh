@@ -89,6 +89,14 @@ services:
     port_range:
       start: 20000
       end: 20008
+
+testing:
+  brain_tests:
+    enabled: ${SCF_TESTGROUP}
+  cf_acceptance_tests:
+    enabled: ${SCF_TESTGROUP}
+  smoke_tests:
+    enabled: ${SCF_TESTGROUP}
 EOF
 
 else
