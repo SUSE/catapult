@@ -47,6 +47,7 @@ restart:
 
 .PHONY: recover
 recover: buildir kubeconfig
+	$(MAKE) -C modules/common
 
 .PHONY: force-clean
 force-clean: buildir clean
