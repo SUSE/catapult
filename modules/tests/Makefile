@@ -36,6 +36,10 @@ sample:
 sample-ticking:
 	./sample-ticking.sh
 
+.PHONY: autoscaler
+autoscaler:
+	./autoscaler.sh
+
 # test all the things!
 .PHONY: all
 # Enable only reliable ones:
