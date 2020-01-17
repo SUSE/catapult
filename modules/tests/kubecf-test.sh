@@ -19,15 +19,14 @@ wait_for_smoke_tests_pod() {
   return 0
 }
 
+# Delete any pending job
+kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all || true
 
 pushd "$KUBECF_CHECKOUT"
     sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl
     sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl
     if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
-        pod_name="$(smoke_tests_pod_name)"
-        if [ -z "$pod_name" ];then
             bazel run //testing/smoke_tests
-        fi
     else
         bazel run //testing/acceptance_tests
     fi
