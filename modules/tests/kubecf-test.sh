@@ -4,20 +4,6 @@
 . ../../include/common.sh
 . .envrc
 
-pushd "$KUBECF_CHECKOUT"
-    sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl
-    sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl
-    if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
-        pod_name="$(smoke_tests_pod_name)"
-        if [ -z "$pod_name" ];then
-            bazel run //testing/smoke_tests
-        fi
-    else
-        bazel run //testing/acceptance_tests
-    fi
-popd
-
-
 smoke_tests_pod_name() {
   kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "smoke-tests"
 }
@@ -32,6 +18,20 @@ wait_for_smoke_tests_pod() {
   if [[ "${timeout}" == 0 ]]; then return 1; fi
   return 0
 }
+
+
+pushd "$KUBECF_CHECKOUT"
+    sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl
+    sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl
+    if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
+        pod_name="$(smoke_tests_pod_name)"
+        if [ -z "$pod_name" ];then
+            bazel run //testing/smoke_tests
+        fi
+    else
+        bazel run //testing/acceptance_tests
+    fi
+popd
 
 if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
     set -x
