@@ -26,8 +26,9 @@ wait_for_tests_pod() {
 kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all || true
 
 pushd "$KUBECF_CHECKOUT"
-    sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl
-    sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl
+    # FIXME: See how to pass those options to bazel commands - we make it not to fail to be idempotent but we edit user files on git checkout (BAD!)
+    sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl || true
+    sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl || true
     if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
         bazel run //testing/smoke_tests
     else
@@ -55,7 +56,7 @@ wait_for_tests_pod "$pod_name" "$container_name" || {
 exit 1
 }
 
-# Follow the logs. If the tests fail, the logs command will also fail.
+# Follow the logs. If the tests fail, or container exits it will move on (with all logs printed)
 kubectl logs -f "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" ||:
 
 # Wait for the container to terminate and then exit the script with the container's exit code.
