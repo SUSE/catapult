@@ -281,6 +281,10 @@ tests-cats:
 tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler
 
+.PHONY: tests-kubecf
+tests-kubecf:
+	$(MAKE) -C modules/tests kubecf
+
 # Samples and fixtures
 .PHONY: sample
 sample:

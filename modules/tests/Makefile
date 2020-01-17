@@ -40,6 +40,10 @@ sample-ticking:
 autoscaler:
 	./autoscaler.sh
 
+.PHONY: kubecf
+kubecf:
+	./kubecf-test.sh
+
 # test all the things!
 .PHONY: all
 # Enable only reliable ones:
