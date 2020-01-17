@@ -51,12 +51,12 @@ else
 fi
 
 wait_for_tests_pod "$pod_name" "$container_name" || {
->&2 err "Timed out waiting for the smoke-tests pod"
+>&2 err "Timed out waiting for the tests pod"
 exit 1
 }
 
 # Follow the logs. If the tests fail, the logs command will also fail.
-kubectl attach "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" ||:
+kubectl logs -f "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" ||:
 
 # Wait for the container to terminate and then exit the script with the container's exit code.
 jsonpath='{.status.containerStatuses[?(@.name == "'"$containername"'")].state.terminated.exitCode}'
