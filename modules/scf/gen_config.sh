@@ -1,11 +1,10 @@
 #!/bin/bash
 
-. ./defaults.sh
 . ../../include/common.sh
+. ./defaults.sh # Read build defaults
 . .envrc
 
 
-info "Generating SCF config values"
 if [ "${DEFAULT_STACK}" = "from_chart" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
 fi
