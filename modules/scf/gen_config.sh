@@ -93,6 +93,14 @@ testing:
     enabled: ${SCF_TESTGROUP}
   smoke_tests:
     enabled: ${SCF_TESTGROUP}
+
+properties:
+  acceptance-tests:
+    acceptance-tests:
+      acceptance_tests:
+        ginkgo:
+          slow_spec_threshold: 300
+          nodes: 2
 EOF
 
 else
