@@ -3,5 +3,8 @@
 # Caasp4os options
 ##################
 
-GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-btrfs}"
+# Override default GARDEN_ROOTFS_DRIVER for all backends default
+if [ "$BACKEND" == "caasp4os" ]; then
+    GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-btrfs}"
+fi
 CAASP_VER=${CAASP_VER:-"update"} # devel, staging, update, product
