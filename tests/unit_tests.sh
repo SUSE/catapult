@@ -43,7 +43,7 @@ testConfig() {
   assertContains 'generates correctly CLUSTER_ADMIN_PASSWORD' "$VALUES_FILE" "CLUSTER_ADMIN_PASSWORD: test123"
   assertContains 'generates correctly KUBE_CSR_AUTO_APPROVAL' "$VALUES_FILE" "KUBE_CSR_AUTO_APPROVAL: true"
   assertContains 'generates correctly DEFAULT_STACK' "$VALUES_FILE" "DEFAULT_STACK: \"sle\""
-  assertContains 'generates correctly GARDEN_ROOTFS_DRIVER' "$VALUES_FILE" "GARDEN_ROOTFS_DRIVER: \"btrfs\""
+  assertContains 'generates correctly GARDEN_ROOTFS_DRIVER' "$VALUES_FILE" "GARDEN_ROOTFS_DRIVER: \"overlay-xfs\""
   assertContains 'generates correctly STORAGECLASS (1)' "$VALUES_FILE" "kube_storage_class: \"our-storage\""
   assertContains 'generates correctly STORAGECLASS (2)' "$VALUES_FILE" "persistent: \"our-storage\""
   assertContains 'generates correctly STORAGECLASS (3)' "$VALUES_FILE" "shared: \"our-storage\""

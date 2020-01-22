@@ -10,10 +10,6 @@ if [ "${DEFAULT_STACK}" = "from_chart" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
 fi
 
-if [ "$ENABLE_EIRINI" = false ]; then
-  GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
-fi
-
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 aux_external_ips=($(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address'))
