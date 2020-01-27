@@ -123,8 +123,11 @@ kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
 helm init --upgrade --wait
 
-container_ip=$(curl -s http://$EKCP_HOST/ | jq .ClusterIPs.${CLUSTER_NAME} -r)
+container_ip=$(curl -s http://"$EKCP_HOST"/ | jq .ClusterIPs.\"${CLUSTER_NAME}\" -r)
 domain="${CLUSTER_NAME}.${container_ip}.${MAGICDNS}"
+
+info "Container IP: $container_ip"
+info "Domain: $domain"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
