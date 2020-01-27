@@ -74,6 +74,11 @@ services:
       start: 20000
       end: 20008
 
+
+EOF
+
+if [ "${SCF_TESTGROUP}" == "true" ]; then
+cat >> scf-config-values.yaml <<EOF
 testing:
   brain_tests:
     enabled: ${SCF_TESTGROUP}
@@ -81,7 +86,6 @@ testing:
     enabled: ${SCF_TESTGROUP}
   smoke_tests:
     enabled: ${SCF_TESTGROUP}
-
 properties:
   acceptance-tests:
     acceptance-tests:
@@ -92,6 +96,7 @@ properties:
           nodes: 2
           flake_attempts: 4
 EOF
+fi
 
 else
 
