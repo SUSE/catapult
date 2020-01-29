@@ -23,7 +23,7 @@ else
     if echo "$METRICS_CHART" | grep -q "http"; then
         curl -L "$METRICS_CHART" -o stratos-metrics-chart
     else
-        cp -rfv "$STRATOS_CHART" stratos-metrics-chart
+        cp -rfv "$METRICS_CHART" stratos-metrics-chart
     fi
 
     if echo "$METRICS_CHART" | grep -q "tgz"; then
@@ -31,11 +31,11 @@ else
     else
         unzip -o stratos-metrics-chart
     fi
-    rm metrics-chart
+    rm stratos-metrics-chart
     METRICS_CHART_NAME="$METRICS_CHART"
 fi
 
 # save STRATOS_CHART_NAME on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$METRICS_CHART_NAME'"'
+kubectl patch -n kube-system configmap cap-values -p $'data:\n metrics-chart: "'$METRICS_CHART_NAME'"'
 
 ok "Stratos-metrics chart uncompressed"
