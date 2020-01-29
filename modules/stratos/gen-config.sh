@@ -10,12 +10,10 @@ cp scf-config-values.yaml scf-config-values-for-stratos.yaml
 cat <<HEREDOC_APPEND >> scf-config-values-for-stratos.yaml
 
 # Appended for stratos:
-
-kube:
-  registry:
-    hostname: "${DOCKER_REGISTRY}"
-    username: "${DOCKER_USERNAME}"
-    password: "${DOCKER_PASSWORD}"
+console:
+  service:
+    ingress:
+      enabled: true
 HEREDOC_APPEND
 
 ok "Stratos config values generated"
