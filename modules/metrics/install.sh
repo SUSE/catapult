@@ -14,4 +14,6 @@ helm install ./metrics \
 
 bash "$ROOT_DIR"/include/wait_ns.sh metrics
 
+kubectl get service susecf-metrics-metrics-nginx --namespace metrics
+
 ok "Stratos-metrics deployed successfully"
