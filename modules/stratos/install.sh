@@ -13,6 +13,6 @@ helm install ./console \
 
 bash "$ROOT_DIR"/include/wait_ns.sh stratos
 
-helm status susecf-console | grep ui-ext
+kubectl get services susecf-console-ui-ext -n stratos
 
 ok "Stratos deployed successfully"
