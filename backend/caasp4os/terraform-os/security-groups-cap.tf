@@ -3,21 +3,21 @@ resource "openstack_compute_secgroup_v2" "secgroup_cap" {
   description = "CAP security group"
 
   rule {
-    from_port   = 80 
-    to_port     = 80 
+    from_port   = 80
+    to_port     = 80
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
 
   rule {
-    from_port   = 443 
+    from_port   = 443
     to_port     = 443
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
 
   rule {
-    from_port   = 2222 
+    from_port   = 2222
     to_port     = 2222
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
@@ -31,15 +31,29 @@ resource "openstack_compute_secgroup_v2" "secgroup_cap" {
   }
 
   rule {
-    from_port   = 4443 
-    to_port     = 4443 
+    from_port   = 4443
+    to_port     = 4443
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
 
   rule {
-    from_port   = 20000 
-    to_port     = 20008 
+    from_port   = 8443
+    to_port     = 8443
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
+  }
+
+  rule {
+    from_port   = 7443
+    to_port     = 7443
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
+  }
+
+  rule {
+    from_port   = 20000
+    to_port     = 20008
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
