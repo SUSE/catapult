@@ -240,6 +240,10 @@ metrics-chart:
 metrics-gen-config:
 	$(MAKE) -C modules/metrics gen-config
 
+.PHONY: metrics-install
+metrics-install:
+	$(MAKE) -C modules/metrics install
+
 .PHONY: metrics-upgrade
 metrics-upgrade:
 	$(MAKE) -C modules/metrics upgrade
