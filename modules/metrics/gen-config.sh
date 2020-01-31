@@ -7,6 +7,7 @@ info "Generating stratos-metrics config values"
 
 cat <<HEREDOC_APPEND >> scf-config-values-for-stratos.yaml
 
+# FIXME remove after future change to staging repo
 # Appended for stratos-metrics:
 prometheus:
   imagePullSecrets:
