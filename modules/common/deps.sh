@@ -14,10 +14,12 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export HELM_OS_TYPE="${HELM_OS_TYPE:-darwin-amd64}"
     export KUBECTL_OS_TYPE="${KUBECTL_OS_TYPE:-darwin}"
     export CFCLI_OS_TYPE="${CFCLI_OS_TYPE:-macosx64}"
+    export YAMLPATCH_OS_TYPE="${YAMLPATCH_OS_TYPE:-darwin}"
 else
     export HELM_OS_TYPE="${HELM_OS_TYPE:-linux-amd64}"
     export KUBECTL_OS_TYPE="${KUBECTL_OS_TYPE:-linux}"
     export CFCLI_OS_TYPE="${CFCLI_OS_TYPE:-linux64}"
+    export YAMLPATCH_OS_TYPE="${YAMLPATCH_OS_TYPE:-linux}"
 fi
 
 if [ ! -e "bin/helm" ]; then
@@ -43,10 +45,21 @@ if [ ! -e "bin/cf" ]; then
     cf version
 fi
 
+if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
+    ok "Skipping downloading catapult dependencies, using host binaries"
+    exit 0
+fi
+
 bazelpath=bin/bazel
 if [ ! -e "$bazelpath" ]; then
     wget "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64" -O $bazelpath
     chmod +x $bazelpath
+fi
+
+yamlpatchpath=bin/yaml-patch
+if [ ! -e "$yamlpatchpath" ]; then
+    wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_${YAMLPATCH_OS_TYPE}" -O $yamlpatchpath
+    chmod +x $yamlpatchpath
 fi
 
 ok "Deps correctly downloaded"
