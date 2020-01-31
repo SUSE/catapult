@@ -176,3 +176,13 @@ function supported_backend {
         exit 1
     fi
 }
+
+function yamlpatch {
+    # we cannot use stdin to pass the file that yaml-patch is going to edit, or the
+    # file will change under its feet; use a temporal file
+    OP_FILE="$1"
+    PATCHED_FILE="$2"
+    cp "$PATCHED_FILE"{,.bak}
+    BAK_FILE="$PATCHED_FILE".bak
+    cat "$BAK_FILE" | yaml-patch -o "$OP_FILE" > "$PATCHED_FILE"; rm "$OP_FILE" "$BAK_FILE"
+}
