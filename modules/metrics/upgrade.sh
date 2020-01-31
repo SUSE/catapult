@@ -13,7 +13,7 @@ fi
 
 helm upgrade susecf-metrics ./metrics \
      --recreate-pods \
-     --values scf-config-values-for-stratos.yaml \
+     --values scf-config-values-for-metrics.yaml \
      --values stratos-metrics-values.yaml
 
 bash "$ROOT_DIR"/include/wait_ns.sh metrics

@@ -5,21 +5,37 @@
 
 info "Generating stratos-metrics config values"
 
-cat <<HEREDOC_APPEND >> scf-config-values-for-stratos.yaml
-
-# FIXME remove after future change to staging repo
-# Appended for stratos-metrics:
-prometheus:
-  imagePullSecrets:
-  - name: regsecret
-HEREDOC_APPEND
-
-
 KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server' | cut -d ':' -f 1,2)":6443"
 
-cat <<HEREDOC > stratos-metrics-values.yaml
+cp scf-config-values-for-stratos.yaml scf-config-values-for-metrics.yaml
 
-# Appended for stratos:
+cat <<EOF > op.yml
+- op: add
+  path: /prometheus
+  value:
+    imagePullSecrets:
+    - name: regsecret
+- op: replace
+  path: /kube/registry/hostname
+  value:
+    "${DOCKER_REGISTRY}"
+- op: replace
+  path: /kube/registry/username
+  value:
+    "${DOCKER_USERNAME}"
+- op: replace
+  path: /kube/registry/password
+  value:
+    "${DOCKER_PASSWORD}"
+- op: replace
+  path: /kube/organization
+  value:
+    "${DOCKER_ORG}"
+EOF
+
+yamlpatch op.yml scf-config-values-for-metrics.yaml
+
+cat <<HEREDOC > stratos-metrics-values.yaml
 ---
 env:
   DOPPLER_PORT: 443

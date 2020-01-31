@@ -15,6 +15,6 @@ if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.da
     kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/metrics-chart"}]'
 fi
 
-rm -rf metrics stratos-metrics-values.yaml
+rm -rf metrics stratos-metrics-values.yaml scf-config-values-for-metrics.yaml
 
 ok "Stratos-metrics removed"
