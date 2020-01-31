@@ -15,7 +15,7 @@ prometheus:
 HEREDOC_APPEND
 
 
-KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server' | cut -d ':' -f 1,2)":7443"
+KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server' | cut -d ':' -f 1,2)":6443"
 
 cat <<HEREDOC > stratos-metrics-values.yaml
 
