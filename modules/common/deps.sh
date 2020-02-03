@@ -6,7 +6,7 @@
 . .envrc
 
 if [[ "$DOWNLOAD_BINS" == "false" ]]; then
-    ok "Skipping downloading deps, using host binaries"
+    ok "Skipping downloading bins, using host binaries"
     exit 0
 fi
 
