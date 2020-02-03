@@ -17,6 +17,7 @@ kubectl exec -ti -n catapult task -- /bin/bash -c "chsh root -s /bin/zsh" || tru
 echo "pushd /catapult/build$CLUSTER_NAME ; source .envrc ; popd" > .zshrc
 # Inject a sane zshrc!
 cat <<'EOF' >> .zshrc
+export TERM=xterm
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export GOPATH=$HOME/go
