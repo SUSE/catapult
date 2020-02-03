@@ -174,6 +174,23 @@ testCommonDeps() {
 
   make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+
+  make buildir
+  DOWNLOAD_BINS=false DOWNLOAD_CATAPULT_DEPS=false make private modules/common
+
+  assertFalse 'bazel not downloaded' "[ -e 'buildtest/bin/bazel' ]"
+  assertFalse 'yaml-patch not downloaded' "[ -e 'buildtest/bin/yaml-patch' ]"
+  assertFalse 'yq not downloaded' "[ -e 'buildtest/bin/yq' ]"
+
+  make clean
+  assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
+
+  make buildir
+  DOWNLOAD_BINS=false make private modules/common
+
+  assertTrue 'bazel downloaded' "[ -e 'buildtest/bin/bazel' ]"
+  assertTrue 'yaml-patch downloaded' "[ -e 'buildtest/bin/yaml-patch' ]"
+  assertTrue 'yq downloaded' "[ -e 'buildtest/bin/yq' ]"
 }
 
 # Load shUnit2.
