@@ -42,10 +42,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
 
     if [ "$OPERATOR_CHART_URL" = latest ]; then
         info "Sourcing operator from kubecf charts"
-        # FIXME: Platform dipendent for now
         info "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
-        [ ! -e "bin/yq" ] && wget https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64 -O bin/yq && chmod +x bin/yq
-
         OPERATOR_CHART_URL=$(yq r $SCF_CHART/Metadata.yaml operatorChartUrl)
 
         # If still empty, grab latest one

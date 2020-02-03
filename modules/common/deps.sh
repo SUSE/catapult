@@ -15,11 +15,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export KUBECTL_OS_TYPE="${KUBECTL_OS_TYPE:-darwin}"
     export CFCLI_OS_TYPE="${CFCLI_OS_TYPE:-macosx64}"
     export YAMLPATCH_OS_TYPE="${YAMLPATCH_OS_TYPE:-darwin}"
+    export YQ_OS_TYPE="${YQ_OS_TYPE:-darwin_amd64}"
 else
     export HELM_OS_TYPE="${HELM_OS_TYPE:-linux-amd64}"
     export KUBECTL_OS_TYPE="${KUBECTL_OS_TYPE:-linux}"
     export CFCLI_OS_TYPE="${CFCLI_OS_TYPE:-linux64}"
     export YAMLPATCH_OS_TYPE="${YAMLPATCH_OS_TYPE:-linux}"
+    export YQ_OS_TYPE="${YQ_OS_TYPE:-linux_amd64}"
 fi
 
 if [ ! -e "bin/helm" ]; then
@@ -60,6 +62,12 @@ yamlpatchpath=bin/yaml-patch
 if [ ! -e "$yamlpatchpath" ]; then
     wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_${YAMLPATCH_OS_TYPE}" -O $yamlpatchpath
     chmod +x $yamlpatchpath
+fi
+
+yqpath=bin/yq
+if [ ! -e "$yqpath" ]; then
+    wget "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_${YQ_OS_TYPE}" -O $yqpath
+    chmod +x $yqpath
 fi
 
 ok "Deps correctly downloaded"
