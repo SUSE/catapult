@@ -18,8 +18,8 @@ fi
 GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
 if [ "$SCF_OPERATOR" == "true" ]; then
     rm -rfv bazel-bin/deploy/helm/kubecf/* || true
-    bazel build //deploy/helm/kubecf:chart
-    tar -xvf bazel-bin/deploy/helm/kubecf/kubecf-*.tgz -C "$BUILD_DIR"
+    bazel build //deploy/helm/kubecf
+    tar -xvf bazel-bin/deploy/helm/kubecf/kubecf.tgz -C "$BUILD_DIR"
     SCF_CHART=kubecf-"$GIT_HEAD"
 else
     sed -i 's|exit 1||' make/kube-dist || true
