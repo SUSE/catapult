@@ -15,6 +15,7 @@ if [[ $ENABLE_EIRINI == true ]] ; then
 
     echo "Waiting for metrics server to come up..."
     bash "$ROOT_DIR"/include/wait_ns.sh default
+    sleep 10
 fi
 
 if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
