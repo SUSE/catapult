@@ -21,7 +21,9 @@ if [ "$METRICS_CHART" = "latest" ]; then
     METRICS_CHART_NAME=$(cat metrics/values.yaml | grep imageTag | cut -d " " -f2)
 else
     if echo "$METRICS_CHART" | grep -q "http"; then
-        curl -L "$METRICS_CHART" -o stratos-metrics-chart
+        # curl -L "$METRICS_CHART" -o stratos-metrics-chart
+        err "METRICS_CHART download needs authentication, please download manually"
+        exit 1
     else
         cp -rfv "$METRICS_CHART" stratos-metrics-chart
     fi
