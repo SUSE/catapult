@@ -150,18 +150,18 @@ testJsonOverrides() {
 testCommonDeps() {
   rm -rf buildtest
   make buildir
-  DOWNLOAD_BINS=false make private modules/common
+  DOWNLOAD_BINS=false DOWNLOAD_CATAPULT_DEPS=false make private modules/common
 
-  assertFalse 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
-  assertFalse 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
-  assertFalse 'kubectl downloaded' "[ -e 'buildtest/bin/kubectl' ]"
-  assertFalse 'cfcli downloaded' "[ -e 'buildtest/bin/cf' ]"
+  assertFalse 'helm not downloaded' "[ -e 'buildtest/bin/helm' ]"
+  assertFalse 'tiller not downloaded' "[ -e 'buildtest/bin/tiller' ]"
+  assertFalse 'kubectl not downloaded' "[ -e 'buildtest/bin/kubectl' ]"
+  assertFalse 'cfcli not downloaded' "[ -e 'buildtest/bin/cf' ]"
 
   make clean
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 
   make buildir
-  make private modules/common
+  DOWNLOAD_CATAPULT_DEPS=false make private modules/common
 
   assertTrue 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
   assertTrue 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
