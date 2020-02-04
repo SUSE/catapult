@@ -181,7 +181,6 @@ scf-upgrade:
 
 .PHONY: scf-chart
 scf-chart:
-	$(MAKE) -C modules/common
 	$(MAKE) -C modules/scf chart
 
 .PHONY: scf-build
