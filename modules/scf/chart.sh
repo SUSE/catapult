@@ -4,6 +4,7 @@
 . ../../include/common.sh
 . .envrc
 
+rm -rf helm chart scf_chart_url suse kubecf
 
 if [ -z "$SCF_CHART" ] && [ -z "$SCF_HELM_VERSION" ]; then
     warn "No chart url given - using latest public release from GH"
