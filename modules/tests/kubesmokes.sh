@@ -34,7 +34,7 @@ container_status() {
 
 bash ../include/wait_ns.sh catapult
 while [[ -z $(container_status "smokes") ]]; do
-    kubectl attach -n catapult "smokes" ||:
+    kubectl attach -n catapult "smokes" -it 2>/dev/null ||:
 done
 
 set +e
