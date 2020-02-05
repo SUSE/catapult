@@ -3,7 +3,7 @@
 # Functions to interact with a container that includes the client caasp4
 # binaries and terraform
 
-SKUBA_CLUSTER_NAME="my-cluster" #default from caasp
+SKUBA_CLUSTER_NAME="$CLUSTER_NAME"
 
 _set_env_vars() {
     JSON=$(skuba_container terraform output -json)
