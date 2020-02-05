@@ -17,7 +17,9 @@ info
 kubectl create namespace catapult || true
 kubectl delete pod cats -n catapult || true
 
-export DEFAULT_STACK="${DEFAULT_STACK:-cflinuxfs3}"
+if [ "${DEFAULT_STACK}" = "from_chart" ]; then
+    export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+fi
 
 export CATS_REPO=$CATS_REPO
 pod_definition=$(erb "$ROOT_DIR"/kube/cats/pod.yaml.erb)
