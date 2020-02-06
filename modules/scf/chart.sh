@@ -38,18 +38,15 @@ if [ -n "$SCF_HELM_VERSION" ]; then
 
     fi
 
-    # FIXME: Platform hardcoded for now - should we have a global deps step?
-    [ ! -e "bin/yq" ] && wget https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64 -O bin/yq && chmod +x bin/yq
-
     mkdir -p charts/helm
     tar xvf cf-*.tgz -C charts/helm
     tar xvf uaa-*.tgz -C charts/helm
     pushd charts
-        VERSION=$(../bin/yq r helm/cf/Chart.yaml version)
-        API_VERSION=$(../bin/yq r helm/cf/Chart.yaml apiVersion)
+        VERSION=$(yq r helm/cf/Chart.yaml version)
+        API_VERSION=$(yq r helm/cf/Chart.yaml apiVersion)
 
         if [ "${API_VERSION}" == "v1" ]; then
-            API_VERSION=$(../bin/yq r helm/cf/Chart.yaml scfVersion)
+            API_VERSION=$(yq r helm/cf/Chart.yaml scfVersion)
         fi
 
         if [ -z "$VERSION" ]; then

@@ -17,3 +17,6 @@ export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
 
 # Download binaries of helm, kubectl, cf, etc
 DOWNLOAD_BINS="${DOWNLOAD_BINS:-true}"
+
+# Download binaries of catapult dependencies
+DOWNLOAD_CATAPULT_DEPS="${DOWNLOAD_CATAPULT_DEPS:-true}"
