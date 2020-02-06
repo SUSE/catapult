@@ -42,7 +42,7 @@ terraform apply -auto-approve
 popd
 
 # wait for cluster ready:
-bash "$ROOT_DIR"/include/wait_ns.sh kube-system
+wait_ns kube-system
 
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
