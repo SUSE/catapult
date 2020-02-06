@@ -10,6 +10,6 @@ helm upgrade susecf-console ./console \
      --recreate-pods \
      --values scf-config-values-for-stratos.yaml
 
-bash "$ROOT_DIR"/include/wait_ns.sh stratos
+wait_ns stratos
 
 ok "Stratos deployment upgraded successfully"

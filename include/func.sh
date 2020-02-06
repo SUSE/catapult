@@ -186,3 +186,10 @@ function yamlpatch {
     BAK_FILE="$PATCHED_FILE".bak
     cat "$BAK_FILE" | yaml-patch -o "$OP_FILE" > "$PATCHED_FILE"; rm "$OP_FILE" "$BAK_FILE"
 }
+
+function wait_ns {
+    while ! ( kubectl get pods --namespace "$1" | gawk '{ if ((match($2, /^([0-9]+)\/([0-9]+)$/, c) && c[1] != c[2] && !match($3, /Completed/)) || !match($3, /STATUS|Completed|Running/)) { print ; exit 1 } }' )
+    do
+        sleep 10
+    done
+}

@@ -31,7 +31,7 @@ service:
 EOF
 
 helm install --values gitea-config-values.yaml --name gitea --namespace gittea jfelten/gitea
-bash "$ROOT_DIR"/include/wait_ns.sh gittea
+wait_ns gittea
 
 if [ "$BACKEND" == "ekcp" ]; then
   PODNAME=$(kubectl get pods -n gittea -l app=gitea-gitea -o jsonpath="{.items[0].metadata.name}")

@@ -49,7 +49,7 @@ EOF
 helm install --name catapult-concourse -f concourse-values.yml \
    stable/concourse
 
-bash "$ROOT_DIR"/include/wait_ns.sh default
+wait_ns default
 
 if [ "${LOCAL_ACCESS}" == "true" ]; then
 

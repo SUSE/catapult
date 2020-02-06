@@ -77,7 +77,7 @@ helm upgrade drone \
   --set 'sourceControl.secret=drone-server-secrets' --set "server.host=${domain}:32011" \
   stable/drone
 
-bash "$ROOT_DIR"/include/wait_ns.sh drone
+wait_ns drone
 RPC_SECRET=$(kubectl get secrets -n drone drone-drone -o json | jq -r '.data["secret"]')
 
 cat <<EOF | kubectl apply -n drone -f -
@@ -152,7 +152,7 @@ spec:
           value: $RPC_SECRET
 EOF
 
-bash "$ROOT_DIR"/include/wait_ns.sh drone
+wait_ns drone
 
 if [ "$BACKEND" == "ekcp" ]; then
   PODNAME=$(kubectl get pods -n drone -l app=drone -o jsonpath="{.items[0].metadata.name}")

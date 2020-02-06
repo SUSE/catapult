@@ -16,6 +16,6 @@ helm upgrade susecf-metrics ./metrics \
      --values scf-config-values-for-metrics.yaml \
      --values stratos-metrics-values.yaml
 
-bash "$ROOT_DIR"/include/wait_ns.sh metrics
+wait_ns metrics
 
 ok "Stratos-metrics deployment upgraded successfully"

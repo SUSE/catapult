@@ -39,5 +39,5 @@ done
 set -ex
 kubectl apply -f "$ROOT_DIR"/kube/registry.yaml
 sleep 10
-bash "$ROOT_DIR"/include/wait_ns.sh container-registry
+wait_ns container-registry
 kubectl port-forward -n container-registry service/registry 32001:5000

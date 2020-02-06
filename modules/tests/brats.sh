@@ -44,13 +44,13 @@ ${redacted_pod_definition}
 EOF
 
 kubectl apply -n catapult -f <(echo "${pod_definition}")
+wait_ns catapult
 
 container_status() {
     kubectl get --output=json -n catapult pod "$1" \
         | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
 }
 
-bash ../include/wait_ns.sh catapult
 while [[ -z $(container_status "brats") ]]; do
     kubectl attach -n catapult "brats" ||:
 done

@@ -14,7 +14,7 @@ if [[ $ENABLE_EIRINI == true ]] ; then
     fi
 
     echo "Waiting for metrics server to come up..."
-    bash "$ROOT_DIR"/include/wait_ns.sh default
+    wait_ns default
     sleep 10
 fi
 
@@ -22,7 +22,7 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
 
     helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
 
-    bash "$ROOT_DIR"/include/wait_ns.sh uaa
+    wait_ns uaa
 
     SECRET=$(kubectl get pods --namespace uaa \
     -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -65,7 +65,7 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     --set "provider=gke" --set "customResources.enableInstallation=true" \
     "$OPERATOR_CHART_URL" || true
 
-    bash "$ROOT_DIR"/include/wait_ns.sh scf
+    wait_ns scf
     sleep 10
 
     helm install --name susecf-scf ${SCF_CHART} \
@@ -79,9 +79,9 @@ else
     --values scf-config-values.yaml \
     --set enable.uaa=true
 
-    bash "$ROOT_DIR"/include/wait_ns.sh uaa
+    wait_ns uaa
 fi
 
-bash "$ROOT_DIR"/include/wait_ns.sh scf
+wait_ns scf
 
 ok "SCF deployed successfully"

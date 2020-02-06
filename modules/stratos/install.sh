@@ -11,7 +11,7 @@ helm install ./console \
     --namespace stratos \
     --values scf-config-values-for-stratos.yaml
 
-bash "$ROOT_DIR"/include/wait_ns.sh stratos
+wait_ns stratos
 
 kubectl get services susecf-console-ui-ext -n stratos
 

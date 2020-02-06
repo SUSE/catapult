@@ -28,7 +28,7 @@ else
         helm upgrade --recreate-pods susecf-uaa helm/uaa/ --values scf-config-values.yaml \
         --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
-        bash "$ROOT_DIR"/include/wait_ns.sh uaa
+        wait_ns uaa
 
     fi
 
@@ -37,6 +37,6 @@ else
     --set "secrets.UAA_CA_CERT=${CA_CERT}"
 fi
 
-bash "$ROOT_DIR"/include/wait_ns.sh scf
+wait_ns scf
 
 ok "SCF deployment upgraded successfully"

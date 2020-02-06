@@ -7,7 +7,7 @@ kubectl create namespace catapult || true
 kubectl create -f "$ROOT_DIR"/kube/dind.yaml -n catapult || true
 kubectl create -f "$ROOT_DIR"/kube/task.yaml -n catapult || true
 
-bash "$ROOT_DIR"/include/wait_ns.sh catapult
+wait_ns catapult
 
 kubectl cp "$ROOT_DIR"/build$CLUSTER_NAME catapult/task:/catapult/
 kubectl cp "$TASK_SCRIPT" catapult/task:/catapult/build$CLUSTER_NAME/
