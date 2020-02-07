@@ -9,7 +9,7 @@ generated_secrets_secret="$(kubectl get pod api-group-0 -n scf -o jsonpath='{@.s
 SCF_LOG_HOST=$(kubectl get pods -o json -n scf api-group-0 | jq -r '.spec.containers[0].env[] | select(.name == "SCF_LOG_HOST").value')
 
 kube_overrides() {
-    # overrides of smoke-tests.yaml
+    # overrides of acceptance-tests.yaml
     ruby <<EOF
         require 'yaml'
         require 'json'
@@ -43,8 +43,8 @@ EOF
 if kubectl get secrets -n scf 2>/dev/null | grep -qi tests-registry-credentials; then
     kubectl delete secret tests-registry-credentials -n scf
 fi
-if kubectl get pods -n scf 2>/dev/null | grep -qi smoke-tests; then
-    kubectl delete pod smoke-tests -n scf
+if kubectl get pods -n scf 2>/dev/null | grep -qi acceptance-tests; then
+    kubectl delete pod acceptance-tests -n scf
 fi
 
 SECRETS_FILE=${SECRETS_FILE:-"$ROOT_DIR"/../cloudfoundry/secure/concourse-secrets.yml.gpg}
