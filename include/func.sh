@@ -187,6 +187,23 @@ function yamlpatch {
     cat "$BAK_FILE" | yaml-patch -o "$OP_FILE" > "$PATCHED_FILE"; rm "$OP_FILE" "$BAK_FILE"
 }
 
+function container_status {
+    local NAMESPACE=$1
+    local POD=$2
+
+    kubectl get --output=json -n "$NAMESPACE" pod "$POD" \
+        | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
+}
+
+function wait_container_attached {
+    local NAMESPACE=$1
+    local POD=$2
+
+    while [[ -z $(container_status "$NAMESPACE" "$POD") ]]; do
+        kubectl attach -n "$NAMESPACE" "$POD" -it 2>/dev/null ||:
+    done
+}
+
 function wait_ns {
     while ! ( kubectl get pods --namespace "$1" | gawk '{ if ((match($2, /^([0-9]+)\/([0-9]+)$/, c) && c[1] != c[2] && !match($3, /Completed/)) || !match($3, /STATUS|Completed|Running/)) { print ; exit 1 } }' )
     do

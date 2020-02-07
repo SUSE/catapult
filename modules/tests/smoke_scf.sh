@@ -64,16 +64,9 @@ kubectl run \
         --overrides="$(kube_overrides)" \
         "smoke-tests" ||:
 
-container_status() {
-    kubectl get --output=json -n scf pod "$1" \
-        | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
-}
-
-while [[ -z $(container_status "smoke-tests") ]]; do
-    kubectl attach -n scf "smoke-tests" ||:
-done
+wait_container_attached "scf" "smoke-tests"
 
 mkdir -p artifacts
 kubectl logs -f smoke-tests -n scf > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_smoke-tests.log
 
-exit "$(container_status "smoke-tests")"
+exit "$(container_status "scf" "smoke-tests")"

@@ -32,18 +32,11 @@ EOF
 kubectl apply -n catapult -f <(echo "${pod_definition}")
 wait_ns catapult
 
-container_status() {
-    kubectl get --output=json -n catapult pod "$1" \
-        | jq '.status.containerStatuses[0].state.terminated.exitCode | tonumber' 2>/dev/null
-}
-
-while [[ -z $(container_status "cats") ]]; do
-    kubectl attach -n catapult "cats" -it 2>/dev/null ||:
-done
+wait_container_attached "catapult" "cats"
 
 set +e
 mkdir -p artifacts
 kubectl logs -f cats -n catapult > artifacts/"$(date +'%H:%M-%Y-%m-%d')"_cats.log
-status="$(container_status "cats")"
+status="$(container_status "catapult" "cats")"
 kubectl delete pod -n catapult cats
 exit "$status"
