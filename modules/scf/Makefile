@@ -52,3 +52,7 @@ scf-klog:
 .PHONY: stemcell_build
 stemcell_build:
 	./stemcell_build.sh
+
+.PHONY: minibroker
+minibroker:
+	./minibroker.sh

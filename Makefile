@@ -197,6 +197,10 @@ scf-purge:
 scf-build-stemcell:
 	$(MAKE) -C modules/scf stemcell_build
 
+.PHONY: scf-minibroker
+scf-minibroker:
+	$(MAKE) -C modules/scf minibroker
+
 # stratos-only targets:
 .PHONY: stratos
 stratos:
