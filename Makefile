@@ -280,6 +280,10 @@ tests-smoke-scf:
 tests-cats:
 	$(MAKE) -C modules/tests cats
 
+.PHONY: tests-cats-scf
+tests-cats-scf:
+	$(MAKE) -C modules/tests cats-scf
+
 .PHONY: tests-autoscaler
 tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler

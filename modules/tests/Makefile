@@ -28,6 +28,10 @@ smoke-scf:
 cats:
 	./cats.sh
 
+.PHONY: cats-scf
+cats-scf:
+	./cats_scf.sh
+
 .PHONY: sample
 sample:
 	./sample.sh
