@@ -203,8 +203,6 @@ sizing:
 
 EOF
 fi
-
-fi
 cat >> scf-config-values.yaml <<EOF
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
@@ -234,5 +232,6 @@ secrets:
   UAA_ADMIN_CLIENT_SECRET: ${CLUSTER_PASSWORD}
 EOF
 
+fi
 
 ok "SCF config values generated"
