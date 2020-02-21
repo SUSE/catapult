@@ -54,9 +54,14 @@ features:
     enabled: ${ENABLE_EIRINI}
 
 kube:
-  storage_class: ~
   service_cluster_ip_range: 0.0.0.0/0
   pod_cluster_ip_range: 0.0.0.0/0
+
+  registry:
+    hostname: "${DOCKER_REGISTRY}"
+    username: "${DOCKER_USERNAME}"
+    password: "${DOCKER_PASSWORD}"
+  organization: "${DOCKER_ORG}"
 
 ${CONFIG_OVERRIDE}
 

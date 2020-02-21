@@ -6,14 +6,18 @@
 info "Generating stratos config values from scf values"
 
 cp scf-config-values.yaml scf-config-values-for-stratos.yaml
+public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 
 cat <<EOF > op.yml
 - op: add
   path: /console
   value:
     service:
+      externalIPs: ["${public_ip}"]
+      servicePort: 8443
       ingress:
         enabled: true
+        host: ${public_ip}.nip.io
 - op: replace
   path: /kube/registry/hostname
   value:
