@@ -1,5 +1,4 @@
-# [![Build
-Status](https://travis-ci.com/SUSE/catapult.svg?branch=master)](https://travis-ci.com/SUSE/catapult) Catapult
+# [![Build Status](https://travis-ci.com/SUSE/catapult.svg?branch=master)](https://travis-ci.com/SUSE/catapult) Catapult
 
     $> git clone https://github.com/SUSE/catapult.git && cd catapult
     $> make all
