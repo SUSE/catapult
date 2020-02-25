@@ -32,7 +32,10 @@ k8s: clean buildir
 
 .PHONY: kubeconfig
 kubeconfig: ##@states Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
+kubeconfig: buildir
+	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND) kubeconfig
+  backend/check.sh
 
 .PHONY: start
 start: ##@k8s Start cluster of type $BACKEND (only present in some backends, like kind)
