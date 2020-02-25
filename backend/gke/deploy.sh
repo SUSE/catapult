@@ -27,6 +27,7 @@ cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"
 location = "$GKE_LOCATION"
 node_pool_name = "$GKE_CLUSTER_NAME"
+node_count = "$GKE_NODE_COUNT"
 vm_type = "UBUNTU"
 gke_sa_key = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_CRED_JSON"
