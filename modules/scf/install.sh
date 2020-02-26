@@ -55,18 +55,21 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
     info "Installing cf-operator"
-    # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
-    kubectl create namespace scf || true
-    kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password=$CLUSTER_PASSWORD || true
+    kubectl create namespace cf-operator || true
 
+
+    echo "Installing CFO from: ${OPERATOR_CHART_URL}"
     # Install the operator
-    helm install --namespace scf \
+    helm install --namespace cf-operator \
     --name cf-operator \
     --set "provider=gke" --set "customResources.enableInstallation=true" \
-    "$OPERATOR_CHART_URL" || true
+    --set "global.operator.watchNamespace=scf" "${OPERATOR_CHART_URL}"
 
-    wait_ns scf
+    wait_ns cf-operator
     sleep 10
+
+    # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
+    kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
     helm install --name susecf-scf ${SCF_CHART} \
     --namespace scf \

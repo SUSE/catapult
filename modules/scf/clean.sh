@@ -26,6 +26,10 @@ if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
     kubectl delete namespace scf
 fi
 
+if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
+    kubectl delete namespace cf-operator
+fi
+
 if [[ "$ENABLE_EIRINI" == true ]] ; then
     if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
         kubectl delete namespace eirini
