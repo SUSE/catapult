@@ -21,39 +21,43 @@ buildir:
 
 # General targets (Public)
 .PHONY: clean
-clean:
+clean: ##@states Delete cluster of type $BACKEND and location build$CLUSTER_NAME
 	$(MAKE) -C backend/$(BACKEND) clean
 
 .PHONY: k8s
+k8s: ##@states Delete if exists then deploy cluster of type $BACKEND in build$CLUSTER_NAME
 k8s: clean buildir
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND)
 
 .PHONY: kubeconfig
-kubeconfig:
+kubeconfig: ##@states Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
 	$(MAKE) -C backend/$(BACKEND) kubeconfig
 
 .PHONY: start
-start:
+start: ##@k8s Start cluster of type $BACKEND (only present in some backends, like kind)
 	$(MAKE) -C backend/$(BACKEND) start
 
 .PHONY: stop
-stop:
+stop: ##@k8s Stop cluster of type $BACKEND (only present in some backends, like kind)
 	$(MAKE) -C backend/$(BACKEND) stop
 
 .PHONY: restart
-restart:
+restart: ##@k8s Restart cluster of type $BACKEND (only present in some backends, like kind)
 	$(MAKE) -C backend/$(BACKEND) restart
 
 .PHONY: recover
+recover: ##@k8s Obtain kubeconfig from cluster without build folder (only present in kind)
 recover: buildir kubeconfig
 	$(MAKE) -C modules/common
 
 .PHONY: force-clean
+force-clean: ##@k8s Remove build folder no matter what (caution)
 force-clean: buildir clean
 
 .PHONY: all
-all: scf-deploy scf-login
+all: ## Alias for `make k8s scf scf-login`
+all: scf-deploy scf-login # TODO remove scf-deploy
 
 # kind targets:
 
@@ -69,36 +73,36 @@ dind: clean buildir
 # catapult-only targets:
 
 .PHONY: catapult-test
-catapult-test:
+catapult-test: ##@catapult Run linters, unit & integration tests of catapult
 	$(MAKE) -C tests
 
 .PHONY: catapult-lint
-catapult-lint:
+catapult-lint: ##@catapult Only run linters
 	$(MAKE) -C tests lint
 
 .PHONY: catapult-image
-catapult-image:
+catapult-image: ##@catapult Build catapult docker image
 	scripts/image.sh
 
 # extra targets:
 .PHONY: module-extra-concourse
-module-extra-concourse:
+module-extra-concourse: ##@module-extra Deploy concourse instance in cluster
 	$(MAKE) -C modules/extra concourse
 
 .PHONY: module-extra-drone
-module-extra-drone:
+module-extra-drone: ##@module-extra Deploy drone instance in cluster
 	$(MAKE) -C modules/extra drone
 
 .PHONY: module-extra-gitea
-module-extra-gitea:
+module-extra-gitea: ##@module-extra Deploy gitea instance in cluster
 	$(MAKE) -C modules/extra gitea
 
 .PHONY: module-extra-ingress
-module-extra-ingress:
+module-extra-ingress: ##@module-extra Start socksproxy pod
 	$(MAKE) -C modules/extra ingress
 
 .PHONY: module-extra-ingress-forward
-module-extra-ingress-forward:
+module-extra-ingress-forward: ##@module-extra Port-forward socksproxy pod to :8000
 	$(MAKE) -C modules/extra ingress-forward
 
 .PHONY: module-extra-kwt
@@ -118,23 +122,23 @@ module-extra-log:
 	$(MAKE) -C modules/extra log
 
 .PHONY: module-extra-top
-module-extra-top:
+module-extra-top: ##@module-extra Install k9s in buildfoo/bin/
 	$(MAKE) -C modules/extra top
 
 .PHONY: module-extra-task
-module-extra-task:
+module-extra-task: ##@module-extra Run task script inside task pod in catapult ns
 	$(MAKE) -C modules/extra task
 
 .PHONY: module-extra-terminal
-module-extra-terminal:
+module-extra-terminal: ##@module-extra Start a pod with catapult installed inside and open a shell in it
 	$(MAKE) -C modules/extra terminal
 
 .PHONY: module-extra-catapult-web
-module-extra-catapult-web:
+module-extra-catapult-web: ##@module-extra Start docker image in host with a web tty. Useful after calling module-extra-terminal
 	$(MAKE) -C modules/extra web
 
 .PHONY: module-extra-registry
-module-extra-registry:
+module-extra-registry: ##@module-extra Inject host registry intro cluster workers
 	$(MAKE) -C modules/extra registry
 
 .PHONY: module-extra-brats-setup
@@ -152,124 +156,125 @@ module-experimental-eirini_release:
 
 # scf-only targets:
 .PHONY: scf-deploy
+scf-deploy: ##@scf Alias for `make k8s kubeconfig scf`
 scf-deploy: clean buildir
 	$(MAKE) k8s kubeconfig scf
 
 .PHONY: scf-clean
-scf-clean:
+scf-clean: ##@scf Only delete installation of CF & related files
 	$(MAKE) -C modules/scf clean
 
 .PHONY: scf
-scf:
+scf: ##@states Delete if exists then deploy CF in cluster
 	$(MAKE) -C modules/scf
 
 .PHONY: scf-login
-scf-login:
+scf-login: ##@scf Only perform cf login against deployed CF
 	$(MAKE) -C modules/scf login
 
 .PHONY: scf-gen-config
-scf-gen-config:
+scf-gen-config: ##@scf Only generate CF config yamls
 	$(MAKE) -C modules/scf gen-config
 
 .PHONY: scf-install
-scf-install:
+scf-install: ##@scf Only install CF
 	$(MAKE) -C modules/scf install
 
 .PHONY: scf-upgrade
-scf-upgrade:
+scf-upgrade: ##@scf Only upgrade CF
 	$(MAKE) -C modules/scf upgrade
 
 .PHONY: scf-chart
-scf-chart:
+scf-chart: ##@scf Only obtain CF chart, by file or download
 	$(MAKE) -C modules/scf chart
 
 .PHONY: scf-build
-scf-build:
+scf-build: ##@scf Build chart from source and install CF
 	$(MAKE) -C modules/scf build-scf-from-source
 	$(MAKE) scf-gen-config
 	$(MAKE) -C modules/scf install
 
 .PHONY: scf-purge
-scf-purge:
+scf-purge: ##@scf Purge all apps, buildpacks and services from CF
 	$(MAKE) -C modules/scf purge
 
 .PHONY: scf-build-stemcell
-scf-build-stemcell:
+scf-build-stemcell: ##@scf Build stemcell
 	$(MAKE) -C modules/scf stemcell_build
 
 .PHONY: scf-minibroker
-scf-minibroker:
+scf-minibroker: ##@scf Deploy minibroker & services on CF
 	$(MAKE) -C modules/scf minibroker
 
 # stratos-only targets:
 .PHONY: stratos
-stratos:
+stratos: ##@states Delete if exists then deploy Stratos console
 	$(MAKE) -C modules/stratos
 
 .PHONY: stratos-clean
-stratos-clean:
+stratos-clean: ##@stratos Remove Stratos console
 	$(MAKE) -C modules/stratos clean
 
 .PHONY: stratos-chart
-stratos-chart:
+stratos-chart: ##@stratos Only obtain Stratos console chart, by file or download
 	$(MAKE) -C modules/stratos chart
 
 .PHONY: stratos-gen-config
-stratos-gen-config:
+stratos-gen-config: ##@stratos Only generate Stratos console config yamls
 	$(MAKE) -C modules/stratos gen-config
 
 .PHONY: stratos-install
-stratos-install:
+stratos-install: ##@stratos Only install Stratos console
 	$(MAKE) -C modules/stratos install
 
 .PHONY: stratos-upgrade
-stratos-upgrade:
+stratos-upgrade: ##@stratos Only upgrade Stratos console
 	$(MAKE) -C modules/stratos upgrade
 
 # metrics-only targets:
 .PHONY: metrics
-metrics:
+metrics: ##@states Delete if exists then deploy Stratos metrics
 	$(MAKE) -C modules/metrics
 
 .PHONY: metrics-clean
-metrics-clean:
+metrics-clean: ##@metrics Remove Stratos metrics
 	$(MAKE) -C modules/metrics clean
 
 .PHONY: metrics-chart
-metrics-chart:
+metrics-chart: ##@metrics Only obtain Stratos metrics chart, by file or download
 	$(MAKE) -C modules/metrics chart
 
 .PHONY: metrics-gen-config
-metrics-gen-config:
+metrics-gen-config: ##@metrics Only generate Stratos metrics config yamls
 	$(MAKE) -C modules/metrics gen-config
 
 .PHONY: metrics-install
-metrics-install:
+metrics-install: ##@metrics Only install Stratos metrics
 	$(MAKE) -C modules/metrics install
 
 .PHONY: metrics-upgrade
-metrics-upgrade:
+metrics-upgrade: ##@metrics Only upgrade Stratos metrics
 	$(MAKE) -C modules/metrics upgrade
 
 # test-only targets:
 .PHONY: tests
-tests:
+tests: ##@states Run a reliable subset of tests against CF
 	$(MAKE) -C modules/tests
 
 .PHONY: tests-smoke
-tests-smoke:
+tests-smoke: ##@tests Build Smokes on host and run against CF
 	$(MAKE) -C modules/tests smoke
 
 .PHONY: tests-smoke-kube
-tests-smoke-kube:
+tests-smoke-kube: ##@tests Build Smokes on pod and run against CF
 	$(MAKE) -C modules/tests smoke-kube
 
 .PHONY: tests-kubecats
-tests-kubecats:
+tests-kubecats: ##@tests Build CATS on pod and run against CF
 	$(MAKE) -C modules/tests kubecats
 
 .PHONY: tests-brats
-tests-brats:
+tests-brats: ##@tests Run BRATS against CF
 	$(MAKE) -C modules/tests brats
 
 .PHONY: tests-eirini-persi
@@ -281,7 +286,7 @@ tests-smoke-scf:
 	$(MAKE) -C modules/tests smoke-scf
 
 .PHONY: tests-cats
-tests-cats:
+tests-cats: ##@tests Build CATS on host and run against CF
 	$(MAKE) -C modules/tests cats
 
 .PHONY: tests-cats-scf
@@ -293,12 +298,12 @@ tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler
 
 .PHONY: tests-kubecf
-tests-kubecf:
+tests-kubecf: ##@tests Run specified KUBECF_TEST_SUITE
 	$(MAKE) -C modules/tests kubecf
 
 # Samples and fixtures
 .PHONY: sample
-sample:
+sample: ##@tests Deploy sample app
 	$(MAKE) -C modules/tests sample
 
 .PHONY: sample-ticking
@@ -373,3 +378,81 @@ image::
 	@echo 'WARNING: target deprecated. Please use `make catapult-image` instead.'
 	@echo 'Kindly waiting for 20s…'; sleep 20
 image:: catapult-image
+
+# Build help output from the makefile comments:
+# - Comments after a target that start with '\#\#' will be taken
+# - Comments can be added to a category with @category
+# TODO choose a regex
+HELP_FUNC = \
+    %help; \
+    while(<>) { push @{$$help{$$2 // 'other'}}, [$$1, $$3] if /^([a-zA-Z0-9\-]+)\s*:.*\#\#(?:@([a-zA-Z0-9\-]+))?\s(.*)$$/ }; \
+    for (keys %help) { \
+			if ($$_ !~ "states") { \
+				print "$$_:\n"; \
+				for (@{$$help{$$_}}) { \
+					$$sep = " " x (30  - length $$_->[0]); \
+					print "  $$_->[0]$$sep$$_->[1]\n"; \
+				}; \
+      } \
+    print "\n"; }
+HELP_STATES = \
+    %help; \
+    while(<>) { push @{$$help{$$2}}, [$$1, $$3] if /^([a-zA-Z0-9\-]+)\s*:.*\#\#\@(?:(states))?\s(.*)$$/ }; \
+    for (keys %help) { \
+			print "$$_:\n"; \
+			for (@{$$help{$$_}}) { \
+				$$sep = " " x (23  - length $$_->[0]); \
+				print "  $$_->[0]$$sep$$_->[1]\n"; \
+			}; \
+    print "\n"; }
+
+help: ##@other Show help
+	@echo 'USAGE: <envvars> make [target]'
+	@echo
+	@echo '  Main state targets and their cleaning targets:	'
+	@echo
+	@echo '     {} ─┬─> k8s        ─┬─> scf ────> tests ────> stratos ────> metrics	'
+	@echo '         └─> kubeconfig ─┘																								'
+	@echo
+	@echo '             clean           scf-clean           stratos-clean   metrics-clean'
+	@echo
+	@echo '  Calling `make k8s` creates a buildfoo folder on catapult/'
+	@echo '  All states operate against the files in that buildfoo folder'
+	@echo '  Calling `make clean` deletes the cluster and then the buildfoo folder'
+	@echo
+	@perl -e '$(HELP_STATES)' $(MAKEFILE_LIST)
+	@echo
+	@echo 'OPTIONS:'
+	@echo '  Passed as env vars. Them and their default values are sourced from:'
+	@echo '    (in descendent order of priority)'
+	@echo '    include/defaults_global{,_private}.sh'
+	@echo '    backend/*/defaults.sh								'
+	@echo '    modules/common/defaults.sh						'
+	@echo '    modules/*/defaults.sh								'
+	@echo
+	@echo '  BACKEND option specifies the type of k8s cluster to create. Defaults to "kind"'
+	@echo '  CLUSTER_NAME option specifies the name of the build$CLUSTER_NAME. Defaults to "$BACKEND"'
+	@echo
+	@echo '  A concatenated list of all options is compiled in buildfoo/defaults.sh on '
+	@echo '  cluster creation.'
+	@echo
+	@echo 'EXAMPLES:'
+	@echo '  Deploy a kind cluster, and scf on top. Result in `buildkind` folder'
+	@echo '  > make k8s scf'
+	@echo
+	@echo '  Deploy an EKS cluster, then scf, then stratos. Result in `buildeks` folder'
+	@echo '  > BACKEND=eks make k8s scf stratos'
+	@echo
+	@echo '  Deploy an EKS cluster. Result in `buildmy_eks` folder'
+	@echo '  > BACKEND=eks CLUSTER_NAME=my_eks make k8s'
+	@echo '  Target the cluster manually'
+	@echo '  > cd buildmy_eks; source .envrc; kubectl get pods -A'
+	@echo
+
+
+help-all: help
+help-all: ##@other Show all help
+	@echo 'SUBSTATES and other targets:'
+	@echo
+	@perl -e '$(HELP_FUNC)' $(MAKEFILE_LIST)
+	@echo
