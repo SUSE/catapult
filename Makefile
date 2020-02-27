@@ -430,23 +430,30 @@ help: ##@other Show help
 	@echo '    modules/common/defaults.sh						'
 	@echo '    modules/*/defaults.sh								'
 	@echo
-	@echo '  BACKEND option specifies the type of k8s cluster to create. Defaults to "kind"'
+	@echo '  BACKEND option is mandatory. Is the type of k8s cluster to create/target. Defaults to "kind"'
 	@echo '  CLUSTER_NAME option specifies the name of the build$CLUSTER_NAME. Defaults to "$BACKEND"'
 	@echo
 	@echo '  A concatenated list of all options is compiled in buildfoo/defaults.sh on '
 	@echo '  cluster creation.'
 	@echo
 	@echo 'EXAMPLES:'
-	@echo '  Deploy a kind cluster, and scf on top. Result in `buildkind` folder'
+	@echo '  Deploy a kind cluster, then scf on top. Result in `buildkind` folder'
 	@echo '  > make k8s scf'
 	@echo
 	@echo '  Deploy an EKS cluster, then scf, then stratos. Result in `buildeks` folder'
 	@echo '  > BACKEND=eks make k8s scf stratos'
 	@echo
-	@echo '  Deploy an EKS cluster. Result in `buildmy_eks` folder'
-	@echo '  > BACKEND=eks CLUSTER_NAME=my_eks make k8s'
-	@echo '  Target the cluster manually'
-	@echo '  > cd buildmy_eks; source .envrc; kubectl get pods -A'
+	@echo '  Target the cluster `eks` manually'
+	@echo '  > cd buildeks; source .envrc; kubectl get pods -A'
+	@echo
+	@echo '  Remove cluster `my_cluster`, then delete `buildmy_cluster` folder'
+	@echo '  > BACKEND=my_cluster make clean'
+	@echo
+	@echo '  Import existing cluster kubeconfig by creating a `buildfoo` folder'
+	@echo '   BACKEND=imported CLUSTER_NAME=foo KUBECFG=/tmp/kubeconfig make k8s'
+	@echo
+	@echo '  Install latest released kubecf chart against previous cluster example'
+	@echo '  > BACKEND=imported CLUSTER_NAME=foo SCF_OPERATOR=true make scf'
 	@echo
 
 
