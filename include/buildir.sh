@@ -33,8 +33,12 @@ HEREDOC_APPEND
 info "Generating default options file"
 rm -rf defaults.sh
 echo '#!/usr/bin/env bash' >> defaults.sh
-echo '# DISCLAIMER!' >> defaults.sh
-echo '# DEFAULT VALUES. DO NOT CHANGE THIS FILE' >> defaults.sh
+echo >> defaults.sh
+echo '# DISCLAIMER!!!!!!!!' >> defaults.sh
+echo '# DISCLAIMER!!!!!!!!      CHANGING THIS FILE HAS NO EFFECT ANYWHERE for now' >> defaults.sh
+echo '# DISCLAIMER!!!!!!!!      It is a concat of all possible options,' >> defaults.sh
+echo '# DISCLAIMER!!!!!!!!      only for your viewing pleasure' >> defaults.sh
+echo '# DISCLAIMER!!!!!!!!' >> defaults.sh
 sed '1d' "$ROOT_DIR"/include/defaults_global.sh >> defaults.sh
 set +x
 sed '1d' "$ROOT_DIR"/include/defaults_global_private.sh >> defaults.sh
