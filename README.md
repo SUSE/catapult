@@ -4,9 +4,13 @@
     $> make all
 
 This will start a local [Kind](https://github.com/kubernetes-sigs/kind) cluster
-and deploy scf on top of it. To remove everything, run `make clean`.
+and deploy scf on top of it. Remove everything with `make clean`.
 
-Check the [First steps wiki page](https://github.com/SUSE/catapult/wiki/First-steps).
+Next, check the [First steps wiki page](https://github.com/SUSE/catapult/wiki/First-steps)
+or do:
+
+    $> make help
+    $> make help-all
 
 
 # Description
