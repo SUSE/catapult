@@ -85,6 +85,26 @@ catapult-image: ##@catapult Build catapult docker image
 	scripts/image.sh
 
 # extra targets:
+.PHONY: module-extra-top
+module-extra-top: ##@module-extra Install k9s in buildfoo/bin/
+	$(MAKE) -C modules/extra top
+
+.PHONY: module-extra-task
+module-extra-task: ##@module-extra Run task script inside task pod in catapult ns
+	$(MAKE) -C modules/extra task
+
+.PHONY: module-extra-terminal
+module-extra-terminal: ##@module-extra Start a pod with catapult installed inside and open a shell in it
+	$(MAKE) -C modules/extra terminal
+
+.PHONY: module-extra-catapult-web
+module-extra-catapult-web: ##@module-extra Start docker image in host with a web tty. Useful after calling module-extra-terminal
+	$(MAKE) -C modules/extra web
+
+.PHONY: module-extra-registry
+module-extra-registry: ##@module-extra Inject host registry intro cluster workers
+	$(MAKE) -C modules/extra registry
+
 .PHONY: module-extra-concourse
 module-extra-concourse: ##@module-extra Deploy concourse instance in cluster
 	$(MAKE) -C modules/extra concourse
@@ -121,26 +141,6 @@ module-extra-kwt-connect:
 module-extra-log:
 	$(MAKE) -C modules/extra log
 
-.PHONY: module-extra-top
-module-extra-top: ##@module-extra Install k9s in buildfoo/bin/
-	$(MAKE) -C modules/extra top
-
-.PHONY: module-extra-task
-module-extra-task: ##@module-extra Run task script inside task pod in catapult ns
-	$(MAKE) -C modules/extra task
-
-.PHONY: module-extra-terminal
-module-extra-terminal: ##@module-extra Start a pod with catapult installed inside and open a shell in it
-	$(MAKE) -C modules/extra terminal
-
-.PHONY: module-extra-catapult-web
-module-extra-catapult-web: ##@module-extra Start docker image in host with a web tty. Useful after calling module-extra-terminal
-	$(MAKE) -C modules/extra web
-
-.PHONY: module-extra-registry
-module-extra-registry: ##@module-extra Inject host registry intro cluster workers
-	$(MAKE) -C modules/extra registry
-
 .PHONY: module-extra-brats-setup
 module-extra-brats-setup:
 	$(MAKE) -C modules/scf scf-brats-setup
@@ -160,6 +160,12 @@ scf-deploy: ##@scf Alias for `make k8s kubeconfig scf`
 scf-deploy: clean buildir
 	$(MAKE) k8s kubeconfig scf
 
+.PHONY: scf-build
+scf-build: ##@scf Build chart from source and install CF
+	$(MAKE) -C modules/scf build-scf-from-source
+	$(MAKE) scf-gen-config
+	$(MAKE) -C modules/scf install
+
 .PHONY: scf-clean
 scf-clean: ##@scf Only delete installation of CF & related files
 	$(MAKE) -C modules/scf clean
@@ -168,9 +174,9 @@ scf-clean: ##@scf Only delete installation of CF & related files
 scf: ##@states Delete if exists then deploy CF in cluster
 	$(MAKE) -C modules/scf
 
-.PHONY: scf-login
-scf-login: ##@scf Only perform cf login against deployed CF
-	$(MAKE) -C modules/scf login
+.PHONY: scf-chart
+scf-chart: ##@scf Only obtain CF chart, by file or download
+	$(MAKE) -C modules/scf chart
 
 .PHONY: scf-gen-config
 scf-gen-config: ##@scf Only generate CF config yamls
@@ -184,15 +190,13 @@ scf-install: ##@scf Only install CF
 scf-upgrade: ##@scf Only upgrade CF
 	$(MAKE) -C modules/scf upgrade
 
-.PHONY: scf-chart
-scf-chart: ##@scf Only obtain CF chart, by file or download
-	$(MAKE) -C modules/scf chart
+.PHONY: scf-login
+scf-login: ##@scf Only perform cf login against deployed CF
+	$(MAKE) -C modules/scf login
 
-.PHONY: scf-build
-scf-build: ##@scf Build chart from source and install CF
-	$(MAKE) -C modules/scf build-scf-from-source
-	$(MAKE) scf-gen-config
-	$(MAKE) -C modules/scf install
+.PHONY: scf-minibroker
+scf-minibroker: ##@scf Deploy minibroker & services on CF
+	$(MAKE) -C modules/scf minibroker
 
 .PHONY: scf-purge
 scf-purge: ##@scf Purge all apps, buildpacks and services from CF
@@ -201,10 +205,6 @@ scf-purge: ##@scf Purge all apps, buildpacks and services from CF
 .PHONY: scf-build-stemcell
 scf-build-stemcell: ##@scf Build stemcell
 	$(MAKE) -C modules/scf stemcell_build
-
-.PHONY: scf-minibroker
-scf-minibroker: ##@scf Deploy minibroker & services on CF
-	$(MAKE) -C modules/scf minibroker
 
 # stratos-only targets:
 .PHONY: stratos
@@ -261,20 +261,24 @@ metrics-upgrade: ##@metrics Only upgrade Stratos metrics
 tests: ##@states Run a reliable subset of tests against CF
 	$(MAKE) -C modules/tests
 
+.PHONY: tests-kubecf
+tests-kubecf: ##@tests Run specified KUBECF_TEST_SUITE
+	$(MAKE) -C modules/tests kubecf
+
 .PHONY: tests-smoke
-tests-smoke: ##@tests Build Smokes on host and run against CF
+tests-smoke: ##@tests Build and run scf Smokes from host
 	$(MAKE) -C modules/tests smoke
 
 .PHONY: tests-smoke-kube
-tests-smoke-kube: ##@tests Build Smokes on pod and run against CF
+tests-smoke-kube: ##@tests Build and run scf Smokes from pod
 	$(MAKE) -C modules/tests smoke-kube
 
 .PHONY: tests-kubecats
-tests-kubecats: ##@tests Build CATS on pod and run against CF
+tests-kubecats: ##@tests Build and run scf CATS from pod
 	$(MAKE) -C modules/tests kubecats
 
 .PHONY: tests-brats
-tests-brats: ##@tests Run BRATS against CF
+tests-brats: ##@tests Run scf BRATS
 	$(MAKE) -C modules/tests brats
 
 .PHONY: tests-eirini-persi
@@ -286,7 +290,7 @@ tests-smoke-scf:
 	$(MAKE) -C modules/tests smoke-scf
 
 .PHONY: tests-cats
-tests-cats: ##@tests Build CATS on host and run against CF
+tests-cats: ##@tests Build and run scf CATS from host
 	$(MAKE) -C modules/tests cats
 
 .PHONY: tests-cats-scf
@@ -296,10 +300,6 @@ tests-cats-scf:
 .PHONY: tests-autoscaler
 tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler
-
-.PHONY: tests-kubecf
-tests-kubecf: ##@tests Run specified KUBECF_TEST_SUITE
-	$(MAKE) -C modules/tests kubecf
 
 # Samples and fixtures
 .PHONY: sample
