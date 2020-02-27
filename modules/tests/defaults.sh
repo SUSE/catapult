@@ -32,6 +32,9 @@ BRATS_BUILDPACK_VERSION="${BRATS_BUILDPACK_VERSION}"
 
 SAMPLE_APP_REPO="${SAMPLE_APP_REPO:-https://github.com/cloudfoundry-samples/cf-sample-app-nodejs}"
 
+# KubeCF tests options
+######################
+
 KUBECF_CHECKOUT="${KUBECF_CHECKOUT:-}"
 KUBECF_TEST_SUITE="${KUBECF_TEST_SUITE:-smokes}"
 KUBECF_DEPLOYMENT_NAME="${KUBECF_DEPLOYMENT_NAME:-susecf-scf}"
