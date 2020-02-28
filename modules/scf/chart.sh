@@ -81,6 +81,10 @@ else
 fi
 
 if  [ "${SCF_OPERATOR}" == "true" ]; then
+    if echo "$SCF_CHART" | grep -q "bundle"; then
+        tar xvzf cf-operator*.tgz
+        tar xvzf kubecf*.tgz
+    fi
     cp -rfv kubecf*/* ./
 fi
 
