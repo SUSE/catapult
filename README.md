@@ -50,10 +50,12 @@ experience, as PRs are gated through them (see "build status" label):
 
      $> make catapult-tests
 
+Debug catapult with `DEBUG_MODE=true`.
+
 You can get your local development for [SCF](https://github.com/SUSE/scf)
 or [KubeCF](https://github.com/SUSE/kubecf), with all needed catapult deps, with:
 
     $> docker run -v /var/run/docker.sock:/var/run/docker.sock -ti --rm splatform/catapult:latest dind
-    
+
 Check out [Run in Docker](https://github.com/SUSE/catapult/wiki/Run-in-Docker)
 page on the wiki for more options.
