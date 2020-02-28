@@ -8,15 +8,10 @@ if [[ "$DOWNLOAD_BINS" == "false" ]]; then
     exit 0
 fi
 
-# pin the kubectl to eks default version
-curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/kubectl
-chmod +x kubectl && mv kubectl bin/
 
-# pin helm to cap-terraform/eks/modules/eks/<tiller image> version
-curl -o helm.tar.gz https://get.helm.sh/helm-v2.12.3-linux-amd64.tar.gz
-tar -xvf helm.tar.gz
-chmod +x helm && mv helm bin/
-rm -rf helm.tar.gz
+# pin the kubectl to eks default version. Hardcoded as the URL has a changing date stamp
+curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
+chmod +x kubectl && mv kubectl bin/
 
 mkdir -p .local
 curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
