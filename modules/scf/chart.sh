@@ -81,6 +81,8 @@ else
 fi
 
 if  [ "${SCF_OPERATOR}" == "true" ]; then
+    tar xvzf cf-operator*.tgz
+    tar xvzf kubecf*.tgz
     cp -rfv kubecf*/* ./
 fi
 
