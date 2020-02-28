@@ -52,6 +52,25 @@ testConfig() {
   AUTOSCALER=true make scf-gen-config
   VALUES_FILE="$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)"
   assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: true"
+
+  make clean
+
+  export BACKEND=kind
+  export GARDEN_ROOTFS_DRIVER=test
+  make buildir scf-gen-config
+
+  VALUES_FILE="$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)"
+    assertContains 'generates correctly GARDEN_ROOTFS_DRIVER ' "$VALUES_FILE" "GARDEN_ROOTFS_DRIVER: \"test\""
+
+
+  make clean
+
+  unset GARDEN_ROOTFS_DRIVER
+  export BACKEND=caasp4os
+  make buildir scf-gen-config
+  VALUES_FILE="$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)"
+  assertContains 'generates correctly GARDEN_ROOTFS_DRIVER for caasp' "$VALUES_FILE" "GARDEN_ROOTFS_DRIVER: \"btrfs\""
+
 }
 
 # Tests backend switch

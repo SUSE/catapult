@@ -1,11 +1,10 @@
 #!/bin/bash
 
-. ./defaults.sh
 . ../../include/common.sh
+. ./defaults.sh # Read build defaults
 . .envrc
 
 
-info "Generating SCF config values"
 if [ "${DEFAULT_STACK}" = "from_chart" ]; then
     export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
 fi
@@ -17,6 +16,15 @@ external_ips+="\"$public_ip\""
 for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
 external_ips+=", \"${aux_external_ips[$i]}\""
 done
+
+info "Generating SCF config values"
+info "\t  GARDEN_ROOTFS_DRIVER: $GARDEN_ROOTFS_DRIVER"
+info "\t  DOMAIN: $domain"
+info "\t  DEFAULT_STACK: $DEFAULT_STACK"
+info "\t  ENABLE_EIRINI: $ENABLE_EIRINI"
+info "\t  AUTOSCALER: $AUTOSCALER"
+info "\t  HA: $HA"
+info "\t  SIZING: $SIZING"
 
 VALUES=
 if [ "$ENABLE_EIRINI" = true ] ; then
