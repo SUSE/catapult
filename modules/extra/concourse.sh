@@ -53,7 +53,8 @@ wait_ns default
 
 if [ "${LOCAL_ACCESS}" == "true" ]; then
 
-    export POD_NAME=$(kubectl get pods --namespace default -l "app=catapult-concourse-web" -o jsonpath="{.items[0].metadata.name}")
+    POD_NAME=$(kubectl get pods --namespace default -l "app=catapult-concourse-web" -o jsonpath="{.items[0].metadata.name}")
+    export POD_NAME
 
     info "After exiting, if you want to access Concourse, do: 'kubectl port-forward --namespace default $POD_NAME 8080:80'"
     ok "All done"

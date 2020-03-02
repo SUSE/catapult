@@ -7,12 +7,14 @@ ROOT_DIR="$(git rev-parse --show-toplevel)"
 setUp() {
     export PATH=$ROOT_DIR/tests/mocks:"$PATH"
     export CLUSTER_NAME=test
-    export ROOT_DIR="$(git rev-parse --show-toplevel)"
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    export ROOT_DIR
     pushd "$ROOT_DIR" || exit
 }
 
 tearDown() {
-    export ROOT_DIR="$(git rev-parse --show-toplevel)"
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    export ROOT_DIR
     pushd "$ROOT_DIR" || exit
     rm -rf buildtest
 }

@@ -100,6 +100,7 @@ On_IWhite='\033[0;107m'   # White
 function simple {
     local cat="$2"
     local message="$1"
+    # shellcheck disable=SC2153 #BACKEND comes from env
     echo "[$cat] [backend:$BACKEND] [cluster:${CLUSTER_NAME}] $message"
 }
 

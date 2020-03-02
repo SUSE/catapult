@@ -9,13 +9,14 @@ if [ -n "$CONFIG" ]; then
   load_env_from_json "$CONFIG"
 fi
 
-export BACKEND="${BACKEND:-kind}"
 export VALUES_OVERRIDE="${VALUES_OVERRIDE:-}"
 OVERRIDE=
 if [ -n "$VALUES_OVERRIDE" ] && [ -f "$VALUES_OVERRIDE" ]; then
   OVERRIDE=$(cat "$VALUES_OVERRIDE")
+  export OVERRIDE
 fi
 
+export BACKEND="${BACKEND:-kind}"
 export CLUSTER_NAME=${CLUSTER_NAME:-$BACKEND}
 #export ROOT_DIR="$(git rev-parse --show-toplevel)"
 export BUILD_DIR="$ROOT_DIR"/build${CLUSTER_NAME}

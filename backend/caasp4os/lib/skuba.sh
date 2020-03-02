@@ -7,10 +7,14 @@ SKUBA_CLUSTER_NAME="$CLUSTER_NAME"
 
 _set_env_vars() {
     JSON=$(skuba_container terraform output -json)
-    export LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value')"
-    export MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|@tsv')"
-    export WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|@tsv')"
-    export ALL="$MASTERS $WORKERS"
+    LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value')"
+    export LB
+    MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|@tsv')"
+    export MASTERS
+    WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|@tsv')"
+    export WORKERS
+    ALL="$MASTERS $WORKERS"
+    export ALL
 }
 
 _define_node_group() {
@@ -166,7 +170,8 @@ _init_control_plane() {
 _deploy_masters() {
 local i=0
 for n in $1; do
-    local j="$(printf "%03g" $i)"
+    local j
+    j="$(printf "%03g" $i)"
     if [[ $i -eq 0 ]]; then
       skuba_container "$SKUBA_CLUSTER_NAME" skuba node bootstrap --user sles --sudo --target "$n" "master$j" -v "$DEBUG"
       wait
@@ -183,7 +188,8 @@ done
 _deploy_workers() {
     local i=0
     for n in $1; do
-        local j="$(printf "%03g" $i)"
+        local j
+        j="$(printf "%03g" $i)"
         (skuba_container "$SKUBA_CLUSTER_NAME" skuba node join --role worker --user sles --sudo --target  "$n" "worker$j" -v "$DEBUG") &
         wait
         ((++i))
