@@ -106,7 +106,7 @@ function simple {
 
 function info {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
@@ -120,7 +120,7 @@ function info {
 
 function ok {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
@@ -134,7 +134,7 @@ function ok {
 
 function warn {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
@@ -148,7 +148,7 @@ function warn {
 
 function err {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
