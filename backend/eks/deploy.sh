@@ -8,7 +8,10 @@
 . .envrc
 
 if ! aws sts get-caller-identity ; then
-    echo ">>> Missing aws credentials, run aws configure, aborting" && exit 1
+    info "Missing aws credentials, running aws configure…"
+    # Use predefined aws env vars
+    # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
+    aws configure
 fi
 
 git clone https://github.com/SUSE/cap-terraform.git
