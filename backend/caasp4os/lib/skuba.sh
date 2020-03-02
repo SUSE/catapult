@@ -199,13 +199,12 @@ _deploy_workers() {
 skuba_deploy() {
     # Usage: deploy
 
-    local KUBECONFIG=""
     _set_env_vars
     _init_control_plane
     pushd "$(pwd)"/ || exit
     _deploy_masters "$MASTERS"
     _deploy_workers "$WORKERS"
-    skuba_container $SKUBA_CLUSTER_NAME skuba cluster status
+    KUBECONFIG="" skuba_container $SKUBA_CLUSTER_NAME skuba cluster status
 }
 
 skuba_node_upgrade() {
