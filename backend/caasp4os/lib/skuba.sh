@@ -36,7 +36,7 @@ _define_node_group() {
 }
 
 DEBUG_MODE=${DEBUG_MODE:-false}
-if [ DEBUG_MODE = true ]; then
+if [ $DEBUG_MODE = true ]; then
     DEBUG=1
 else
     DEBUG=0
