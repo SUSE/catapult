@@ -7,7 +7,7 @@ BUILDDIR_REGEXP="^$ROOT_DIR/build"
 
 info "Linting shell scripts" && debug_mode
 SH_FILES=$(find "$ROOT_DIR" -type f -name '*.sh' -o -name '*.ksh' -o -name '*.bash' | grep -v "shunit2" | grep -v "$BUILDDIR_REGEXP" )
-shellcheck --severity=error $SH_FILES || retcode=1
+shellcheck --severity=warning $SH_FILES || retcode=1
 
 info "Linting yamls" && debug_mode
 YML_FILES=$(find "$ROOT_DIR" -type f -name '*.yaml' -o -name '*.yml' | grep -v "shunit2" | grep -v "$BUILDDIR_REGEXP")
