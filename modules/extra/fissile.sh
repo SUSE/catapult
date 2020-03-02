@@ -6,8 +6,6 @@
 
 supported_backend "kind"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 if [ ! -e "bin/fissile" ]; then
     # Takes a dev bosh release checkout and make it an image. Upload it also to the kind cluster
     info "Building fissile from develop"
