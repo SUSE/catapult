@@ -51,9 +51,9 @@ SECRETS_FILE=${SECRETS_FILE:-"$ROOT_DIR"/../cloudfoundry/secure/concourse-secret
 # Create secret for the imagePullSecrets we renamed in the scf images:
 kubectl create secret docker-registry tests-registry-credentials \
         --namespace scf \
-        --docker-server=$(grep "docker-internal-registry:" <<< $(gpg --decrypt --batch "$SECRETS_FILE") | cut -d ' ' -f 3- ) \
-        --docker-username=$(grep "docker-internal-username:" <<< $(gpg --decrypt --batch "$SECRETS_FILE") | cut -d ' ' -f 3- ) \
-        --docker-password="$(grep "docker-internal-password:" <<< $(gpg --decrypt --batch "$SECRETS_FILE") | cut -d ' ' -f 3- )"
+        --docker-server="$(grep "docker-internal-registry:" <<< "$(gpg --decrypt --batch "$SECRETS_FILE")" | cut -d ' ' -f 3- )" \
+        --docker-username="$(grep "docker-internal-username:" <<< "$(gpg --decrypt --batch "$SECRETS_FILE")" | cut -d ' ' -f 3- )" \
+        --docker-password="$(grep "docker-internal-password:" <<< "$(gpg --decrypt --batch "$SECRETS_FILE")" | cut -d ' ' -f 3- )"
 
 image=$(gawk '$1 == "image:" { gsub(/"/, "", $2); print $2 }' kube/cf/bosh-task/acceptance-tests.yaml)
 kubectl run \

@@ -21,7 +21,7 @@ popd || exit
 docker rm --force catapult-sync || true
 docker rm --force catapult-web || true
 
-docker rm --force $(docker ps -f name=catapult-wtty --format={{.Names}}) || true
+docker rm --force "$(docker ps -f name=catapult-wtty --format=\{\{.Names\}\})" || true
 
 docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock --name catapult-sync catapult-sync
 docker run -e TMPDIR=$TMPDIR -v $TMPDIR:$TMPDIR -e EKCP_HOST="$EKCP_HOST" -d -p 7060:8080 --restart=always -v /var/run/docker.sock:/var/run/docker.sock --name catapult-web catapult-web

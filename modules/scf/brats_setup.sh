@@ -6,7 +6,7 @@
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
-aux_external_ips=($(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address'))
+aux_external_ips=("$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')")
 external_ips+="\"$public_ip\""
 for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
     external_ips+=", \"${aux_external_ips[$i]}\""

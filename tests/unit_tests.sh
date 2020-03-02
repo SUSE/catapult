@@ -52,7 +52,7 @@ testConfig() {
   assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: false"
 
   AUTOSCALER=true make scf-gen-config
-  VALUES_FILE="$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)"
+  VALUES_FILE=$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)
   assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: true"
 }
 
