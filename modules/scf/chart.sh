@@ -62,7 +62,7 @@ if [ -n "$SCF_HELM_VERSION" ]; then
         tar cvzf ../scf-sle-${API_VERSION}.tgz *
         zip -r9 ../scf-sle-${API_VERSION}.zip -- *
         export SCF_CHART=$PWD/../scf-sle-${API_VERSION}.zip
-    popd
+    popd || exit
 fi
 
 rm -rf scf_chart_url || true

@@ -9,15 +9,15 @@
 [ ! -d "eirinifs" ] && git clone --recurse-submodules "${EIRINIFS}"
 pushd eirinifs
 git pull
-popd
+popd || exit
 [ ! -d "diego-ssh" ] && git clone --recurse-submodules "${EIRINISSH}"
 pushd diego-ssh
 git pull
-popd
+popd || exit
 
 pushd diego-ssh/cmd/sshd
 go build
-popd
+popd || exit
 
 cp -rfv diego-ssh/cmd/sshd/sshd eirinifs/image
 pushd eirinifs
@@ -26,5 +26,5 @@ docker run --rm --privileged -it --workdir / -v $PWD:/eirinifs eirini/ci /bin/ba
 
 sudo chmod 777 image/eirinifs.tar &&  kubectl cp image/eirinifs.tar scf/bits-0:/var/vcap/store/bits-service/assets/eirinifs.tar
 
-popd
+popd || exit
 kubectl exec -it -n scf bits-0 -- bash -c -l "monit restart bits-service"

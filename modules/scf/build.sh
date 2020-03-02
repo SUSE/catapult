@@ -31,7 +31,7 @@ else
     unzip -o ./*.zip
     SCF_CHART=scf-"$GIT_HEAD"
 fi
-popd
+popd || exit
 
 # save SCF_CHART on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'

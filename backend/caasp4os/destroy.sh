@@ -27,12 +27,12 @@ if [ -d "$BUILD_DIR" ]; then
         fi
         skuba_container terraform destroy -auto-approve
         info "Terraform infrastructure destroyed"
-        popd
+        popd || exit
     else
         info "No Terraform infrastructure present"
     fi
 
-    popd
+    popd || exit
     rm -rf "$BUILD_DIR"
 fi
 ok "CaaSP4 on Openstack succesfully destroyed!"

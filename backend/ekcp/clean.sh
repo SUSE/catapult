@@ -6,7 +6,7 @@
 if [ -d "$BUILD_DIR" ]; then
       . .envrc
       curl -X DELETE http://"$EKCP_HOST"/"${CLUSTER_NAME}"
-      popd
+      popd || exit
       rm -rf "$BUILD_DIR"
 fi
 

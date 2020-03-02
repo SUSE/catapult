@@ -25,7 +25,7 @@ tearDown() {
 #   deployst=$?
 #   pushd buildtest
 #   source .envrc
-#   popd
+#   popd || exit
 #   assertTrue 'create buildir' "[ -d 'buildtest' ]"
 #   PODS="$(kubectl get pods -n scf)"
 #   SVCS="$(kubectl get svc -n scf)"

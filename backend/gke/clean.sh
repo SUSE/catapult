@@ -14,9 +14,9 @@ if [ -d "$BUILD_DIR" ]; then
     if [ -d "cap-terraform/gke" ]; then
         pushd cap-terraform/gke
         terraform destroy -auto-approve
-        popd
+        popd || exit
     fi
 
-    popd
+    popd || exit
     rm -rf "$BUILD_DIR"
 fi

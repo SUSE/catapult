@@ -20,8 +20,8 @@ if [ ! -e "bin/fissile" ]; then
     make tools                              # install required tools; only needed first time
     make docker-deps                        # pull docker images required to build
     make build
-    popd
-    popd
+    popd || exit
+    popd || exit
     mv $GOPATH/src/code.cloudfoundry.org/fissile/build/linux-amd64/fissile bin/
     rm -rf buildfissile
 fi
@@ -43,7 +43,7 @@ docker run --rm -ti -v ${FISSILE_OPT_BOSH_RELEASE}:/bosh-release \
             /bin/bash -c "cd /bosh-release && bosh create-release --force --tarball=${BOSH_REL} --name=${FISSILE_OPT_RELEASE_NAME} --version=${FISSILE_OPT_RELEASE_VERSION} && chmod 777 ${BOSH_REL}"
 
 #git submodule sync --recursive && git submodule update --init --recursive && git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"
-popd
+popd || exit
 
 mv ${FISSILE_OPT_BOSH_RELEASE}/"${BOSH_REL}" ./
 SHA=$(sha1sum ${PWD}/${BOSH_REL} | cut -d' ' -f1)

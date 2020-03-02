@@ -55,4 +55,4 @@ for d in "$ROOT_DIR"/modules/*/ ; do
     fi
 done
 
-popd
+popd || exit

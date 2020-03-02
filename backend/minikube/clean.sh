@@ -10,7 +10,7 @@ if [ -d "$BUILD_DIR" ]; then
     set +x
     minikube delete || true
     set -x
-    popd
+    popd || exit
 
     rm -rf "$BUILD_DIR"
 fi

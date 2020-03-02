@@ -6,17 +6,17 @@
 info "Building wtty image"
 pushd "$ROOT_DIR"/kube/catapult-wtty
     docker build -t catapult-wtty .
-popd
+popd || exit
 
 info "Building sync image"
 pushd "$ROOT_DIR"/kube/catapult-sync
     docker build --build-arg=EKCP_HOST=$EKCP_HOST -t catapult-sync .
-popd
+popd || exit
 
 info "Building redirector image"
 pushd "$ROOT_DIR"/kube/catapult-web
     docker build -t catapult-web .
-popd
+popd || exit
 
 docker rm --force catapult-sync || true
 docker rm --force catapult-web || true

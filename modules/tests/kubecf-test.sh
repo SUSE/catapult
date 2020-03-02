@@ -45,7 +45,7 @@ pushd "$KUBECF_CHECKOUT"
         pod_name="$(cf_acceptance_tests_pod_name)"
         container_name="acceptance-tests-acceptance-tests"
     fi
-popd
+popd || exit
 
 wait_for_tests_pod "$pod_name" "$container_name" || {
 >&2 err "Timed out waiting for the tests pod"

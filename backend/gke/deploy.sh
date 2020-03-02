@@ -39,7 +39,7 @@ terraform init
 terraform plan -out="$(pwd)"/my-plan
 
 terraform apply -auto-approve
-popd
+popd || exit
 
 # wait for cluster ready:
 wait_ns kube-system

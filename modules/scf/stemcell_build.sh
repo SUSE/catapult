@@ -10,4 +10,4 @@
 pushd bosh-linux-stemcell-builder
     git checkout devel
     make all
-popd
+popd || exit

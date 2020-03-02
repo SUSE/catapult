@@ -76,7 +76,7 @@ fi
 pushd eirini
 git checkout ${EIRINI_RELEASE_CHECKOUT}
 git pull
-popd
+popd || exit
 
 helm fetch eirini/cf
 tar xzvf eirini-cf.tgz
@@ -85,7 +85,7 @@ tar xvfz eirini-*.tgz
 cp ../../eirini/helm/eirini/templates/eirini-loggregator-bridge.yaml eirini/templates
 tar cvfz eirini-*.tgz eirini
 rm -rf eirini
-popd
+popd || exit
 
 helm install eirini/uaa --namespace uaa --name uaa --values eirini-values.yaml
 bash ../scripts/wait.sh uaa
