@@ -21,6 +21,6 @@ info "Running $TASK_SCRIPT in /catapult/build$CLUSTER_NAME inside the task pod (
 info "@@@@@@@@@@@@@@"
 info
 
-kubectl exec -ti task -n catapult -- /bin/bash -l -c "pushd build$CLUSTER_NAME && source .envrc && popd && /catapult/build$CLUSTER_NAME/$(basename $TASK_SCRIPT)"
+kubectl exec -ti task -n catapult -- /bin/bash -l -c "( pushd build$CLUSTER_NAME || exit ) && source .envrc && popd && /catapult/build$CLUSTER_NAME/$(basename $TASK_SCRIPT)"
 status=$?
 exit $status

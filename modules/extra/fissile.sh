@@ -12,11 +12,11 @@ if [ ! -e "bin/fissile" ]; then
     # Takes a dev bosh release checkout and make it an image. Upload it also to the kind cluster
     info "Building fissile from develop"
     mkdir -p buildfissile
-    pushd buildfissile
+    pushd buildfissile || exit
     mkdir -p src                                  # make the directory src in your workspace
     export GOPATH=$PWD                            # set GOPATH to current working directory
     go get -d code.cloudfoundry.org/fissile || true      # Download sources
-    pushd $GOPATH/src/code.cloudfoundry.org/fissile
+    pushd $GOPATH/src/code.cloudfoundry.org/fissile || exit
     make tools                              # install required tools; only needed first time
     make docker-deps                        # pull docker images required to build
     make build
@@ -29,7 +29,7 @@ fi
 info "Building bosh release"
 # Keep fissile generated cache inside our build dir
 export HOME=$PWD
-pushd ${FISSILE_OPT_BOSH_RELEASE}
+pushd ${FISSILE_OPT_BOSH_RELEASE} || exit
 
 GIT_COMMIT=$(git rev-parse --short HEAD)
 BOSH_REL="${FISSILE_OPT_RELEASE_NAME}"-dev-"${GIT_COMMIT}".tgz

@@ -4,17 +4,17 @@
 . ../../include/common.sh
 
 info "Building wtty image"
-pushd "$ROOT_DIR"/kube/catapult-wtty
+pushd "$ROOT_DIR"/kube/catapult-wtty || exit
     docker build -t catapult-wtty .
 popd || exit
 
 info "Building sync image"
-pushd "$ROOT_DIR"/kube/catapult-sync
+pushd "$ROOT_DIR"/kube/catapult-sync || exit
     docker build --build-arg=EKCP_HOST=$EKCP_HOST -t catapult-sync .
 popd || exit
 
 info "Building redirector image"
-pushd "$ROOT_DIR"/kube/catapult-web
+pushd "$ROOT_DIR"/kube/catapult-web || exit
     docker build -t catapult-web .
 popd || exit
 

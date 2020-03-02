@@ -18,7 +18,7 @@ spec:
 
           git clone $SMOKES_REPO
 
-          pushd cf-smoke-tests
+          pushd cf-smoke-tests || exit
           cat > config.json <<EOF
           {
             "suite_name"                      : "CF_SMOKE_TESTS",
@@ -48,7 +48,7 @@ spec:
 
           mkdir -p "$GOPATH"/src/github.com/cloudfoundry
           ln -s "$PWD" "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests
-          pushd "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests
+          pushd "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests || exit
 
           CONFIG="$PWD"/config.json ./bin/test
       env:

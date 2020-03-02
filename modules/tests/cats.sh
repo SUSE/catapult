@@ -12,7 +12,7 @@ fi
 
 [ ! -d "cf-acceptance-tests" ] && git clone https://github.com/cloudfoundry/cf-acceptance-tests
 
-pushd cf-acceptance-tests
+pushd cf-acceptance-tests || exit
 cat > config.json <<EOF
 {
   "api"                             : "api.${DOMAIN}",
@@ -73,7 +73,7 @@ rm -rf "$GOPATH"/src/*
 
 mkdir -p "$GOPATH"/src/github.com/cloudfoundry
 [ ! -e "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests ] && ln -s "$PWD" "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
-pushd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+pushd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests || exit
 go get github.com/onsi/ginkgo/ginkgo
 go install github.com/onsi/ginkgo/ginkgo
 if [ -n "$EKCP_PROXY" ]; then

@@ -73,14 +73,14 @@ helm repo add eirini https://cloudfoundry-incubator.github.io/eirini-release
 if [ ! -d eirini ]; then
   git clone $EIRINI_RELEASE_REPO eirini
 fi
-pushd eirini
+pushd eirini || exit
 git checkout ${EIRINI_RELEASE_CHECKOUT}
 git pull
 popd || exit
 
 helm fetch eirini/cf
 tar xzvf eirini-cf.tgz
-pushd cf/charts
+pushd cf/charts || exit
 tar xvfz eirini-*.tgz
 cp ../../eirini/helm/eirini/templates/eirini-loggregator-bridge.yaml eirini/templates
 tar cvfz eirini-*.tgz eirini

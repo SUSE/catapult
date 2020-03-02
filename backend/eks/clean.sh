@@ -10,7 +10,7 @@ if [ -d "$BUILD_DIR" ]; then
 
 
     if [ -d "cap-terraform/eks" ]; then
-        pushd cap-terraform/eks
+        pushd cap-terraform/eks || exit
         terraform destroy -auto-approve
         popd || exit
         rm -rf cap-terraform

@@ -75,7 +75,7 @@ sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     deployment/terraform.tfvars
 cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
-pushd deployment
+pushd deployment || exit
 
 info "Deploying infrastructure with terraform…"
 

@@ -9,12 +9,12 @@ export ENABLE_EIRINI=false
 
 setUp() {
     export ROOT_DIR="$(git rev-parse --show-toplevel)"
-    pushd "$ROOT_DIR"
+    pushd "$ROOT_DIR" || exit
 }
 
 tearDown() {
     export ROOT_DIR="$(git rev-parse --show-toplevel)"
-    pushd "$ROOT_DIR"
+    pushd "$ROOT_DIR" || exit
     rm -rf buildtest
 }
 
@@ -23,7 +23,7 @@ tearDown() {
 #   rm -rf buildtest
 #   make scf-deploy
 #   deployst=$?
-#   pushd buildtest
+#   pushd buildtest || exit
 #   source .envrc
 #   popd || exit
 #   assertTrue 'create buildir' "[ -d 'buildtest' ]"

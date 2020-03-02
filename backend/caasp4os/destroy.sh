@@ -20,7 +20,7 @@ if [ -d "$BUILD_DIR" ]; then
     fi
 
     if [ -d deployment ]; then
-        pushd deployment
+        pushd deployment || exit
         info "Destroying infrastructure with Terraform…"
         if [[ ! -v OS_PASSWORD ]]; then
             err "Missing openstack credentials" && exit 1

@@ -7,20 +7,20 @@
 . .envrc
 
 [ ! -d "eirinifs" ] && git clone --recurse-submodules "${EIRINIFS}"
-pushd eirinifs
+pushd eirinifs || exit
 git pull
 popd || exit
 [ ! -d "diego-ssh" ] && git clone --recurse-submodules "${EIRINISSH}"
-pushd diego-ssh
+pushd diego-ssh || exit
 git pull
 popd || exit
 
-pushd diego-ssh/cmd/sshd
+pushd diego-ssh/cmd/sshd || exit
 go build
 popd || exit
 
 cp -rfv diego-ssh/cmd/sshd/sshd eirinifs/image
-pushd eirinifs
+pushd eirinifs || exit
 
 docker run --rm --privileged -it --workdir / -v $PWD:/eirinifs eirini/ci /bin/bash -c "/eirinifs/ci/build-eirinifs/task.sh && mv /go/src/github.com/cloudfoundry-incubator/eirinifs/image/eirinifs.tar /eirinifs/image"
 

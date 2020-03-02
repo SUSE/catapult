@@ -21,7 +21,7 @@ export CLUSTER_NAME=${CLUSTER_NAME:-$BACKEND}
 export BUILD_DIR="$ROOT_DIR"/build${CLUSTER_NAME}
 
 # Forces our build context
-[ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR"
+[ -d "$BUILD_DIR" ] && pushd "$BUILD_DIR" || true
 
 . "$ROOT_DIR"/include/defaults_global.sh
 set +x

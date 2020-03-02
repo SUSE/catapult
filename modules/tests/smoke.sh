@@ -7,7 +7,7 @@ DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data[
 
 [ ! -d "cf-smoke-tests" ] && git clone https://github.com/cloudfoundry/cf-smoke-tests
 
-pushd cf-smoke-tests
+pushd cf-smoke-tests || exit
 cat > config.json <<EOF
 {
   "suite_name"                      : "CF_SMOKE_TESTS",
@@ -37,7 +37,7 @@ rm -rf "$GOPATH"/src/*
 
 mkdir -p "$GOPATH"/src/github.com/cloudfoundry
 [ ! -e "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests ] && ln -s "$PWD" "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests
-pushd "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests
+pushd "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests || exit
 
 
 if [ -n "$EKCP_PROXY" ]; then

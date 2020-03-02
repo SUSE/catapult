@@ -26,7 +26,7 @@ wait_for_tests_pod() {
 kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all || true
 
 timeout="300"
-pushd "$KUBECF_CHECKOUT"
+pushd "$KUBECF_CHECKOUT" || exit
     # FIXME: See how to pass those options to bazel commands - we make it not to fail to be idempotent but we edit user files on git checkout (BAD!)
     sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl || true
     sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl || true

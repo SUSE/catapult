@@ -18,7 +18,7 @@ fi
 #        --role=roles/container.admin
 
 git clone https://github.com/SUSE/cap-terraform.git
-pushd cap-terraform/gke
+pushd cap-terraform/gke || exit
 
 cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"
