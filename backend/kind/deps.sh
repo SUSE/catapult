@@ -22,6 +22,6 @@ fi
 chmod +x kind
 mv kind bin/kind
 
-popd
+popd || exit
 
 ok "Deps correctly downloaded"

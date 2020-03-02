@@ -10,9 +10,9 @@ if [ -z "$SCF_LOCAL" ]; then
     git submodule sync --recursive && \
     git submodule update --init --recursive && \
     git submodule foreach --recursive "git checkout . && git reset --hard && git clean -dffx"
-    pushd scf
+    pushd scf || exit
 else
-    pushd "$SCF_LOCAL"
+    pushd "$SCF_LOCAL" || exit
 fi
 
 GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
@@ -31,7 +31,7 @@ else
     unzip -o ./*.zip
     SCF_CHART=scf-"$GIT_HEAD"
 fi
-popd
+popd || exit
 
 # save SCF_CHART on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'

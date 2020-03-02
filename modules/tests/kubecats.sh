@@ -5,7 +5,8 @@
 . .envrc
 
 
-export DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+export DOMAIN
 DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')
 
 info
@@ -18,7 +19,8 @@ kubectl create namespace catapult || true
 kubectl delete pod cats -n catapult || true
 
 if [ "${DEFAULT_STACK}" = "from_chart" ]; then
-    export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+    DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+    export DEFAULT_STACK
 fi
 
 export CATS_REPO=$CATS_REPO

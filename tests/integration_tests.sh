@@ -8,13 +8,15 @@ export ENABLE_EIRINI=false
 [ ! -d "shunit2" ] && git clone https://github.com/kward/shunit2.git
 
 setUp() {
-    export ROOT_DIR="$(git rev-parse --show-toplevel)"
-    pushd "$ROOT_DIR"
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    export ROOT_DIR
+    pushd "$ROOT_DIR" || exit
 }
 
 tearDown() {
-    export ROOT_DIR="$(git rev-parse --show-toplevel)"
-    pushd "$ROOT_DIR"
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    export ROOT_DIR
+    pushd "$ROOT_DIR" || exit
     rm -rf buildtest
 }
 
@@ -23,9 +25,9 @@ tearDown() {
 #   rm -rf buildtest
 #   make scf-deploy
 #   deployst=$?
-#   pushd buildtest
+#   pushd buildtest || exit
 #   source .envrc
-#   popd
+#   popd || exit
 #   assertTrue 'create buildir' "[ -d 'buildtest' ]"
 #   PODS="$(kubectl get pods -n scf)"
 #   SVCS="$(kubectl get svc -n scf)"
@@ -49,6 +51,9 @@ testKind() {
     assertEquals 'deploys successfully' "$deployst" "0"
     make scf-chart
     assertTrue 'helm folder is present' "[ -d 'buildtest/helm' ]"
+    AUTOSCALER=true make scf-gen-config
+    VALUES_FILE=$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)
+    assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: true"
     make module-extra-ingress
     deployst=$?
     assertEquals 'deploys ingress successfully' "$deployst" "0"

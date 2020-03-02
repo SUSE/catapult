@@ -7,12 +7,13 @@
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
 if [ "${DEFAULT_STACK}" = "from_chart" ]; then
-    export DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+    DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+    export DEFAULT_STACK
 fi
 
 [ ! -d "cf-acceptance-tests" ] && git clone https://github.com/cloudfoundry/cf-acceptance-tests
 
-pushd cf-acceptance-tests
+pushd cf-acceptance-tests || exit
 cat > config.json <<EOF
 {
   "api"                             : "api.${DOMAIN}",
@@ -73,7 +74,7 @@ rm -rf "$GOPATH"/src/*
 
 mkdir -p "$GOPATH"/src/github.com/cloudfoundry
 [ ! -e "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests ] && ln -s "$PWD" "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
-pushd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+pushd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests || exit
 go get github.com/onsi/ginkgo/ginkgo
 go install github.com/onsi/ginkgo/ginkgo
 if [ -n "$EKCP_PROXY" ]; then

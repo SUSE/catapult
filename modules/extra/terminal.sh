@@ -14,7 +14,7 @@ kubectl cp $ROOT_DIR/build$CLUSTER_NAME catapult/task:/catapult/
 kubectl exec -ti -n catapult task -- /bin/bash -c "CLUSTER_NAME=$CLUSTER_NAME make buildir scf-login" || true
 kubectl exec -ti -n catapult task -- /bin/bash -c "chsh root -s /bin/zsh" || true
 
-echo "pushd /catapult/build$CLUSTER_NAME ; source .envrc ; popd" > .zshrc
+echo "pushd /catapult/build$CLUSTER_NAME || exit ; source .envrc ; popd || exit" > .zshrc
 # Inject a sane zshrc!
 cat <<'EOF' >> .zshrc
 export TERM=xterm

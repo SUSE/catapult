@@ -7,13 +7,15 @@ ROOT_DIR="$(git rev-parse --show-toplevel)"
 setUp() {
     export PATH=$ROOT_DIR/tests/mocks:"$PATH"
     export CLUSTER_NAME=test
-    export ROOT_DIR="$(git rev-parse --show-toplevel)"
-    pushd "$ROOT_DIR"
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    export ROOT_DIR
+    pushd "$ROOT_DIR" || exit
 }
 
 tearDown() {
-    export ROOT_DIR="$(git rev-parse --show-toplevel)"
-    pushd "$ROOT_DIR"
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    export ROOT_DIR
+    pushd "$ROOT_DIR" || exit
     rm -rf buildtest
 }
 
@@ -48,10 +50,6 @@ testConfig() {
   assertContains 'generates correctly STORAGECLASS (2)' "$VALUES_FILE" "persistent: \"our-storage\""
   assertContains 'generates correctly STORAGECLASS (3)' "$VALUES_FILE" "shared: \"our-storage\""
   assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: false"
-
-  AUTOSCALER=true make scf-gen-config
-  VALUES_FILE="$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)"
-  assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: true"
 }
 
 # Tests backend switch

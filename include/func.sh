@@ -22,6 +22,8 @@ if ((BASH_VERSINFO[0] >= 4)) && [[ $'\u2388 ' != "\\u2388 " ]]; then
         OK_IMG=$'\xE2\x9C\x85 '
 fi
 
+#shellcheck disable=SC2034
+{
 # Reset
 Color_Off='\033[0m'       # Text Reset
 # Regular Colors
@@ -93,16 +95,18 @@ On_IBlue='\033[0;104m'    # Blue
 On_IPurple='\033[0;105m'  # Purple
 On_ICyan='\033[0;106m'    # Cyan
 On_IWhite='\033[0;107m'   # White
+}
 
 function simple {
     local cat="$2"
     local message="$1"
+    # shellcheck disable=SC2153 #BACKEND comes from env
     echo "[$cat] [backend:$BACKEND] [cluster:${CLUSTER_NAME}] $message"
 }
 
 function info {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
@@ -116,7 +120,7 @@ function info {
 
 function ok {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
@@ -130,7 +134,7 @@ function ok {
 
 function warn {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 
@@ -144,7 +148,7 @@ function warn {
 
 function err {
     set +x
-    local message="$@"
+    local message="$*"
 
     cat=$0
 

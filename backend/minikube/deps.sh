@@ -19,4 +19,4 @@ chmod +x minikube && mv minikube bin/
 curl -Lo docker-machine-driver-kvm2 https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2
 chmod +x docker-machine-driver-kvm2 && mv docker-machine-driver-kvm2 bin/
 
-popd
+popd || exit

@@ -32,7 +32,7 @@ spec:
           git config --global user.name "johndoe"
 
           git clone --recurse-submodules https://github.com/SUSE/cf-${BRATS_BUILDPACK}-buildpack.git
-          pushd cf-${BRATS_BUILDPACK}-buildpack
+          pushd cf-${BRATS_BUILDPACK}-buildpack || exit
           git checkout "${BRATS_BUILDPACK_VERSION}"
           git submodule sync --recursive && \
           git submodule update --init --recursive && \

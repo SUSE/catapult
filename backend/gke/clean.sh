@@ -12,11 +12,11 @@ if [ -d "$BUILD_DIR" ]; then
     . .envrc
 
     if [ -d "cap-terraform/gke" ]; then
-        pushd cap-terraform/gke
+        pushd cap-terraform/gke || exit
         terraform destroy -auto-approve
-        popd
+        popd || exit
     fi
 
-    popd
+    popd || exit
     rm -rf "$BUILD_DIR"
 fi

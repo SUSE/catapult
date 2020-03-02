@@ -11,7 +11,7 @@ CONCOURSE_DRIVER="${CONCOURSE_DRIVER:-btrfs}"
 info "Deploying concourse from the helm charts"
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
-aux_external_ips=($(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address'))
+aux_external_ips=("$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')")
 external_ips+="\"$public_ip\""
 for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
 external_ips+=", \"${aux_external_ips[$i]}\""
@@ -53,7 +53,8 @@ wait_ns default
 
 if [ "${LOCAL_ACCESS}" == "true" ]; then
 
-    export POD_NAME=$(kubectl get pods --namespace default -l "app=catapult-concourse-web" -o jsonpath="{.items[0].metadata.name}")
+    POD_NAME=$(kubectl get pods --namespace default -l "app=catapult-concourse-web" -o jsonpath="{.items[0].metadata.name}")
+    export POD_NAME
 
     info "After exiting, if you want to access Concourse, do: 'kubectl port-forward --namespace default $POD_NAME 8080:80'"
     ok "All done"

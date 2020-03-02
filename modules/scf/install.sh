@@ -52,8 +52,6 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
         fi
     fi
 
-    domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-
     info "Installing cf-operator"
     kubectl create namespace cf-operator || true
 

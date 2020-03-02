@@ -18,7 +18,7 @@ fi
 #        --role=roles/container.admin
 
 git clone https://github.com/SUSE/cap-terraform.git
-pushd cap-terraform/gke
+pushd cap-terraform/gke || exit
 
 cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"
@@ -39,7 +39,7 @@ terraform init
 terraform plan -out="$(pwd)"/my-plan
 
 terraform apply -auto-approve
-popd
+popd || exit
 
 # wait for cluster ready:
 wait_ns kube-system

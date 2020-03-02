@@ -6,7 +6,7 @@
 # Don't touch original copy
 cp -rfv ../contrib/samples/ticking_app ./
 
-pushd ticking_app
+pushd ticking_app || exit
 
 go build -o log_producing_app main.go
 

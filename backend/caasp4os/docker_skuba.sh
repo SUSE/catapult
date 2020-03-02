@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 . ../../include/common.sh
-pushd  "$ROOT_DIR"/backend/caasp4os
+pushd  "$ROOT_DIR"/backend/caasp4os || exit
 . defaults.sh
 
 set -Eeuo pipefail

@@ -5,7 +5,8 @@ REPO="$2"
 VERSION=
 
 retrieve_version() {
-  local output=$(docker run --rm -ti registry.suse.com/suse/sle15 sh -c "zypper rr -a && zypper ar -G http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/ caasp4-product && zypper ar -G $REPO skuba-$REPO_ENV > /dev/null 2>&1 && zypper --no-color --no-gpg-checks info -r skuba-$REPO_ENV skuba")
+  local output
+  output=$(docker run --rm -ti registry.suse.com/suse/sle15 sh -c "zypper rr -a && zypper ar -G http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/ caasp4-product && zypper ar -G $REPO skuba-$REPO_ENV > /dev/null 2>&1 && zypper --no-color --no-gpg-checks info -r skuba-$REPO_ENV skuba")
 
   if [[ $? -eq 0 ]]; then
     # 0.5.0-1.2 ^M$

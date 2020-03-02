@@ -6,7 +6,7 @@
 # Don't touch original copy
 cp -rfv ../contrib/samples/eirini-persi-test ./
 
-pushd eirini-persi-test
+pushd eirini-persi-test || exit
 
 go build -o persi-test main.go
 

@@ -8,7 +8,7 @@ if [ -d "$BUILD_DIR" ]; then
       if kind get clusters | grep -qi "${CLUSTER_NAME}" ; then
           kind delete cluster --name="${CLUSTER_NAME}"
       fi
-      popd
+      popd || exit
       rm -rf "$BUILD_DIR"
 fi
 
