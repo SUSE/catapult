@@ -51,6 +51,9 @@ testKind() {
     assertEquals 'deploys successfully' "$deployst" "0"
     make scf-chart
     assertTrue 'helm folder is present' "[ -d 'buildtest/helm' ]"
+    AUTOSCALER=true make scf-gen-config
+    VALUES_FILE=$(cat $ROOT_DIR/buildtest/scf-config-values.yaml)
+    assertContains 'generates correctly AUTOSCALER' "$VALUES_FILE" "autoscaler: true"
     make module-extra-ingress
     deployst=$?
     assertEquals 'deploys ingress successfully' "$deployst" "0"
