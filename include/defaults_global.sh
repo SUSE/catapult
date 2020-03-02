@@ -16,7 +16,7 @@ export KUBEPROXY_PORT="${KUBEPROXY_PORT:-2224}"
 export QUIET_OUTPUT="${QUIET_OUTPUT:-false}"
 
 # Download binaries of helm, kubectl, cf, etc
-DOWNLOAD_BINS="${DOWNLOAD_BINS:-true}"
+export DOWNLOAD_BINS="${DOWNLOAD_BINS:-true}"
 
 # Download binaries of catapult dependencies
-DOWNLOAD_CATAPULT_DEPS="${DOWNLOAD_CATAPULT_DEPS:-true}"
+export DOWNLOAD_CATAPULT_DEPS="${DOWNLOAD_CATAPULT_DEPS:-true}"
