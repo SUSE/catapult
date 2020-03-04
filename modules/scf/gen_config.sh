@@ -94,6 +94,8 @@ testing:
     enabled: ${SCF_TESTGROUP}
   smoke_tests:
     enabled: ${SCF_TESTGROUP}
+  sync_integration_tests:
+    enabled: ${SCF_TESTGROUP}
 properties:
   acceptance-tests:
     acceptance-tests:
