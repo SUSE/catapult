@@ -214,3 +214,31 @@ function wait_ns {
         sleep 10
     done
 }
+
+function helm_info {
+    if [[ "$HELM_VERSION" == v3* ]]; then
+        helm version
+    else
+        helm version --client
+    fi
+}
+
+function helm_init {
+    if [[ "$HELM_VERSION" != v3* ]]; then
+        helm init --upgrade --wait
+    else
+        helm repo update
+    fi
+}
+
+function helm_install {
+    local release_name=$1;shift
+    local chart=$1;shift
+    if [[ "$HELM_VERSION" == v3* ]]; then
+        info "Helm 3 version detected"
+        echo "Running helm with: helm install $release_name $chart $@"
+        helm install "$release_name" "$chart" "$@"
+    else
+        helm install --name $release_name $chart "$@"
+    fi
+}
