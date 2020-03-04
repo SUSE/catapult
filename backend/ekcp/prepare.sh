@@ -121,7 +121,8 @@ EOF
 
 kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
-helm init --upgrade --wait
+
+helm_init
 
 container_ip=$(curl -s http://"$EKCP_HOST"/ | jq .ClusterIPs.\"${CLUSTER_NAME}\" -r)
 domain="${CLUSTER_NAME}.${container_ip}.${MAGICDNS}"

@@ -125,7 +125,8 @@ EOF
 
 kubectl delete storageclass standard
 kubectl create -f ../kube/storageclass.yaml
-helm init --upgrade --wait
+
+helm_init
 
 container_id=$(docker ps -f "name=${CLUSTER_NAME}-control-plane" -q)
 container_ip=$(docker inspect $container_id | jq -r .[0].NetworkSettings.Networks.bridge.IPAddress)

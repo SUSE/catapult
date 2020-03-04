@@ -25,7 +25,7 @@ EOF
 
 kubectl create -f ./storageclass.yaml
 kubectl delete storageclass standard
-helm init --upgrade --wait
+helm_init
 
 container_ip=$(minikube ip)
 domain="${container_ip}.$MAGICDNS"
