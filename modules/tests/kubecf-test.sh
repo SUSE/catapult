@@ -8,6 +8,10 @@ smoke_tests_pod_name() {
   kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "smoke-tests"
 }
 
+sync_integration_tests_pod_name() {
+  kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "sync-integration-tests"
+}
+
 cf_acceptance_tests_pod_name() {
   kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "acceptance-tests"
 }
@@ -37,6 +41,13 @@ pushd "$KUBECF_CHECKOUT" || exit
         if [[ "${timeout}" == 0 ]]; then return 1; fi
         pod_name="$(smoke_tests_pod_name)"
         container_name="smoke-tests-smoke-tests"
+    elif [ "${KUBECF_TEST_SUITE}" == "sits" ]; then
+        bazel run //testing/sync_integration_tests
+        info "Waiting for the sync-integration-tests pod to start..."
+        until sync_integration_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
+        if [[ "${timeout}" == 0 ]]; then return 1; fi
+        pod_name="$(sync_integration_tests_pod_name)"
+        container_name="sync_integration-tests-sync_integration"
     else
         bazel run //testing/acceptance_tests
         info "Waiting for the acceptance-tests pod to start..."
