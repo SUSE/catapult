@@ -16,18 +16,19 @@ cf_acceptance_tests_pod_name() {
   kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "acceptance-tests"
 }
 
-# Wait for smoke-tests to start.
+# Wait for tests pod to start.
 wait_for_tests_pod() {
   local podname=$1
   local containername=$2
   local timeout="300"
-  until [[ "$(kubectl get "${podname}" --namespace "${KUBECF_NAMESPACE}" --output jsonpath='{.status.containerStatuses[?(@.name == "'"$containername"'")].state.running}' 2> /dev/null)" != "" ]] || [[ "$(kubectl get "${podname}" --namespace "${KUBECF_NAMESPACE}" --output jsonpath='{.status.containerStatuses[?(@.name == "smoke-tests-smoke-tests")].state.terminated}' 2> /dev/null)" != "" ]]  || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
+  info "Waiting for container $containername in $podname"
+  until [[ "$(kubectl get "${podname}" --namespace "${KUBECF_NAMESPACE}" --output jsonpath='{.status.containerStatuses[?(@.name == "'"$containername"'")].state.running}' 2> /dev/null)" != "" ]] || [[ "$(kubectl get "${podname}" --namespace "${KUBECF_NAMESPACE}" --output jsonpath='{.status.containerStatuses[?(@.name == "'"$containername"'")].state.terminated}' 2> /dev/null)" != "" ]]  || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
   if [[ "${timeout}" == 0 ]]; then return 1; fi
   return 0
 }
 
 # Delete any pending job
-kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all || true
+kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 
 timeout="300"
 pushd "$KUBECF_CHECKOUT" || exit
