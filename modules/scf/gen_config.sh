@@ -8,7 +8,12 @@
 info "Generating SCF config values"
 if [ "$SCF_OPERATOR" != true ]; then
     if [ "${DEFAULT_STACK}" = "from_chart" ]; then
-        DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+        if [[ "$HELM_VERSION" == v3* ]];
+        then
+          DEFAULT_STACK=$(helm show values helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+        else
+          DEFAULT_STACK=$(helm inspect helm/cf/ | grep DEFAULT_STACK | sed  's~DEFAULT_STACK:~~g' | sed 's~"~~g' | sed 's~\s~~g')
+        fi
         export DEFAULT_STACK
     fi
 fi
