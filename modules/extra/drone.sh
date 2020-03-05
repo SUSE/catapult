@@ -60,7 +60,7 @@ EOF
 
 starlark_svc=$(kubectl get svc -n drone starlark -o jsonpath="{.spec.clusterIP}")
 
-helm install --name drone --namespace drone stable/drone
+helm_install drone stable/drone --namespace drone
 
 kubectl create secret generic drone-server-secrets \
       --namespace=drone \

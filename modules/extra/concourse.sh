@@ -46,8 +46,7 @@ secrets:
   localUsers: "${CONCOURSE_USER}:${CONCOURSE_PASSWORD}"
 EOF
 
-helm install --name catapult-concourse -f concourse-values.yml \
-   stable/concourse
+helm_install catapult-concourse stable/concourse -f concourse-values.yml
 
 wait_ns default
 
