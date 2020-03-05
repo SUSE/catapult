@@ -236,8 +236,6 @@ function helm_install {
     local release_name=$1;shift
     local chart=$1;shift
     if [[ "$HELM_VERSION" == v3* ]]; then
-        info "Helm 3 version detected"
-        echo "Running helm with: helm install $release_name $chart $@"
         helm install "$release_name" "$chart" "$@"
     else
         helm install --name $release_name $chart "$@"
