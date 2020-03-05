@@ -227,6 +227,7 @@ function helm_init {
     if [[ "$HELM_VERSION" != v3* ]]; then
         helm init --upgrade --wait
     else
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm repo update
     fi
 }
