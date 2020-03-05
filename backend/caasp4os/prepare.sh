@@ -55,6 +55,7 @@ HEREDOC
 }
 
 install_helm_and_tiller() {
+  if [[ "$HELM_VERSION" != v3* ]]; then
     if kubectl get pods --all-namespaces 2>/dev/null | grep -qi tiller; then
         # Tiller already present
         helm init --client-only
@@ -62,6 +63,9 @@ install_helm_and_tiller() {
         kubectl create serviceaccount tiller --namespace kube-system
         helm init --wait
     fi
+  else
+    helm_init
+  fi
 }
 
 create_nfs_storageclass() {
