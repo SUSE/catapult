@@ -136,3 +136,9 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=domain="$domain" \
             --from-literal=platform="ekcp"
 fi
+
+# Wait for default SA to be ready:
+# https://github.com/kubernetes/kubernetes/issues/66689#issuecomment-463097073
+info "Wait for default SA to be ready"
+n=0; until ((n >= 60)); do kubectl -n default get serviceaccount default -o name && break; n=$((n + 1)); sleep 1; done; ((n < 60))
+ok "Cluster prepared"
