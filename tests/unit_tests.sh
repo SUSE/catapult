@@ -151,7 +151,6 @@ testCommonDeps() {
   DOWNLOAD_BINS=false DOWNLOAD_CATAPULT_DEPS=false make private modules/common
 
   assertFalse 'helm not downloaded' "[ -e 'buildtest/bin/helm' ]"
-  assertFalse 'tiller not downloaded' "[ -e 'buildtest/bin/tiller' ]"
   assertFalse 'kubectl not downloaded' "[ -e 'buildtest/bin/kubectl' ]"
   assertFalse 'cfcli not downloaded' "[ -e 'buildtest/bin/cf' ]"
 
@@ -162,7 +161,6 @@ testCommonDeps() {
   DOWNLOAD_CATAPULT_DEPS=false make private modules/common
 
   assertTrue 'helm downloaded' "[ -e 'buildtest/bin/helm' ]"
-  assertTrue 'tiller downloaded' "[ -e 'buildtest/bin/tiller' ]"
   assertTrue 'kubectl downloaded' "[ -e 'buildtest/bin/kubectl' ]"
   assertTrue 'cfcli downloaded' "[ -e 'buildtest/bin/cf' ]"
 

@@ -17,7 +17,6 @@ if [ -z "$SCF_CHART" ] && [ -z "$SCF_HELM_VERSION" ]; then
 fi
 
 if [ -n "$SCF_HELM_VERSION" ]; then
-    HELM_VERSION="$SCF_HELM_VERSION"
     HELM_REPO="${SCF_HELM_REPO:-https://kubernetes-charts.suse.com/}"
     HELM_REPO_NAME="${SCF_HELM_REPO_NAME:-suse}"
     info "Grabbing $SCF_HELM_VERSION from $HELM_REPO"
@@ -26,17 +25,8 @@ if [ -n "$SCF_HELM_VERSION" ]; then
     helm repo add "$HELM_REPO_NAME" $HELM_REPO
     helm repo update
 
-    if [ -n "$HELM_VERSION" ]; then
-
-        helm fetch "$HELM_REPO_NAME"/cf --version $HELM_VERSION
-        helm fetch "$HELM_REPO_NAME"/uaa --version $HELM_VERSION
-
-    else
-
-        helm fetch "$HELM_REPO_NAME"/cf
-        helm fetch "$HELM_REPO_NAME"/uaa
-
-    fi
+    helm fetch "$HELM_REPO_NAME"/cf --version $SCF_HELM_VERSION
+    helm fetch "$HELM_REPO_NAME"/uaa --version $SCF_HELM_VERSION
 
     mkdir -p charts/helm
     tar xvf cf-*.tgz -C charts/helm

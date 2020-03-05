@@ -12,7 +12,7 @@ fi
 
 if [ "${SCF_OPERATOR}" == "true" ]; then
 
-    helm upgrade --recreate-pods susecf-scf kubecf/ --values scf-config-values.yaml
+    helm upgrade susecf-scf kubecf/ --values scf-config-values.yaml
     sleep 10
 
 else
@@ -25,7 +25,7 @@ else
 
     if [ "$UAA_UPGRADE" == true ]; then
 
-        helm upgrade --recreate-pods susecf-uaa helm/uaa/ --values scf-config-values.yaml \
+        helm upgrade susecf-uaa helm/uaa/ --values scf-config-values.yaml \
         --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
         wait_ns uaa
@@ -33,7 +33,7 @@ else
     fi
 
 
-    helm upgrade --recreate-pods susecf-scf helm/cf/ --values scf-config-values.yaml \
+    helm upgrade susecf-scf helm/cf/ --values scf-config-values.yaml \
     --set "secrets.UAA_CA_CERT=${CA_CERT}"
 fi
 

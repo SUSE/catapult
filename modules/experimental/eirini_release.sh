@@ -87,7 +87,8 @@ tar cvfz eirini-*.tgz eirini
 rm -rf eirini
 popd || exit
 
-helm install eirini/uaa --namespace uaa --name uaa --values eirini-values.yaml
+kubectl create namespace "uaa" || true
+helm_install uaa eirini/uaa --namespace uaa --values eirini-values.yaml
 bash ../scripts/wait.sh uaa
 
 SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -106,6 +107,7 @@ docker exec ${CLUSTER_NAME}-control-plane systemctl restart kubelet.service
 sleep 120
 openssl req -newkey rsa:4096 -nodes -sha256 -keyout domain.key -x509 -days 365 -out domain.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=registry.${DOMAIN}"
 
-helm install cf/ --namespace scf --name eirini --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
+kubectl create namespace "scf" || true
+helm_install eirini cf/ --namespace scf --values eirini-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" --set "eirini.secrets.BITS_TLS_KEY=$(cat domain.key)" --set "eirini.secrets.BITS_TLS_CRT=$(cat domain.crt)"
 
 wait_ns scf

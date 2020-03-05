@@ -30,7 +30,8 @@ service:
 
 EOF
 
-helm install --values gitea-config-values.yaml --name gitea --namespace gittea jfelten/gitea
+kubectl create namespace "gittea" || true
+helm_install gitea jfelten/gitea --values gitea-config-values.yaml --namespace gittea
 wait_ns gittea
 
 if [ "$BACKEND" == "ekcp" ]; then

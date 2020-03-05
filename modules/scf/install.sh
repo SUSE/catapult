@@ -8,7 +8,7 @@
 if [[ $ENABLE_EIRINI == true ]] ; then
    # [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm ls 2>/dev/null | grep -qi metrics-server ; then
-        helm install stable/metrics-server --name=metrics-server \
+        helm_install metrics-server stable/metrics-server\
              --set args[0]="--kubelet-preferred-address-types=InternalIP" \
              --set args[1]="--kubelet-insecure-tls" || true
     fi
@@ -20,7 +20,8 @@ fi
 
 if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
 
-    helm install helm/uaa --name susecf-uaa --namespace uaa --values scf-config-values.yaml
+    kubectl create namespace "uaa"
+    helm_install susecf-uaa helm/uaa --name --namespace uaa --values scf-config-values.yaml
 
     wait_ns uaa
 
@@ -30,7 +31,7 @@ if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
     CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa \
     -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-    helm install helm/cf --name susecf-scf --namespace scf \
+    helm_install susecf-scf helm/cf --namespace scf \
     --values scf-config-values.yaml \
     --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
@@ -58,10 +59,9 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
 
     echo "Installing CFO from: ${OPERATOR_CHART_URL}"
     # Install the operator
-    helm install --namespace cf-operator \
-    --name cf-operator \
+    helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
     --set "provider=gke" --set "customResources.enableInstallation=true" \
-    --set "global.operator.watchNamespace=scf" "${OPERATOR_CHART_URL}"
+    --set "global.operator.watchNamespace=scf"
 
     wait_ns cf-operator
     sleep 10
@@ -69,14 +69,15 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
     kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
-    helm install --name susecf-scf ${SCF_CHART} \
+    helm_install susecf-scf ${SCF_CHART} \
     --namespace scf \
     --values scf-config-values.yaml
 
     sleep 540
 else
 
-    helm install helm/cf --name susecf-scf --namespace scf \
+    kubectl create namespace "scf"
+    helm_install susecf-scf helm/cf --namespace scf \
     --values scf-config-values.yaml \
     --set enable.uaa=true
 

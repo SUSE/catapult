@@ -26,9 +26,11 @@ else
     if [ ! -e "bin/helm" ]; then
         curl -L https://get.helm.sh/helm-${HELM_VERSION}-${HELM_OS_TYPE}.tar.gz | tar zxf -
         mv $HELM_OS_TYPE/helm bin/
-        mv $HELM_OS_TYPE/tiller bin/
+        if [ -e "$HELM_OS_TYPE/tiller" ]; then
+            mv $HELM_OS_TYPE/tiller bin/
+        fi
         rm -rf "$HELM_OS_TYPE"
-        helm version --client
+        helm_info
     fi
 
     if [ ! -e "bin/kubectl" ]; then
