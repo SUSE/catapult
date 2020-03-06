@@ -31,35 +31,34 @@ wait_for_tests_pod() {
 kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 
 timeout="300"
-pushd "$KUBECF_CHECKOUT" || exit
-    # FIXME: See how to pass those options to bazel commands - we make it not to fail to be idempotent but we edit user files on git checkout (BAD!)
-    sed -i 's/namespace = "kubecf"/namespace = "'"$KUBECF_NAMESPACE"'"/' def.bzl || true
-    sed -i 's/deployment_name = "kubecf"/deployment_name =  "'"$KUBECF_DEPLOYMENT_NAME"'"/' def.bzl || true
-    if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
-        bazel run //testing/smoke_tests
-        info "Waiting for the smoke-tests pod to start..."
-        until smoke_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
-        if [[ "${timeout}" == 0 ]]; then return 1; fi
-        pod_name="$(smoke_tests_pod_name)"
-        container_name="smoke-tests-smoke-tests"
-    elif [ "${KUBECF_TEST_SUITE}" == "sits" ]; then
-        kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-sync-integration-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
-          trigger:
-              strategy: now'
-        info "Waiting for the sync-integration-tests pod to start..."
-        until sync_integration_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
-        if [[ "${timeout}" == 0 ]]; then return 1; fi
-        pod_name="$(sync_integration_tests_pod_name)"
-        container_name="sync-integration-tests-sync-integration-tests"
-    else
-        bazel run //testing/acceptance_tests
-        info "Waiting for the acceptance-tests pod to start..."
-        until cf_acceptance_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
-        if [[ "${timeout}" == 0 ]]; then return 1; fi
-        pod_name="$(cf_acceptance_tests_pod_name)"
-        container_name="acceptance-tests-acceptance-tests"
-    fi
-popd || exit
+if [ "${KUBECF_TEST_SUITE}" == "smokes" ]; then
+    kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-smoke-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
+      trigger:
+          strategy: now'
+    info "Waiting for the smoke-tests pod to start..."
+    until smoke_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
+    if [[ "${timeout}" == 0 ]]; then return 1; fi
+    pod_name="$(smoke_tests_pod_name)"
+    container_name="smoke-tests-smoke-tests"
+elif [ "${KUBECF_TEST_SUITE}" == "sits" ]; then
+    kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-sync-integration-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
+      trigger:
+          strategy: now'
+    info "Waiting for the sync-integration-tests pod to start..."
+    until sync_integration_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
+    if [[ "${timeout}" == 0 ]]; then return 1; fi
+    pod_name="$(sync_integration_tests_pod_name)"
+    container_name="sync-integration-tests-sync-integration-tests"
+else
+    kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
+      trigger:
+          strategy: now'
+    info "Waiting for the acceptance-tests pod to start..."
+    until cf_acceptance_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
+    if [[ "${timeout}" == 0 ]]; then return 1; fi
+    pod_name="$(cf_acceptance_tests_pod_name)"
+    container_name="acceptance-tests-acceptance-tests"
+fi
 
 wait_for_tests_pod "$pod_name" "$container_name" || {
 >&2 err "Timed out waiting for the tests pod"
