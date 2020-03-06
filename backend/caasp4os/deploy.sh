@@ -88,7 +88,7 @@ info "Bootstrapping k8s with skuba…"
 skuba_container skuba version
 skuba_deploy
 wait
-cp -f ./my-cluster/admin.conf ../kubeconfig
+cp -f ./"$CLUSTER_NAME"/admin.conf ../kubeconfig
 
 info "Disabling node updates…"
 skuba_updates all disable
