@@ -50,7 +50,7 @@ elif [ "${KUBECF_TEST_SUITE}" == "sits" ]; then
     pod_name="$(sync_integration_tests_pod_name)"
     container_name="sync-integration-tests-sync-integration-tests"
 else
-    kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-cf-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
+    kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
       trigger:
           strategy: now'
     info "Waiting for the acceptance-tests pod to start..."
