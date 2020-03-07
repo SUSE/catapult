@@ -16,6 +16,10 @@ cf_acceptance_tests_pod_name() {
   kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "acceptance-tests"
 }
 
+brain_tests_pod_name() {
+  kubectl get pods --namespace "${KUBECF_NAMESPACE}" --output name 2> /dev/null | grep "brain-tests"
+}
+
 # Wait for tests pod to start.
 wait_for_tests_pod() {
   local podname=$1
@@ -49,6 +53,15 @@ elif [ "${KUBECF_TEST_SUITE}" == "sits" ]; then
     if [[ "${timeout}" == 0 ]]; then return 1; fi
     pod_name="$(sync_integration_tests_pod_name)"
     container_name="sync-integration-tests-sync-integration-tests"
+elif [ "${KUBECF_TEST_SUITE}" == "brain" ]; then
+    kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-brain-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
+      trigger:
+          strategy: now'
+    info "Waiting for the acceptance-tests-brain pod to start..."
+    until brain_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
+    if [[ "${timeout}" == 0 ]]; then return 1; fi
+    pod_name="$(sync_integration_tests_pod_name)"
+    container_name="acceptance-tests-brain-acceptance-tests-brain"
 else
     kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
       trigger:
