@@ -9,7 +9,7 @@ mv kube-ready-state-check.sh bin/
 
 info "Testing imported k8s cluster"
 
-kube-ready-state-check.sh kube
+kube-ready-state-check.sh kube || true
 
 info "Adding cap-values configmap if missing"
 if ! kubectl get configmap cap-values -n kube-system 2>/dev/null | grep -qi cap-values; then
