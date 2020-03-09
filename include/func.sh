@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Get defaults from binary dependencies
+. $ROOT_DIR/modules/common/defaults.sh
+
 set +x
 
 if ((BASH_VERSINFO[0] >= 4)) && [[ $'\u2388 ' != "\\u2388 " ]]; then
