@@ -18,8 +18,17 @@ if helm ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf
 fi
 
+if kubectl get psp 2>/dev/null | grep -qi susecf-scf ; then
+    kubectl delete psp susecf-scf-default
+fi
+
 if helm ls 2>/dev/null | grep -qi cf-operator ; then
     helm_delete cf-operator
+fi
+
+if kubectl get clusterrole 2>/dev/null | grep -qi cf-operator ; then
+    kubectl delete clusterrole cf-operator cf-operator-quarks-job
+    kubectl delete clusterrolebinding cf-operator cf-operator-quarks-job
 fi
 
 if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
