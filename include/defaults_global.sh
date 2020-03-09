@@ -21,4 +21,3 @@ export DOWNLOAD_BINS="${DOWNLOAD_BINS:-true}"
 # Download binaries of catapult dependencies
 export DOWNLOAD_CATAPULT_DEPS="${DOWNLOAD_CATAPULT_DEPS:-true}"
 
-export HELM_VERSION="${HELM_VERSION:-v3.1.1}"
