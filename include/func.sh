@@ -244,3 +244,11 @@ function helm_install {
         helm install --name $release_name $chart "$@"
     fi
 }
+
+function helm_delete {
+    if [[ "$HELM_VERSION" == v3* ]]; then
+        helm delete "$@"
+    else
+        helm delete --purge "$@"
+    fi
+}
