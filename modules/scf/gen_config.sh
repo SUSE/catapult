@@ -20,10 +20,12 @@ fi
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
-aux_external_ips=("$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')")
+array_external_ips=()
+while IFS='' read -r line; do array_external_ips+=("$line");
+done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
 external_ips+="\"$public_ip\""
-for (( i=0; i < ${#aux_external_ips[@]}; i++ )); do
-external_ips+=", \"${aux_external_ips[$i]}\""
+for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
+external_ips+=", \"${array_external_ips[$i]}\""
 done
 
 VALUES=
