@@ -34,6 +34,8 @@ HEREDOC
 # terraform needs helm client installed and configured:
 helm init --client-only
 
+info "Deploying GKE cluster with terraform…"
+
 terraform init
 
 terraform plan -out="$(pwd)"/my-plan
@@ -43,6 +45,8 @@ popd || exit
 
 # wait for cluster ready:
 wait_ns kube-system
+
+info "Configuring deployed GKE cluster…"
 
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
@@ -99,3 +103,5 @@ subjects:
 HEREDOC
 }
 create_rolebinding
+
+ok "GKE cluster deployed"

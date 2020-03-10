@@ -29,11 +29,13 @@ k8s: ##@states Delete if exists then deploy cluster of type $BACKEND in build$CL
 k8s: clean buildir
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND)
+	backend/check.sh
 
 .PHONY: kubeconfig
 kubeconfig: ##@states Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
 kubeconfig: buildir
 	$(MAKE) -C modules/common
+	$(MAKE) -C backend/$(BACKEND) deps
 	$(MAKE) -C backend/$(BACKEND) kubeconfig
   backend/check.sh
 
@@ -51,8 +53,9 @@ restart: ##@k8s Restart cluster of type $BACKEND (only present in some backends,
 
 .PHONY: recover
 recover: ##@k8s Obtain kubeconfig from cluster without build folder (only present in kind)
-recover: buildir kubeconfig
+recover: buildir
 	$(MAKE) -C modules/common
+	$(MAKE) -C backend/$(BACKEND) kubeconfig
 
 .PHONY: force-clean
 force-clean: ##@k8s Remove build folder no matter what (caution)

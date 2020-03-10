@@ -8,13 +8,13 @@ kubeconfig:
 clean:
 	./clean.sh
 
-.PHONY: deps-gke
-deps-gke:
+.PHONY: deps
+deps:
 	./deps.sh
 
-.PHONY: deploy-gke
-deploy-gke:
+.PHONY: deploy
+deploy:
 	./deploy.sh
 
 .PHONY: all
-all: deps-gke deploy-gke
+all: deps deploy
