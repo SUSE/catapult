@@ -2,6 +2,7 @@
 
 . ./defaults.sh
 . ../../include/common.sh
+. .envrc
 
 if [ ! -f "$KUBECFG" ]; then
     err "No KUBECFG given - you need to pass one!"
@@ -11,7 +12,7 @@ fi
 # check gcloud credentials:
 info "Using creds from GKE_CRED_JSON…"
 gcloud auth revoke 2>/dev/null || true
-gcloud auth activate-service-account --key-file "$GKE_CRED_JSON"
+gcloud auth activate-service-account --project "$GKE_PROJECT" --key-file "$GKE_CRED_JSON"
 if [[ $(gcloud auth list  --format="value(account)" | wc -l ) -le 0 ]]; then
     err "GKE_CRED_JSON creds don't authenticate, aborting" && exit 1
 fi
