@@ -6,11 +6,12 @@ kubeconfig:
 
 .PHONY: clean
 clean:
-	./clean.sh
+	echo "not implemented yet" && exit 1
 
 .PHONY: deps
 deps:
-	#no-op
+	echo "not implemented yet" && exit 1
 
 .PHONY: all
-all: kubeconfig
+all:
+	echo "not implemented yet" && exit 1

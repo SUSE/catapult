@@ -8,6 +8,10 @@ kubeconfig:
 clean:
 	./destroy.sh
 
+.PHONY: deps
+deps:
+	# no-op
+
 .PHONY: deps-caasp4os
 deps-caasp4os:
 	./docker_skuba.sh

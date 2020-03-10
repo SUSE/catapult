@@ -2,7 +2,7 @@
 
 .PHONY: kubeconfig
 kubeconfig:
-	# No-op
+	./kubeconfig.sh
 
 .PHONY: deps
 deps:

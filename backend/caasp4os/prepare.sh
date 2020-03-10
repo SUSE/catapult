@@ -73,7 +73,7 @@ create_nfs_storageclass() {
     if ! kubectl get storageclass 2>/dev/null | grep -qi persistent; then
         NFS_SERVER_IP=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["nfs-server-ip"]')
         NFS_PATH=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["nfs-path"]')
-        helm install stable/nfs-client-provisioner \
+        helm_install nfs-client-provisioner stable/nfs-client-provisioner \
              --set nfs.server="$NFS_SERVER_IP" \
              --set nfs.path="$NFS_PATH" \
              --set storageClass.name=persistent \

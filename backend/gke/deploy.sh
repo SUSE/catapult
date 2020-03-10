@@ -8,8 +8,11 @@
 . .envrc
 
 # check gcloud credentials:
+info "Using creds from GKE_CRED_JSON…"
+gcloud auth revoke 2>/dev/null || true
+gcloud auth activate-service-account --project "$GKE_PROJECT" --key-file "$GKE_CRED_JSON"
 if [[ $(gcloud auth list  --format="value(account)" | wc -l ) -le 0 ]]; then
-    echo ">>> Missing gcloud credentials, aborting" && exit 1
+    err "GKE_CRED_JSON creds don't authenticate, aborting" && exit 1
 fi
 # one needs the following roles. We cannot check programmatically as
 # you normally don't have permission to list roles:
@@ -24,6 +27,7 @@ cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"
 location = "$GKE_LOCATION"
 node_pool_name = "$GKE_CLUSTER_NAME"
+node_count = "$GKE_NODE_COUNT"
 vm_type = "UBUNTU"
 gke_sa_key = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_CRED_JSON"
@@ -34,6 +38,8 @@ HEREDOC
 # terraform needs helm client installed and configured:
 helm init --client-only
 
+info "Deploying GKE cluster with terraform…"
+
 terraform init
 
 terraform plan -out="$(pwd)"/my-plan
@@ -43,6 +49,8 @@ popd || exit
 
 # wait for cluster ready:
 wait_ns kube-system
+
+info "Configuring deployed GKE cluster…"
 
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
@@ -99,3 +107,5 @@ subjects:
 HEREDOC
 }
 create_rolebinding
+
+ok "GKE cluster deployed"
