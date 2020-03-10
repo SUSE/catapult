@@ -37,7 +37,7 @@ kubeconfig: buildir
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND) deps
 	$(MAKE) -C backend/$(BACKEND) kubeconfig
-  backend/check.sh
+	backend/check.sh
 
 .PHONY: start
 start: ##@k8s Start cluster of type $BACKEND (only present in some backends, like kind)
