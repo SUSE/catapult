@@ -21,18 +21,18 @@ buildir:
 
 # General targets (Public)
 .PHONY: clean
-clean: ##@states Delete cluster of type $BACKEND and location build$CLUSTER_NAME
+clean: ##@STATES Delete cluster of type $BACKEND and location build$CLUSTER_NAME
 	$(MAKE) -C backend/$(BACKEND) clean
 
 .PHONY: k8s
-k8s: ##@states Delete if exists then deploy cluster of type $BACKEND in build$CLUSTER_NAME
+k8s: ##@STATES Delete if exists then deploy cluster of type $BACKEND in build$CLUSTER_NAME
 k8s: clean buildir
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND)
 	backend/check.sh
 
 .PHONY: kubeconfig
-kubeconfig: ##@states Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
+kubeconfig: ##@STATES Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
 kubeconfig: buildir
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND) deps
@@ -177,7 +177,7 @@ scf-clean: ##@scf Only delete installation of CF & related files
 	$(MAKE) -C modules/scf clean
 
 .PHONY: scf
-scf: ##@states Delete if exists then deploy CF in cluster
+scf: ##@STATES Delete if exists then deploy CF in cluster
 	$(MAKE) -C modules/scf
 
 .PHONY: scf-chart
@@ -214,7 +214,7 @@ scf-build-stemcell: ##@scf Build stemcell
 
 # stratos-only targets:
 .PHONY: stratos
-stratos: ##@states Delete if exists then deploy Stratos console
+stratos: ##@STATES Delete if exists then deploy Stratos console
 	$(MAKE) -C modules/stratos
 
 .PHONY: stratos-clean
@@ -239,7 +239,7 @@ stratos-upgrade: ##@stratos Only upgrade Stratos console
 
 # metrics-only targets:
 .PHONY: metrics
-metrics: ##@states Delete if exists then deploy Stratos metrics
+metrics: ##@STATES Delete if exists then deploy Stratos metrics
 	$(MAKE) -C modules/metrics
 
 .PHONY: metrics-clean
@@ -264,7 +264,7 @@ metrics-upgrade: ##@metrics Only upgrade Stratos metrics
 
 # test-only targets:
 .PHONY: tests
-tests: ##@states Run a reliable subset of tests against CF
+tests: ##@STATES Run a reliable subset of tests against CF
 	$(MAKE) -C modules/tests
 
 .PHONY: tests-kubecf
@@ -403,7 +403,7 @@ HELP_FUNC = \
     print "\n"; }
 HELP_STATES = \
     %help; \
-    while(<>) { push @{$$help{$$2}}, [$$1, $$3] if /^([a-zA-Z0-9\-]+)\s*:.*\#\#\@(?:(states))?\s(.*)$$/ }; \
+    while(<>) { push @{$$help{$$2}}, [$$1, $$3] if /^([a-zA-Z0-9\-]+)\s*:.*\#\#\@(?:(STATES))?\s(.*)$$/ }; \
     for (keys %help) { \
 			print "$$_:\n"; \
 			for (@{$$help{$$_}}) { \
@@ -431,13 +431,13 @@ help: ##@other Show help
 	@echo 'OPTIONS:'
 	@echo '  Passed as env vars. Them and their default values are sourced from:'
 	@echo '    (in descendent order of priority)'
+	@echo '    backend/foo/defaults.sh  (if doing make k8s or make kubeconfig)'
+	@echo '    modules/foo/defaults.sh								'
 	@echo '    include/defaults_global{,_private}.sh'
-	@echo '    backend/*/defaults.sh								'
 	@echo '    modules/common/defaults.sh						'
-	@echo '    modules/*/defaults.sh								'
 	@echo
 	@echo '  BACKEND option is mandatory. Is the type of k8s cluster to create/target. Defaults to "kind"'
-	@echo '  CLUSTER_NAME option specifies the name of the build$CLUSTER_NAME. Defaults to "$BACKEND"'
+	@echo '  CLUSTER_NAME option specifies the name of the "buildCLUSTER_NAME". Defaults to "BACKEND"'
 	@echo
 	@echo '  A concatenated list of all options is compiled in buildfoo/defaults.sh on '
 	@echo '  cluster creation.'
@@ -461,10 +461,12 @@ help: ##@other Show help
 	@echo '  Install latest released kubecf chart against previous cluster example'
 	@echo '  > BACKEND=imported CLUSTER_NAME=foo SCF_OPERATOR=true make scf'
 	@echo
+	@echo 'For more info, see make help-all.'
 
 
 help-all: help
 help-all: ##@other Show all help
+	@echo
 	@echo 'SUBSTATES and other targets:'
 	@echo
 	@perl -e '$(HELP_FUNC)' $(MAKEFILE_LIST)
