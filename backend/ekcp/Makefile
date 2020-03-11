@@ -12,6 +12,9 @@ up:
 kubeconfig:
 	./kubeconfig.sh
 
+.PHONY: deps
+deps:
+	# no-op
 
 .PHONY: prepare
 prepare:
