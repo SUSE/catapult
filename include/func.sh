@@ -239,7 +239,8 @@ function helm_init_client {
     if [[ "$HELM_VERSION" != v3* ]]; then
         helm init --client-only
     else
-        helm init
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
+        helm repo update
     fi
 }
 
