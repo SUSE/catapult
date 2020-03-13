@@ -21,7 +21,7 @@ if [ "${LOCAL_ACCESS}" == "true" ]; then
     domain="127.0.0.1:8080"
 fi
 
-helm delete --purge catapult-concourse || true
+helm_delete catapult-concourse || true
 kubectl delete pvc -l app=catapult-concourse-worker || true
 kubectl delete namespace catapult-concourse-main  || true
 

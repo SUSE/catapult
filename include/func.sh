@@ -235,6 +235,14 @@ function helm_init {
     fi
 }
 
+function helm_init_client {
+    if [[ "$HELM_VERSION" != v3* ]]; then
+        helm init --client-only
+    else
+        helm init
+    fi
+}
+
 function helm_install {
     local release_name=$1;shift
     local chart=$1;shift

@@ -9,7 +9,7 @@ info "Deploying gitea from the helm charts"
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
 
-helm delete gitea --purge || true
+helm_delete gitea || true
 helm repo add jfelten https://luqasn.github.io/gitea-helm-chart
 
 
