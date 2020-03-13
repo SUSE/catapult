@@ -36,7 +36,7 @@ k8s_version = "latest"
 HEREDOC
 
 # terraform needs helm client installed and configured:
-helm_init
+helm_init_client
 
 info "Deploying GKE cluster with terraform…"
 
