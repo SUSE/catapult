@@ -4,7 +4,7 @@
 . .envrc
 
 if helm ls 2>/dev/null | grep -qi susecf-metrics ; then
-    helm del --purge susecf-metrics
+    helm_delete susecf-metrics
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi metrics ; then
     kubectl delete namespace metrics

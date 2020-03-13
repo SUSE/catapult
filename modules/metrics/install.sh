@@ -6,8 +6,7 @@
 
 info "Deploying stratos-metrics"
 
-helm install ./metrics \
-     --name susecf-metrics \
+helm_install susecf-metrics ./metrics \
      --namespace metrics \
      --values scf-config-values-for-metrics.yaml \
      --values stratos-metrics-values.yaml

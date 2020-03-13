@@ -16,7 +16,7 @@ info "2. Create a new application, name it drone, redirect uri is: http://${doma
 info "Use those secrets for DRONE_CLIENT_ID and DRONE_CLIENT_SECRET"
 
 
-helm delete --purge drone || true
+helm_delete drone || true
 
 kubectl delete secret -n drone --all || true
 kubectl delete pvc -n drone --all || true

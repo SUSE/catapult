@@ -18,7 +18,7 @@ git clone https://github.com/SUSE/cap-terraform.git
 pushd cap-terraform/eks || exit
 
 # terraform needs helm client installed and configured:
-helm init --client-only
+helm_init_client
 
 cat <<HEREDOC > terraform.tfvars
 region = "$EKS_LOCATION"

@@ -6,8 +6,7 @@
 
 info "Deploying stratos"
 
-helm install ./console \
-    --name susecf-console \
+helm_install susecf-console ./console \
     --namespace stratos \
     --values scf-config-values-for-stratos.yaml
 

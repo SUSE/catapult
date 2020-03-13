@@ -21,7 +21,7 @@ fi
 if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
 
     kubectl create namespace "uaa"
-    helm_install susecf-uaa helm/uaa --name --namespace uaa --values scf-config-values.yaml
+    helm_install susecf-uaa helm/uaa --namespace uaa --values scf-config-values.yaml
 
     wait_ns uaa
 
