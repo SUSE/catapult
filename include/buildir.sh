@@ -24,7 +24,13 @@ HEREDOC
 
 cat <<HEREDOC_APPEND >> .envrc
 export KUBECONFIG="$(pwd)"/kubeconfig
-export HELM_HOME="$(pwd)"/.helm
+
+export HELM_HOME="$(pwd)"/.helm # for helm 2
+# The following are needed for helm 3:
+export XDG_CACHE_HOME="$(pwd)/.cache"
+export XDG_CONFIG_HOME="$(pwd)/.config"
+export XDG_DATA_HOME="$(pwd)/.local/share"
+
 export CF_HOME="$(pwd)"
 export PATH="$(pwd)"/bin:"$PATH"
 export MINIKUBE_HOME="$(pwd)"/.minikube
