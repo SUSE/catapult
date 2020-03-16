@@ -250,7 +250,7 @@ function helm_install {
     if [[ "$HELM_VERSION" == v3* ]]; then
         helm install "$release_name" "$chart" "$@"
     else
-        helm install --name $release_name $chart "$@"
+        helm install --name "$release_name" "$chart" "$@"
     fi
 }
 
