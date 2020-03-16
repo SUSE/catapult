@@ -29,7 +29,6 @@ k8s: ##@STATES Delete if exists then deploy cluster of type $BACKEND in build$CL
 k8s: clean buildir
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND)
-	backend/check.sh
 
 .PHONY: kubeconfig
 kubeconfig: ##@STATES Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
