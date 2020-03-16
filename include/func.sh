@@ -261,3 +261,11 @@ function helm_delete {
         helm delete --purge "$@"
     fi
 }
+
+function helm_ls {
+    if [[ "$HELM_VERSION" == v3* ]]; then
+        helm ls --all-namespaces
+    else
+        helm ls
+    fi
+}

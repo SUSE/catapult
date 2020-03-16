@@ -3,7 +3,7 @@
 . ../../include/common.sh
 . .envrc
 
-if helm ls 2>/dev/null | grep -qi susecf-metrics ; then
+if helm_ls 2>/dev/null | grep -qi susecf-metrics ; then
     helm_delete susecf-metrics -n stratos-metrics
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi metrics ; then
