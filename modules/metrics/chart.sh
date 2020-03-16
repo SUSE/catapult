@@ -12,7 +12,7 @@ if [ "$METRICS_CHART" = "latest" ]; then
     HELM_REPO="https://kubernetes-charts.suse.com/"
     HELM_REPO_NAME="suse"
 
-    helm init --client-only
+    helm_init_client
     helm repo add "$HELM_REPO_NAME" $HELM_REPO
     helm repo update
     helm fetch "$HELM_REPO_NAME"/metrics

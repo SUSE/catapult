@@ -250,7 +250,19 @@ function helm_install {
     if [[ "$HELM_VERSION" == v3* ]]; then
         helm install "$release_name" "$chart" "$@"
     else
-        helm install --name $release_name $chart "$@"
+        helm install --name "$release_name" "$chart" "$@"
+    fi
+}
+
+function helm_upgrade {
+    local release_name=$1;shift
+    local chart=$1;shift
+    if [[ "$HELM_VERSION" == v3* ]]; then
+        # https://v3.helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
+        # we don't use recreate-pods anymore
+        helm upgrade "$release_name" "$chart" "$@"
+    else
+        helm upgrade --name "$release_name" "$chart" --recreate-pods "$@"
     fi
 }
 
@@ -259,5 +271,13 @@ function helm_delete {
         helm delete "$@"
     else
         helm delete --purge "$@"
+    fi
+}
+
+function helm_ls {
+    if [[ "$HELM_VERSION" == v3* ]]; then
+        helm ls --all-namespaces
+    else
+        helm ls
     fi
 }

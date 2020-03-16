@@ -6,12 +6,15 @@
 
 info "Deploying stratos"
 
-helm_install susecf-console ./console \
+if [[ "$HELM_VERSION" == v3* ]]; then
+   kubectl create namespace "stratos"
+fi
+helm_install suse-console ./console \
     --namespace stratos \
     --values scf-config-values-for-stratos.yaml
 
 wait_ns stratos
 
-kubectl get services susecf-console-ui-ext -n stratos
+kubectl get services suse-console-ui-ext -n stratos
 
 ok "Stratos deployed successfully"

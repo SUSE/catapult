@@ -21,7 +21,7 @@ if [ -n "$SCF_HELM_VERSION" ]; then
     HELM_REPO_NAME="${SCF_HELM_REPO_NAME:-suse}"
     info "Grabbing $SCF_HELM_VERSION from $HELM_REPO"
 
-    helm init --client-only
+    helm_init_client
     helm repo add "$HELM_REPO_NAME" $HELM_REPO
     helm repo update
 

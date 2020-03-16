@@ -8,7 +8,7 @@
 if cf service-brokers 2>/dev/null | grep -qi minibroker ; then
     cf delete-service-broker minibroker -f
 fi
-if helm ls 2>/dev/null | grep -qi minibroker ; then
+if helm_ls 2>/dev/null | grep -qi minibroker ; then
     helm_delete minibroker
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi minibroker ; then
