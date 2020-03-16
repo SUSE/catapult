@@ -11,8 +11,8 @@ if [ -n "$METRICS_CHART" ]; then
     kubectl patch -n kube-system configmap cap-values -p $'data:\n metrics-chart: "'$METRICS_CHART'"'
 fi
 
-helm upgrade susecf-metrics ./metrics \
-     --recreate-pods \
+helm_upgrade susecf-metrics ./metrics \
+     --namespace stratos-metrics \
      --values scf-config-values-for-metrics.yaml \
      --values stratos-metrics-values.yaml
 
