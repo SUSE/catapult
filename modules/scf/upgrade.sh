@@ -13,6 +13,7 @@ fi
 if [ "${SCF_OPERATOR}" == "true" ]; then
 
     helm upgrade susecf-scf kubecf/ --values scf-config-values.yaml
+                 --namespace scf \
     sleep 10
 
 else

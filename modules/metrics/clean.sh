@@ -4,10 +4,10 @@
 . .envrc
 
 if helm ls 2>/dev/null | grep -qi susecf-metrics ; then
-    helm_delete susecf-metrics
+    helm_delete susecf-metrics -n stratos-metrics
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi metrics ; then
-    kubectl delete namespace metrics
+    kubectl delete namespace stratos-metrics
 fi
 
 # delete METRICS_CHART on cap-values configmap

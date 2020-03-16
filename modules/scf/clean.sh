@@ -15,7 +15,7 @@ if [ "$EMBEDDED_UAA" != "true" ]; then
 fi
 
 if helm ls 2>/dev/null | grep -qi susecf-scf ; then
-    helm_delete susecf-scf
+    helm_delete susecf-scf --namespace scf
 fi
 
 if kubectl get psp 2>/dev/null | grep -qi susecf-scf ; then
@@ -23,7 +23,7 @@ if kubectl get psp 2>/dev/null | grep -qi susecf-scf ; then
 fi
 
 if helm ls 2>/dev/null | grep -qi cf-operator ; then
-    helm_delete cf-operator
+    helm_delete cf-operator --namespace cf-operator
 fi
 
 if kubectl get clusterrole 2>/dev/null | grep -qi cf-operator ; then
