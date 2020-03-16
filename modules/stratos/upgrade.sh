@@ -4,7 +4,8 @@
 . .envrc
 
 # save STRATOS_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART'"'
+STRATOS_CHART_NAME=$(cat console/values.yaml | grep consoleVersion | cut -d " " -f2)
+kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'$STRATOS_CHART_NAME'"'
 
 helm_upgrade suse-console ./console \
      --namespace stratos \
