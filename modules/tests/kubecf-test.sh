@@ -60,7 +60,7 @@ elif [ "${KUBECF_TEST_SUITE}" == "brain" ]; then
     info "Waiting for the acceptance-tests-brain pod to start..."
     until brain_tests_pod_name || [[ "$timeout" == "0" ]]; do sleep 1; timeout=$((timeout - 1)); done
     if [[ "${timeout}" == 0 ]]; then return 1; fi
-    pod_name="$(sync_integration_tests_pod_name)"
+    pod_name="$(brain_tests_pod_name)"
     container_name="acceptance-tests-brain-acceptance-tests-brain"
 else
     kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch 'spec:
