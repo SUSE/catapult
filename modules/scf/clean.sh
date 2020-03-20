@@ -10,7 +10,7 @@ if [ "$EMBEDDED_UAA" != "true" ]; then
         helm_delete susecf-uaa
     fi
     if kubectl get namespaces 2>/dev/null | grep -qi uaa ; then
-        kubectl delete namespace uaa
+        kubectl delete --ignore-not-found namespace uaa
     fi
 fi
 
@@ -18,19 +18,19 @@ if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf --namespace scf
 else
     if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
-        kubectl delete namespace scf
+        kubectl delete --ignore-not-found namespace scf
     fi
 fi
 
 if kubectl get psp 2>/dev/null | grep -qi susecf-scf ; then
-    kubectl delete psp susecf-scf-default
+    kubectl delete --ignore-not-found psp susecf-scf-default
 fi
 
 if helm_ls 2>/dev/null | grep -qi cf-operator ; then
     helm_delete cf-operator --namespace cf-operator
 else
     if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
-        kubectl delete namespace cf-operator
+        kubectl delete --ignore-not-found namespace cf-operator
     fi
 fi
 
@@ -39,7 +39,7 @@ fi
 
 if [[ "$ENABLE_EIRINI" == true ]] ; then
     if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
-        kubectl delete namespace eirini
+        kubectl delete --ignore-not-found namespace eirini
     fi
     if helm_ls 2>/dev/null | grep -qi metrics-server ; then
         helm_delete metrics-server
