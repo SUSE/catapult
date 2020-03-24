@@ -11,8 +11,7 @@ if [ -z "$SCF_CHART" ] && [ -z "$SCF_HELM_VERSION" ]; then
     if  [ "${SCF_OPERATOR}" != "true" ]; then
         SCF_CHART=$(curl -s https://api.github.com/repos/SUSE/scf/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
     else
-        SCF_CHART="https://scf-v3.s3.amazonaws.com/scf-3.0.0-8f7a71d1.tgz"
-        #SCF_CHART="https://github.com/SUSE/scf/archive/v3-develop.zip"
+        SCF_CHART=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/kubecf/releases/latest | grep "browser_download_url.*bundle.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
     fi
 fi
 
