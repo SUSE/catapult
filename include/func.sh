@@ -281,3 +281,8 @@ function helm_ls {
         helm ls
     fi
 }
+
+function wait_for {
+    info "Waiting for $1"
+    n=0; until ((n >= 60)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < 60))
+}
