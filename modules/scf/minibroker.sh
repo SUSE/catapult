@@ -12,7 +12,7 @@ if helm_ls 2>/dev/null | grep -qi minibroker ; then
     helm_delete minibroker
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi minibroker ; then
-    kubectl delete namespace minibroker
+    kubectl delete --ignore-not-found namespace minibroker
 fi
 
 ORG=$(cf target | grep "org:" | tr -s " " | cut -d " " -f 2)
