@@ -64,7 +64,15 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     --set "global.operator.watchNamespace=scf"
 
     wait_ns cf-operator
-    sleep 10
+
+    info "Wait for cf-operator to be ready"
+    wait_for "kubectl get endpoints -n cf-operator cf-operator-webhook -o name"
+    wait_for "kubectl get crd quarksstatefulsets.quarks.cloudfoundry.org -o name"
+    wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
+    wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
+    wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
+    sleep 10 # Give extra time for operator to avoid flakyness
+    ok "cf-operator ready"
 
     # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
     kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
