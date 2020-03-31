@@ -71,7 +71,14 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
     wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
     wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
-    sleep 10 # Give extra time for operator to avoid flakyness
+    info "Test CRDs are ready"
+    #wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
+    wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
+    wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+    wait_ns scf
+    #wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
+    wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
+    wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     ok "cf-operator ready"
 
     # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
