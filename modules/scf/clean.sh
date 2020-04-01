@@ -16,10 +16,9 @@ fi
 
 if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf --namespace scf
-else
-    if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
-        kubectl delete --ignore-not-found namespace scf
-    fi
+fi
+if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
+    kubectl delete --ignore-not-found namespace scf
 fi
 
 if kubectl get psp 2>/dev/null | grep -qi susecf-scf ; then
@@ -28,14 +27,10 @@ fi
 
 if helm_ls 2>/dev/null | grep -qi cf-operator ; then
     helm_delete cf-operator --namespace cf-operator
-else
-    if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
-        kubectl delete --ignore-not-found namespace cf-operator
-    fi
 fi
-
-
-
+if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
+    kubectl delete --ignore-not-found namespace cf-operator
+fi
 
 if [[ "$ENABLE_EIRINI" == true ]] ; then
     if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
