@@ -268,7 +268,8 @@ function helm_upgrade {
 
 function helm_delete {
     if [[ "$HELM_VERSION" == v3* ]]; then
-        helm delete "$@"
+        helm uninstall "$@"
+        wait_for "helm ls --all-namespaces 2>/dev/null | grep -qi $1"
     else
         helm delete --purge "$@"
     fi
