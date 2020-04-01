@@ -60,8 +60,8 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     echo "Installing CFO from: ${OPERATOR_CHART_URL}"
     # Install the operator
     helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
-    --set "provider=gke" --set "customResources.enableInstallation=true" \
-    --set "global.operator.watchNamespace=scf"
+        --set "operator-webhook-use-service-reference=true" --set "customResources.enableInstallation=true" \
+        --set "global.operator.watchNamespace=scf"
 
     wait_ns cf-operator
 
