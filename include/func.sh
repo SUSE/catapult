@@ -285,5 +285,6 @@ function helm_ls {
 
 function wait_for {
     info "Waiting for $1"
-    n=0; until ((n >= 60)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < 60))
+    timeout=300
+    n=0; until ((n >= timeout)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < timeout))
 }
