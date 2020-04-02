@@ -1,5 +1,6 @@
 FROM opensuse/tumbleweed:latest
-RUN zypper ref && zypper in -y git zip wget docker ruby gzip make jq curl which unzip
+RUN zypper ref && zypper in -y git zip wget docker ruby gzip make jq curl which unzip direnv
+RUN echo 'eval $(direnv hook bash)' >> ~/.bashrc
 # Extras, mostly for the terminal image (that could be split in another image)
 RUN zypper in -y vim zsh tmux glibc-locale glibc-i18ndata python ruby python3 python3-pip
 
