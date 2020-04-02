@@ -30,7 +30,7 @@ trigger_test_suite() {
   local qjob suite_name="${1}"
   qjob="$(get_resource_name qjob "${suite_name}")"
   kubectl patch "${qjob}" --namespace "${KUBECF_NAMESPACE}" --type merge --patch \
-    '{ spec: { trigger: { strategy: now } } }'
+    '{ "spec": { "trigger": { "strategy": "now" } } }'
   info "waiting for the ${suite_name} pod to start..."
   wait_for_timeout 300 get_resource_name pod "${suite_name}"
   [[ "${timeout}" != 0 ]]
