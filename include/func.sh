@@ -268,7 +268,9 @@ function helm_upgrade {
 
 function helm_delete {
     if [[ "$HELM_VERSION" == v3* ]]; then
-        helm delete "$@"
+        helm uninstall "$@"
+        # wait until there's no helm release installed
+        wait_for "! (helm ls --all-namespaces 2>/dev/null | grep -qi $1)"
     else
         helm delete --purge "$@"
     fi
@@ -284,5 +286,6 @@ function helm_ls {
 
 function wait_for {
     info "Waiting for $1"
-    n=0; until ((n >= 60)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < 60))
+    timeout=300
+    n=0; until ((n >= timeout)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < timeout))
 }
