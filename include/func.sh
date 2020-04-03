@@ -220,7 +220,7 @@ function wait_ns {
 
 function helm_info {
     if [[ "$HELM_VERSION" == v3* ]]; then
-        helm version
+        helm version --kubeconfig /dev/null
     else
         helm version --client
     fi
