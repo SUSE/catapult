@@ -15,13 +15,19 @@ zypper --gpg-auto-import-keys -n in -y --from=devel_languages_go go1.13
 RUN zypper ar --priority 100 https://download.opensuse.org/repositories/Cloud:Tools/openSUSE_Tumbleweed/Cloud:Tools.repo && \
 zypper --gpg-auto-import-keys -n in --no-recommends -y kubernetes-client
 
-RUN zypper in -y python-xml
-RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-RUN unzip awscli-bundle.zip
-RUN ./awscli-bundle/install
-RUN rm -rf awscli-bundle*
-RUN curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
-RUN chmod +x aws-iam-authenticator && mv aws-iam-authenticator bin/
+# k8s backends dependencies:
+RUN zypper in -y terraform aws-cli aws-iam-authenticator
+
+RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz && \
+  tar -xvf google-cloud-sdk.tar.gz && \
+  rm google-cloud-sdk.tar.gz && \
+  pushd google-cloud-sdk || exit && \
+  bash ./install.sh -q && \
+  popd || exit && \
+  echo "source /google-cloud-sdk/path.bash.inc" >> ~/.bashrc
+
+RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
+RUN mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
 
 ADD . /catapult
 WORKDIR /catapult
