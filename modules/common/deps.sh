@@ -67,7 +67,7 @@ else
 
     yqpath=bin/yq
     if [ ! -e "$yqpath" ]; then
-        wget "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_${YQ_OS_TYPE}" -O $yqpath
+        wget "https://github.com/mikefarah/yq/releases/download/3.2.1/yq_${YQ_OS_TYPE}" -O $yqpath 
         chmod +x $yqpath
     fi
 fi
