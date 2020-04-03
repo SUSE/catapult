@@ -3,8 +3,8 @@
 . ../../include/common.sh
 . .envrc
 
-if [[ "$DOWNLOAD_BINS" == "false" ]]; then
-    ok "Skipping downloading deps, using host binaries"
+if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
+    ok "Skipping downloading EKS deps, using host binaries"
     exit 0
 fi
 

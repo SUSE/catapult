@@ -3,6 +3,10 @@
 . ../../include/common.sh
 . .envrc
 
+if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
+    ok "Skipping downloading kind deps, using host binaries"
+    exit 0
+fi
 
 MINIKUBE_VERSION=latest
 if [[ "$OSTYPE" == "darwin"* ]]; then
