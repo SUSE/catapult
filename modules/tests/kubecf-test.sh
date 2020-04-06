@@ -104,8 +104,9 @@ done
 
 # save results of tests to file
 mkdir -p artifacts
-kubectl logs "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" > \
-        artifacts/"$(date +'%Y-%m-%d-%H:%M')"_"$( echo "${pod_name}" | cut -d '/' -f 2)".log
+log="artifacts/$(date +'%Y-%m-%d-%H:%M')_${pod_name#*/}.log"
+kubectl logs "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" > "${log}"
+        
 
 if [ "${exit_code}" -ne 0 ]; then
     err "${KUBECF_TEST_SUITE} failed"
