@@ -96,7 +96,7 @@ kubectl logs -f "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$co
 
 # Wait for the container to terminate and then exit the script with the container's exit code.
 jsonpath='{.status.containerStatuses[?(@.name == "'"$container_name"'")].state.terminated.exitCode}'
-exit_code="$(kubectl get "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --output "jsonpath=${jsonpath}")"
+exit_code=""
 while [[ -z "${exit_code}" ]]; do
     exit_code="$(kubectl get "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --output "jsonpath=${jsonpath}")"
     sleep 1
