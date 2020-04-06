@@ -29,6 +29,11 @@ RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/r
 RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
 RUN mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
 
+RUN zypper --no-recommends in -y gcc libffi-devel python3-devel libopenssl-devel
+RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
+  printf "\n\n\n\n" | python3 ./install.py && \
+  rm ./install.py
+
 RUN zypper clean --all
 
 ADD . /catapult
