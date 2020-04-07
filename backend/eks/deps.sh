@@ -24,7 +24,10 @@ if [ ! -e "$awspath" ]; then
     unzip awscli-bundle.zip
     ./awscli-bundle/install --install-dir="$(pwd)"/.local/ --bin-location="$(pwd)"/bin/aws
     rm -rf awscli-bundle*
+fi
 
+awsiampath=bin/aws-iam-authenticator
+if [ ! -e "$awsiampath" ]; then
     curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
     chmod +x aws-iam-authenticator && mv aws-iam-authenticator bin/
 fi
