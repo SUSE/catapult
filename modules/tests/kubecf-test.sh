@@ -112,7 +112,7 @@ if [ "${exit_code}" -ne 0 ]; then
     err "${KUBECF_TEST_SUITE} failed"
     exit "${exit_code}"
 else
-    # remove job, tests where successful
+    # remove job, tests were successful
     kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 fi
 
