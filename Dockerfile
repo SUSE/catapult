@@ -1,40 +1,27 @@
 FROM opensuse/tumbleweed:latest
-# Catapult dependencies:
-RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq python-yq curl which unzip bazel1.2 direnv
+RUN zypper ref && zypper in -y git zip wget docker ruby gzip make jq curl which unzip direnv
 RUN echo 'eval $(direnv hook bash)' >> ~/.bashrc
-
-RUN wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_linux" -O yaml-patch
-RUN mv yaml-patch /usr/local/bin && chmod +x /usr/local/bin/yaml-patch
-
 # Extras, mostly for the terminal image (that could be split in another image)
-RUN zypper in --no-recommends -y vim zsh tmux glibc-locale glibc-i18ndata python ruby python3 python3-pip cf-cli
+RUN zypper in -y vim zsh tmux glibc-locale glibc-i18ndata python ruby python3 python3-pip
 
-RUN zypper ar --priority 100 https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Factory/devel:languages:go.repo && \
-  zypper --gpg-auto-import-keys -n in --no-recommends -y --from=devel_languages_go go1.13
 
-RUN zypper ar --priority 100 https://download.opensuse.org/repositories/Cloud:Tools/openSUSE_Tumbleweed/Cloud:Tools.repo && \
-  zypper --gpg-auto-import-keys -n in --no-recommends -y kubernetes-client
+RUN zypper ar https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Factory/devel:languages:go.repo
+RUN zypper --gpg-auto-import-keys -n in --from=devel_languages_go go1.13
 
-# k8s backends dependencies:
-RUN zypper in --no-recommends -y terraform aws-cli aws-iam-authenticator
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
 
-RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz && \
-  tar -xvf google-cloud-sdk.tar.gz && \
-  rm google-cloud-sdk.tar.gz && \
-  pushd google-cloud-sdk || exit && \
-  bash ./install.sh -q && \
-  popd || exit && \
-  echo "source /google-cloud-sdk/path.bash.inc" >> ~/.bashrc
+RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
+RUN mv cf /usr/local/bin && chmod +x /usr/local/bin/cf
 
-RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
-RUN mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
-
-RUN zypper --no-recommends in -y gcc libffi-devel python3-devel libopenssl-devel
-RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
-  printf "\n\n\n\n" | python3 ./install.py && \
-  rm ./install.py
-
-RUN zypper clean --all
+RUN zypper in -y python-xml
+RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+RUN unzip awscli-bundle.zip
+RUN ./awscli-bundle/install
+RUN rm -rf awscli-bundle*
+RUN curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
+RUN chmod +x aws-iam-authenticator && mv aws-iam-authenticator bin/
 
 ADD . /catapult
 WORKDIR /catapult

@@ -44,9 +44,7 @@ tearDown() {
 
 testKind() {
     rm -rf buildtest
-    BACKEND=kind DOWNLOAD_CATAPULT_DEPS=true make k8s
-    # with DOWNLOAD_CATAPULT_DEPS=true the following needs to happen:
-    assertTrue 'kind binary is present' "[ -f 'buildtest/bin/kind' ]"
+    BACKEND=kind make k8s
     deployst=$?
     echo "DEPLOYS: $deployst"
     assertTrue 'create buildir' "[ -d 'buildtest' ]"

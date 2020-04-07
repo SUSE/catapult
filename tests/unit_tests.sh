@@ -187,44 +187,6 @@ testCommonDeps() {
   assertTrue 'bazel downloaded' "[ -e 'buildtest/bin/bazel' ]"
   assertTrue 'yaml-patch downloaded' "[ -e 'buildtest/bin/yaml-patch' ]"
   assertTrue 'yq downloaded' "[ -e 'buildtest/bin/yq' ]"
-
-  # test DOWNLOAD_CATAPULT_DEPS=false on all backends
-  for b in kind caasp4os eks gke imported minikube aks; do
-      if [ -d "$ROOT_DIR/backend/$b" ]; then
-          rm -rf buildtest
-          BACKEND="$b" DOWNLOAD_CATAPULT_DEPS=false make buildir
-          BACKEND="$b" DOWNLOAD_BINS=false DOWNLOAD_CATAPULT_DEPS=false make private backend/$b deps
-          assertTrue 'create buildir' "[ -d 'buildtest' ]"
-          ENVRC="$(cat "$PWD"/buildtest/.envrc)"
-          case $b in
-              caasp4os)
-                  assertFalse 'terraform not downloaded' "[ -e 'buildtest/bin/terraform' ]"
-                  ;;
-              kind)
-                  assertFalse 'kind not downloaded' "[ -e 'buildtest/bin/kind' ]"
-                  ;;
-              aws)
-                  assertFalse 'aws not downloaded' "[ -e 'buildtest/bin/aws' ]"
-                  assertFalse 'aws-iam-authenticator not downloaded' "[ -e 'buildtest/bin/aws-iam-authenticator' ]"
-                  assertFalse 'terraform not downloaded' "[ -e 'buildtest/bin/terraform' ]"
-                  ;;
-              gke)
-                  assertFalse 'gcloud not downloaded' "[ -e 'buildtest/bin/gcloud' ]"
-                  assertFalse 'terraform not downloaded' "[ -e 'buildtest/bin/terraform' ]"
-                  ;;
-              minikube)
-                  assertFalse 'minikube not downloaded' "[ -e 'buildtest/bin/minikube' ]"
-                  assertFalse 'docker-machine-driver-kvm2 not downloaded' "[ -e 'buildtest/bin/docker-machine-driver-kvm2' ]"
-                  ;;
-              aks)
-                  assertFalse 'az not downloaded' "[ -e 'buildtest/bin/az' ]"
-                  assertFalse 'terraform not downloaded' "[ -e 'buildtest/bin/terraform' ]"
-                  ;;
-          esac
-          BACKEND="$b" make clean
-          assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
-      fi
-  done
 }
 
 # Load shUnit2.
