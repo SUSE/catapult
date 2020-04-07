@@ -89,6 +89,7 @@ services:
       start: 20000
       end: 20008
 
+high_availability: ${HA}
 
 EOF
 
