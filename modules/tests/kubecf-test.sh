@@ -107,13 +107,11 @@ mkdir -p artifacts
 log="artifacts/$(date +'%Y-%m-%d-%H:%M')_${pod_name#*/}.log"
 kubectl logs "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" > "${log}"
 
-
 if [ "${exit_code}" -ne 0 ]; then
     err "${KUBECF_TEST_SUITE} failed"
     exit "${exit_code}"
-else
-    # remove job, tests were successful
-    kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 fi
+# remove job, tests were successful
+kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 
 ok "${KUBECF_TEST_SUITE} passed"
