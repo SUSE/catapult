@@ -15,6 +15,8 @@ else
   export KIND_OS_TYPE="${KIND_OS_TYPE:-kind-linux-amd64}"
 fi
 
+# needed by kind
+sudo -n /sbin/modprobe br_netfilter  || :
 
 kindpath=bin/kind
 if [ ! -e "$kindpath" ]; then
