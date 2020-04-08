@@ -115,8 +115,8 @@ properties:
   brain-tests:
     acceptance-tests-brain:
       acceptance_tests_brain:
-        verbose: ${BRAIN_VERBOSE}
-        in_order: ${BRAIN_INORDER}
+        verbose: "${BRAIN_VERBOSE}"
+        in_order: "${BRAIN_INORDER}"
         include: "${BRAIN_INCLUDE}"
         exclude: "${BRAIN_EXCLUDE}"
 EOF
