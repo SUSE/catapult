@@ -19,7 +19,16 @@ RUN zypper ar --priority 100 https://download.opensuse.org/repositories/Cloud:To
   zypper --gpg-auto-import-keys -n in --no-recommends -y Cloud_Tools:kubernetes-client
 
 # k8s backends dependencies:
-RUN zypper in --no-recommends -y terraform Cloud_Tools:aws-cli Cloud_Tools:aws-iam-authenticator
+RUN zypper in --no-recommends -y terraform
+
+RUN zypper in --no-recommends -y python-xml
+RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" && \
+  unzip awscli-bundle.zip && rm awscli-bundle.zip && \
+  ./awscli-bundle/install --install-dir=/usr/lib/ --bin-location=/usr/local/bin/aws && \
+  rm -rf awscli-bundle*
+
+RUN curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator && \
+  chmod +x aws-iam-authenticator && mv aws-iam-authenticator /usr/local/bin/
 
 RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz && \
   tar -xvf google-cloud-sdk.tar.gz && \
