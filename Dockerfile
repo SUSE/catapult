@@ -3,8 +3,8 @@ FROM opensuse/tumbleweed:latest
 RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq python-yq curl which unzip bazel1.2 direnv
 RUN echo 'eval $(direnv hook bash)' >> ~/.bashrc
 
-RUN wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_linux" -O yaml-patch
-RUN mv yaml-patch /usr/local/bin && chmod +x /usr/local/bin/yaml-patch
+RUN wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_linux" -O /usr/local/bin/yaml-patch && \
+  chmod +x /usr/local/bin/yaml-patch
 
 # Extras, mostly for the terminal image (that could be split in another image)
 RUN zypper in --no-recommends -y vim zsh tmux glibc-locale glibc-i18ndata python ruby python3 python3-pip cf-cli
@@ -26,8 +26,8 @@ RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/r
   popd || exit && \
   echo "source /google-cloud-sdk/path.bash.inc" >> ~/.bashrc
 
-RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
-RUN mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
+RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl && \
+  mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
 
 RUN zypper in --no-recommends -y gcc libffi-devel python3-devel libopenssl-devel
 RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
