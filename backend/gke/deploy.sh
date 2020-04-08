@@ -22,6 +22,7 @@ fi
 
 git clone https://github.com/SUSE/cap-terraform.git
 pushd cap-terraform/gke || exit
+git checkout -t origin/prabal-gke-clustername-tfvar
 
 cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"
@@ -32,6 +33,7 @@ vm_type = "UBUNTU"
 gke_sa_key = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_CRED_JSON"
 cluster_labels = {key = "$GKE_CLUSTER_NAME"}
+cluster_name= "$GKE_CLUSTER_NAME"
 k8s_version = "latest"
 HEREDOC
 
