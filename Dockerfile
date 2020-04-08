@@ -1,7 +1,10 @@
 FROM opensuse/tumbleweed:latest
 # Catapult dependencies:
-RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq python-yq curl which unzip bazel1.2 direnv
+RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq curl which unzip bazel1.2 direnv
 RUN echo 'eval $(direnv hook bash)' >> ~/.bashrc
+
+RUN wget "https://github.com/mikefarah/yq/releases/download/3.2.1/yq_linux_amd64" -O /usr/local/bin/yq && \
+  chmod +x /usr/local/bin/yq
 
 RUN wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_linux" -O /usr/local/bin/yaml-patch && \
   chmod +x /usr/local/bin/yaml-patch
