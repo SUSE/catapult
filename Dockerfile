@@ -13,10 +13,10 @@ RUN zypper ar --priority 100 https://download.opensuse.org/repositories/devel:/l
   zypper --gpg-auto-import-keys -n in --no-recommends -y --from=devel_languages_go go1.13
 
 RUN zypper ar --priority 100 https://download.opensuse.org/repositories/Cloud:Tools/openSUSE_Tumbleweed/Cloud:Tools.repo && \
-  zypper --gpg-auto-import-keys -n in --no-recommends -y kubernetes-client
+  zypper --gpg-auto-import-keys -n in --no-recommends -y Cloud_Tools:kubernetes-client
 
 # k8s backends dependencies:
-RUN zypper in --no-recommends -y terraform aws-cli aws-iam-authenticator
+RUN zypper in --no-recommends -y terraform Cloud_Tools:aws-cli Cloud_Tools:aws-iam-authenticator
 
 RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz && \
   tar -xvf google-cloud-sdk.tar.gz && \
