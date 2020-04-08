@@ -2,9 +2,10 @@
 
 . ./defaults.sh
 . ../../include/common.sh
+. .envrc
 
-if [[ "$DOWNLOAD_BINS" == "false" ]]; then
-    ok "Skipping downloading deps, using host binaries"
+if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
+    ok "Skipping downloading kind deps, using host binaries"
     exit 0
 fi
 
@@ -14,13 +15,16 @@ else
   export KIND_OS_TYPE="${KIND_OS_TYPE:-kind-linux-amd64}"
 fi
 
-if [[ $KIND_VERSION =~ ^0\.2\.[0-9]$ ]]; then
-  curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/${KIND_OS_TYPE}
-else
-  curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/${KIND_OS_TYPE}
+
+kindpath=bin/kind
+if [ ! -e "$kindpath" ]; then
+    if [[ $KIND_VERSION =~ ^0\.2\.[0-9]$ ]]; then
+        curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/${KIND_OS_TYPE}
+    else
+        curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/${KIND_OS_TYPE}
+    fi
+    chmod +x kind && mv kind $kindpath
 fi
-chmod +x kind
-mv kind bin/kind
 
 popd || exit
 
