@@ -119,6 +119,7 @@ EOF
       # disable isolation
       kubectl delete networkpolicies \
         --namespace "${KUBECF_NAMESPACE}" \
+        --ignore-not-found \
         cats-internetless
     fi
 }
@@ -158,15 +159,15 @@ mount_cats_internetless_secret() {
     --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${patch}"
 }
 
-# Enables internet access again and mounte the original secret in the qjob
-# to enable other cats again.
+# Re-enables internet access again and mounts the original secret in the qjob
+# to allow internet-full cats.
 cleanup_cats_internetless() {
   rv=$?
   isolate_network 0
   revert_patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${original_volumes}' } } } } } }'
   echo "$(blue "Mounting the original secret in acceptance tests qjob")"
   kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${revert_patch}"
-  kubectl delete secret -n ${KUBECF_NAMESPACE} cats-internetless
+  kubectl delete secret -n ${KUBECF_NAMESPACE} --ignore-not-found cats-internetless
   trap "exit \$rv" EXIT
 }
 
