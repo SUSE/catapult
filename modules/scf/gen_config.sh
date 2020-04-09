@@ -113,6 +113,13 @@ properties:
           slow_spec_threshold: 300
           nodes: 2
           flake_attempts: 4
+  brain-tests:
+    acceptance-tests-brain:
+      acceptance_tests_brain:
+        verbose: "${BRAIN_VERBOSE}"
+        in_order: "${BRAIN_INORDER}"
+        include: "${BRAIN_INCLUDE}"
+        exclude: "${BRAIN_EXCLUDE}"
 EOF
 fi
 
