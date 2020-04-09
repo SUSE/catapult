@@ -2,7 +2,7 @@
     "apiVersion": "v1",
     "data": {
         "chart": "https://github.com/SUSE/scf/releases/download/2.19.1/scf-sle-2.19.1%2Bcf9.5.0.0.gd8c18ede.zip",
-        "domain": "172.17.0.2.nip.io",
+        "domain": "172.17.0.2.omg.howdoi.website",
         "platform": "kind",
         "public-ip": "172.17.0.2"
     },
