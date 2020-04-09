@@ -17,7 +17,7 @@ cat <<EOF > op.yml
       servicePort: 8443
       ingress:
         enabled: true
-        host: ${public_ip}.nip.io
+        host: ${public_ip}.${MAGICDNS}
 - op: replace
   path: /kube/registry/hostname
   value:
