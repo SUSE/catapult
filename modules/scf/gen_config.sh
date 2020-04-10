@@ -58,14 +58,23 @@ if [ "${SCF_OPERATOR}" == "true" ]; then
 
 cat > scf-config-values.yaml <<EOF
 system_domain: $domain
+eirini:
+  kube:
+    # The IP address assigned to the kube node pointed to by the domain.
+    external_ips: [${external_ips}]
 
 features:
   eirini:
     enabled: ${ENABLE_EIRINI}
+    use_helm_release: ${USE_EIRINI_HELM_RELEASE:-false}
 
 kube:
   service_cluster_ip_range: 0.0.0.0/0
   pod_cluster_ip_range: 0.0.0.0/0
+
+  # The IP address assigned to the kube node pointed to by the domain.
+  external_ips: [${external_ips}]
+
 
   registry:
     hostname: "${DOCKER_REGISTRY}"
