@@ -22,7 +22,6 @@ fi
 
 git clone https://github.com/SUSE/cap-terraform.git
 pushd cap-terraform/gke || exit
-git checkout -t origin/prabal-gke-clustername-tfvar
 
 cat <<HEREDOC > terraform.tfvars
 project = "$GKE_PROJECT"

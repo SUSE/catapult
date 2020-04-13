@@ -30,13 +30,10 @@ RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.
 RUN curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator && \
   chmod +x aws-iam-authenticator && mv aws-iam-authenticator /usr/local/bin/
 
-RUN curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz && \
-  tar -xvf google-cloud-sdk.tar.gz && \
-  rm google-cloud-sdk.tar.gz && \
-  pushd google-cloud-sdk || exit && \
-  bash ./install.sh -q && \
-  popd || exit && \
-  echo "source /google-cloud-sdk/path.bash.inc" >> ~/.bashrc
+RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz \
+&& mkdir -p /usr/local/gcloud \
+&& tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz \
+&& /usr/local/gcloud/google-cloud-sdk/install.sh --quiet
 
 RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl && \
   mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
@@ -45,6 +42,11 @@ RUN zypper in --no-recommends -y gcc libffi-devel python3-devel libopenssl-devel
 RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
   printf "\n\n\n\n" | python3 ./install.py && \
   rm ./install.py
+
+RUN helm_version=v3.1.1 \
+&& wget https://get.helm.sh/helm-${helm_version}-linux-amd64.tar.gz -O - | tar xz -C /usr/bin --strip-components=1 linux-amd64/helm
+
+ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 RUN zypper clean --all
 
