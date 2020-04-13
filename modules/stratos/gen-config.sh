@@ -34,6 +34,10 @@ cat <<EOF > op.yml
   path: /kube/organization
   value:
     "${DOCKER_ORG}"
+- op: add
+  path: /services
+  value:
+    loadbalanced: true
 EOF
 
 yamlpatch op.yml scf-config-values-for-stratos.yaml
