@@ -41,12 +41,12 @@ workers = 3
 # Size of the master nodes
 # EXAMPLE:
 # master_size = "m1.medium"
-master_size = "m1.xlarge"
+master_size = "c8.large"
 
 # Size of the worker nodes
 # EXAMPLE:
 # worker_size = "m1.medium"
-worker_size = "m1.xxlarge"
+worker_size = "c8.large"
 
 # Attach persistent volumes to workers
 workers_vol_enabled = 0
