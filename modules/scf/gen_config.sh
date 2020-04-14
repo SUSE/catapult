@@ -63,6 +63,17 @@ eirini:
     # The IP address assigned to the kube node pointed to by the domain.
     external_ips: [${external_ips}]
 
+bits:
+  # TODO: Remove this completely from here:
+  # https://github.com/cloudfoundry-incubator/bits-service-release/blob/master/helm/bits/templates/bits.yaml#L31
+  secrets:
+    BITS_SERVICE_SECRET: "test"
+
+  useExistingSecret: true
+  tls_secret_name: var-bits-service-ssl
+  kube:
+    external_ips: [${external_ips}]
+
 features:
   eirini:
     enabled: ${ENABLE_EIRINI}
