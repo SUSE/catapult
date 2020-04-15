@@ -7,6 +7,7 @@ info "Generating stratos config values from scf values"
 
 cp scf-config-values.yaml scf-config-values-for-stratos.yaml
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
+domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
 cat <<EOF > op.yml
 - op: add
@@ -17,7 +18,7 @@ cat <<EOF > op.yml
       servicePort: 8443
       ingress:
         enabled: true
-        host: ${public_ip}.omg.howdoi.website
+        host: ${domain}
 - op: replace
   path: /kube/registry/hostname
   value:
