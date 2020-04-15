@@ -81,8 +81,15 @@ elif [ "${SCF_OPERATOR}" == "true" ]; then
     wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     ok "cf-operator ready"
 
-    # SCFv3 Doesn't support to setup a cluster password yet, doing it manually.
+    # KubeCF Doesn't support to setup a cluster password yet, doing it manually.
+
+    ## Versions of cf-operator prior to 4 included deployment name in front of secrets
+    ## Note: this can be dropped once we don't test anymore kubecf 1.x. in favor of the secret without the
+    ## deployment name, or either we can clearly identify the operator version without hackish ways.
     kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
+
+    ## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
+    kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
     helm_install susecf-scf ${SCF_CHART} \
     --namespace scf \
