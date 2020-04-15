@@ -7,6 +7,8 @@ ROOT_DIR="$(git rev-parse --show-toplevel)"
 setUp() {
     export PATH=$ROOT_DIR/tests/mocks:"$PATH"
     export CLUSTER_NAME=test
+    # export QUIET_OUTPUT=true
+    export DOWNLOAD_CATAPULT_DEPS=false
     ROOT_DIR="$(git rev-parse --show-toplevel)"
     export ROOT_DIR
     pushd "$ROOT_DIR" || exit
@@ -182,7 +184,7 @@ testCommonDeps() {
   assertTrue 'clean buildir' "[ ! -d 'buildtest' ]"
 
   make buildir
-  DOWNLOAD_BINS=false make private modules/common
+  DOWNLOAD_BINS=false DOWNLOAD_CATAPULT_DEPS=true make private modules/common
 
   assertTrue 'bazel downloaded' "[ -e 'buildtest/bin/bazel' ]"
   assertTrue 'yaml-patch downloaded' "[ -e 'buildtest/bin/yaml-patch' ]"
