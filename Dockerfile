@@ -18,6 +18,9 @@ RUN zypper ar --priority 100 https://download.opensuse.org/repositories/devel:/l
 RUN zypper ar --priority 100 https://download.opensuse.org/repositories/Cloud:Tools/openSUSE_Tumbleweed/Cloud:Tools.repo && \
   zypper --gpg-auto-import-keys -n in --no-recommends -y Cloud_Tools:kubernetes-client
 
+RUN helm_version=v3.1.1 \
+&& wget https://get.helm.sh/helm-${helm_version}-linux-amd64.tar.gz -O - | tar xz -C /usr/bin --strip-components=1 linux-amd64/helm
+
 # k8s backends dependencies:
 RUN zypper in --no-recommends -y terraform
 
@@ -42,9 +45,6 @@ RUN zypper in --no-recommends -y gcc libffi-devel python3-devel libopenssl-devel
 RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
   printf "\n\n\n\n" | python3 ./install.py && \
   rm ./install.py
-
-RUN helm_version=v3.1.1 \
-&& wget https://get.helm.sh/helm-${helm_version}-linux-amd64.tar.gz -O - | tar xz -C /usr/bin --strip-components=1 linux-amd64/helm
 
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
