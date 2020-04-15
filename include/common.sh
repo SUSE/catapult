@@ -2,6 +2,7 @@
 
 export DEBUG_MODE="${DEBUG_MODE:-false}"
 source "$ROOT_DIR"/include/func.sh
+source "$ROOT_DIR"/include/colors.sh
 
 debug_mode
 

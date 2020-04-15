@@ -19,8 +19,15 @@ nodes:
   - containerPath: /code
     hostPath: ${APPLICATION_PATH}
     # readOnly: true
+networking:
+  disableDefaultCNI: true
 EOF
 
 kind create cluster --config kind-config.yaml --name=${CLUSTER_NAME}
+
+# Since we use disableDefaultCNI above we need a network plugin
+# weave allows us to use NetworkPolicy to block internet access for
+# CATs internetless suite or other use.
+kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.6.2/weave-daemonset-k8s-1.11.yaml
 
 ok "Cluster is up"

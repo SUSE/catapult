@@ -58,6 +58,119 @@ wait_for_tests_pod() {
   wait_for_timeout 300 is_pod_started "${pod_name}" "${container_name}"
 }
 
+isolate_network() {
+    enable="${1:-1}"
+
+    if [[ $enable == 1 ]]; then
+      # Complaint wrong. The echo generates a traling newline the `blue` doesn't.
+      # shellcheck disable=SC2005
+      echo "$(blue "Configure cluster network: Deny egress external")"
+      # enable isolation
+      # ingress - allows all incoming traffic
+      # egress  - allows dns traffic anywhere
+      #         - allows traffic to all ports, pods, namespaces
+      #           (but no whitelisting of external ips!)
+      # references
+      # - BASE = https://github.com/ahmetb/kubernetes-network-policy-recipes
+      # - (BASE)/blob/master/02a-allow-all-traffic-to-an-application.md
+      # - (BASE)/blob/master/14-deny-external-egress-traffic.md
+      # - See also https://www.youtube.com/watch?v=3gGpMmYeEO8 (31min)
+      #   - Egress info wrt disallow external see 17:20-17:52
+      #
+      # __ATTENTION__
+      # Requires a networking plugin to enforce, else ignored
+      # (if not directly supported by platform)
+      # - Example plugins: Calico, WeaveNet, Romana
+      #
+      # GKE: Uses Calico, Use `--enable-network-policy` when
+      # creating a cluster (`gcloud`).
+      # Minikube needs special setup.
+      # KinD used by our Drone setup may have support.
+
+      cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cats-internetless
+  namespace: ${KUBECF_NAMESPACE}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - {}
+  egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      - namespaceSelector: {}
+EOF
+      # For debugging, show what kube thinks of it.
+      kubectl describe networkpolicies \
+        --namespace "${KUBECF_NAMESPACE}" \
+        cats-internetless
+    else
+      # shellcheck disable=SC2005
+      echo "$(blue "Configure cluster network: Full access")"
+      # disable isolation
+      kubectl delete networkpolicies \
+        --namespace "${KUBECF_NAMESPACE}" \
+        --ignore-not-found \
+        cats-internetless
+    fi
+}
+
+create_cats_internetless_secret() {
+  info "Creating cats secret to use internetless CATS test suite"
+  cats_secret_name="$(
+    kubectl get qjobs -n "${KUBECF_NAMESPACE}" \
+    "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests -o json | \
+    jq -r '.spec.template.spec.template.spec.volumes[] | select(.name=="ig-resolved").secret.secretName')"
+
+  cats_secret="$(kubectl get secrets --export -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o yaml)"
+
+  cats_updated_properties="$(
+    kubectl get secret -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o json  | \
+    jq -r '.data."properties.yaml"' | base64 -d | \
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.include" '=internetless' | \
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.credhub_mode" '"off"' | \
+    base64 -w 0 )"
+
+  cats_updated="$(echo "$cats_secret" | yq w - 'data[properties.yaml]' $cats_updated_properties)"
+  cats_updated="$(echo "$cats_updated" | yq w - 'metadata.name' 'cats-internetless')"
+  kubectl apply -f <(echo "${cats_updated}") -n "${KUBECF_NAMESPACE}"
+}
+
+mount_cats_internetless_secret() {
+  original_volumes=$(
+    kubectl get qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" -o json | \
+    jq -r '.spec.template.spec.template.spec.volumes')
+
+  updated_volumes=$(echo ${original_volumes} | \
+    jq -r 'map((select(.name=="ig-resolved") | .secret.secretName) |= "cats-internetless")')
+
+  patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${updated_volumes}' } } } } } }'
+
+  kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests \
+    --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${patch}"
+}
+
+# Re-enables internet access again and mounts the original secret in the qjob
+# to allow internet-full cats.
+cleanup_cats_internetless() {
+  rv=$?
+  isolate_network 0
+  revert_patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${original_volumes}' } } } } } }'
+  echo "$(blue "Mounting the original secret in acceptance tests qjob")"
+  kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${revert_patch}"
+  kubectl delete secret -n ${KUBECF_NAMESPACE} --ignore-not-found cats-internetless
+  trap "exit \$rv" EXIT
+}
+
 # Delete any pending job
 kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 
@@ -78,6 +191,23 @@ case "${KUBECF_TEST_SUITE}" in
     trigger_test_suite brain-tests
     pod_name="$(get_resource_name pod brain-tests)"
     container_name="acceptance-tests-brain-acceptance-tests-brain"
+    ;;
+  cats-internetless)
+    # Cleanup trap will need this
+    original_volumes=$(
+      kubectl get qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" -o json | \
+      jq -r '.spec.template.spec.template.spec.volumes')
+
+    isolate_network 1
+    create_cats_internetless_secret
+    mount_cats_internetless_secret
+
+    # Allow network traffic again.
+    trap cleanup_cats_internetless EXIT
+
+    trigger_test_suite acceptance-tests
+    pod_name="$(get_resource_name pod acceptance-tests)"
+    container_name="acceptance-tests-acceptance-tests"
     ;;
   *)
     trigger_test_suite acceptance-tests
