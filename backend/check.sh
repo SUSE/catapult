@@ -3,13 +3,13 @@
 . include/common.sh
 . .envrc
 
-curl -s -Lo kube-ready-state-check.sh "$SCF_REPO"/raw/"$SCF_BRANCH"/bin/dev/kube-ready-state-check.sh
-chmod +x kube-ready-state-check.sh
-mv kube-ready-state-check.sh bin/
+curl -sSLo bin/kube-ready-state-check.sh \
+     https://raw.githubusercontent.com/cloudfoundry-incubator/kubecf/master/dev/kube/kube-ready-state-check.sh
+chmod +x bin/kube-ready-state-check.sh
 
-info "Testing imported k8s cluster"
+info "Testing imported k8s cluster for kubecf"
 
-kube-ready-state-check.sh kube || true
+kube-ready-state-check.sh kube
 
 info "Adding cap-values configmap if missing"
 if ! kubectl get configmap cap-values -n kube-system 2>/dev/null | grep -qi cap-values; then
