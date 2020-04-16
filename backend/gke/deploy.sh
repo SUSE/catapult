@@ -24,16 +24,16 @@ git clone https://github.com/SUSE/cap-terraform.git
 pushd cap-terraform/gke || exit
 
 cat <<HEREDOC > terraform.tfvars
-project = "$GKE_PROJECT"
-location = "$GKE_LOCATION"
+project        = "$GKE_PROJECT"
+location       = "$GKE_LOCATION"
 node_pool_name = "$GKE_CLUSTER_NAME"
-node_count = "$GKE_NODE_COUNT"
-vm_type = "UBUNTU"
-gke_sa_key = "$GKE_CRED_JSON"
+node_count     = "$GKE_NODE_COUNT"
+vm_type        = "UBUNTU"
+gke_sa_key     = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_CRED_JSON"
 cluster_labels = {key = "$GKE_CLUSTER_NAME"}
-cluster_name= "$GKE_CLUSTER_NAME"
-k8s_version = "latest"
+cluster_name   = "$GKE_CLUSTER_NAME"
+k8s_version    = "latest"
 HEREDOC
 
 # terraform needs helm client installed and configured:
