@@ -71,6 +71,9 @@ bits:
 
   useExistingSecret: true
   tls_secret_name: var-bits-service-ssl
+  tls_cert_name: certificate
+  tls_key_name: private_key
+  tls_ca_name: ca
   kube:
     external_ips: [${external_ips}]
 
