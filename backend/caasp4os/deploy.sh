@@ -98,7 +98,7 @@ cp openstack.conf my-cluster/cloud/openstack/openstack.conf
 
 skuba_deploy
 wait
-cp -f ./"$CLUSTER_NAME"/admin.conf ../kubeconfig
+cp -f ./my-cluster/admin.conf ../kubeconfig
 
 info "Disabling node updates…"
 skuba_updates all disable
