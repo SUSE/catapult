@@ -76,6 +76,9 @@ sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_sshkey~#%$(escapeSubst "$SSHKEY")%g" \
     "$ROOT_DIR"/backend/caasp4os/terraform-os/terraform.tfvars.skel > \
     deployment/terraform.tfvars
+# enable cpi
+sed -i '/cpi_enable/s/^#//g' deployment/cpi.auto.tfvars
+# inject our terraform files
 cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
 pushd deployment || exit
@@ -89,6 +92,10 @@ skuba_container terraform apply -auto-approve my-plan
 info "Bootstrapping k8s with skuba…"
 
 skuba_container skuba version
+skuba_init
+# inject cloud/openstack.conf for cpi
+cp openstack.conf my-cluster/cloud/openstack/openstack.conf
+
 skuba_deploy
 wait
 cp -f ./"$CLUSTER_NAME"/admin.conf ../kubeconfig
@@ -101,7 +108,7 @@ wait
 # wait
 
 # Create k8s configmap
-PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_workers.value|to_entries|map(.value)|first')"
+PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_load_balancer.value|to_entries|map(.value)|first')"
 ROOTFS=overlay-xfs
 DOMAIN="$PUBLIC_IP"."$MAGICDNS"
 
