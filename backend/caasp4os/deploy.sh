@@ -8,13 +8,16 @@
 # - Key on the ssh keyring. If not, will put one
 
 . ./defaults.sh
-. ./lib/skuba.sh
 . ../../include/common.sh
 . .envrc
 
 # nip.io doesn't seem to work well with ECP, use omg.h.w instead:
 export MAGICDNS=omg.howdoi.website
+
+# Create STACK var for terraform, and for the node names in lib/skuba.sh:
 STACK=${STACK:-"$(whoami)-caasp4-${CAASP_VER::3}-$CLUSTER_NAME"}
+# shellcheck disable=SC1090
+. "$ROOT_DIR"/backend/caasp4os/lib/skuba.sh
 
 if [[ ! -v OS_PASSWORD ]]; then
     err "Missing openstack credentials" && exit 1
