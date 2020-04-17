@@ -8,8 +8,9 @@
 # - Key on the ssh keyring
 
 . ./defaults.sh
-. ./lib/skuba.sh
 . ../../include/common.sh
+# shellcheck disable=SC1090
+. "$ROOT_DIR"/backend/caasp4os/lib/skuba.sh
 
 if [ -d "$BUILD_DIR" ]; then
     . .envrc
