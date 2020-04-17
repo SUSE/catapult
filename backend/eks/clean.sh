@@ -10,9 +10,7 @@ if [ -d "$BUILD_DIR" ]; then
 
     # TODO: Get this as terraform output
     # Currently assumes an exact structure of the kubeconfig
-    eks_cluster_name="$(cat kubeconfig \
-                    | yq '.users[0].user.exec.args[2]' \
-                    2>/dev/null|head -n1)"
+    eks_cluster_name="$(cat kubeconfig | yq r - 'users[0].user.exec.args[2]')"
 
     # See above, having it as proper terraform output is better.
     # if [ -d "cap-terraform/eks" ]; then
