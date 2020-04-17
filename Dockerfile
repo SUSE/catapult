@@ -41,6 +41,9 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tm
 RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl && \
   mv kubectl-aws /usr/local/bin/ && chmod +x /usr/local/bin/kubectl-aws
 
+RUN curl --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /usr/local/bin && \
+  chmod +x /usr/local/bin/eksctl
+
 RUN zypper in --no-recommends -y gcc libffi-devel python3-devel libopenssl-devel
 RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
   printf "\n\n\n\n" | python3 ./install.py && \
