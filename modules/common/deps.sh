@@ -51,6 +51,16 @@ else
         info "CF cli version:"
         cf version
     fi
+
+    if [ ! -e "bin/eksctl" ]; then
+	curl --silent --location \
+	     "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" \
+	    | tar xz
+        mv eksctl bin/
+        chmod +x bin/eksctl
+        info "eksctl version:"
+        eksctl version
+    fi
 fi
 
 
