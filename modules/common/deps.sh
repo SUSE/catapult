@@ -23,7 +23,7 @@ fi
 if [[ "$DOWNLOAD_BINS" == "false" ]]; then
     ok "Skipping downloading bins, using host binaries"
 else
-    info "Downloading specific helm, kubectl, cf versions…"
+    info "Downloading specific helm, kubectl, cf, eksctl versions…"
     if [ ! -e "bin/helm" ]; then
         curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-${HELM_OS_TYPE}.tar.gz | tar zxf -
         mv $HELM_OS_TYPE/helm bin/
@@ -62,7 +62,6 @@ else
         eksctl version
     fi
 fi
-
 
 if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
     ok "Skipping downloading catapult dependencies, using host binaries"
