@@ -89,6 +89,7 @@ skuba_container terraform apply -auto-approve my-plan
 info "Bootstrapping k8s with skuba…"
 
 skuba_container skuba version
+skuba_init
 skuba_deploy
 wait
 cp -f ./"$CLUSTER_NAME"/admin.conf ../kubeconfig
