@@ -3,6 +3,10 @@
 # Functions to interact with a container that includes the client caasp4
 # binaries and terraform
 
+# to test this by hand:
+# $> export CLUSTER_NAME=caasp4os; source backend/caasp4os/defaults.sh; source backend/caasp4os/lib/skuba.sh
+# $> skuba_container skuba version
+
 SKUBA_CLUSTER_NAME="my-cluster"
 
 _set_env_vars() {
@@ -36,15 +40,16 @@ _define_node_group() {
 }
 
 DEBUG_MODE=${DEBUG_MODE:-false}
-if [ $DEBUG_MODE = true ]; then
-    DEBUG=1
+if [ "$DEBUG_MODE" = true ]; then
+    SKUBA_DEBUG=1
 else
-    DEBUG=0
+    SKUBA_DEBUG=0
 fi
 
 skuba_container() {
-    # Usage:
-    # skuba_container <commands to run in a punctured container>
+    # Usage: skuba_container <commands to run in container>
+    # the container is normally skuba/update, which contains the caasp4 product,
+    # skuba, terraform, etc.
 
     docker run -i --rm \
     -v "$(pwd)":/app:rw \
@@ -77,16 +82,16 @@ skuba_wait_ssh() {
     for n in $GROUP; do
         secs=0
         set +e
-        _ssh2 $n exit
+        _ssh2 "$n" exit
         while test $? -gt 0
         do
-            if [ $secs -gt $timeout ] ; then
+            if [ $secs -gt "$timeout" ] ; then
                 echo "Timeout while waiting for $n"
                 exit 2
             else
                 sleep 5
                 secs=$(( secs + 5 ))
-                _ssh2 $n exit
+                _ssh2 "$n" exit
             fi
         done
         set -e
@@ -94,8 +99,7 @@ skuba_wait_ssh() {
 }
 
 skuba_reboots() {
-    # usage:
-    # reboots disable
+    # usage: skuba_reboots disable
 
     local action="${1:-disable}"
 
@@ -108,9 +112,9 @@ skuba_reboots() {
 
 skuba_run_cmd() {
     # Usage:
-    # run_cmd <target> "sudo ..."
-    # run_cmd all "sudo ..."
-    # run_cmd masters "sudo ..."
+    # skuba_run_cmd <target> "sudo ..."
+    # skuba_run_cmd all "sudo ..."
+    # skuba_run_cmd masters "sudo ..."
 
     local target="${1:-all}"
 
@@ -122,9 +126,9 @@ skuba_run_cmd() {
 
 skuba_use_scp() {
     # Usage:
-    # use_scp <target> <src_files> <dest_files>
-    # use_scp masters <src_files> <dest_files>
-    # use_scp workers <src_files> <dest_files>
+    # skuba_use_scp <target> <src_files> <dest_files>
+    # skuba_use_scp masters <src_files> <dest_files>
+    # skuba_use_scp workers <src_files> <dest_files>
 
     local target="${1:-all}"
 
@@ -134,7 +138,7 @@ skuba_use_scp() {
     local options="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -F /dev/null -o LogLevel=ERROR -r"
 
     for n in $GROUP; do
-        scp "$options" "$SRC" sles@$n:"$DEST"
+        scp "$options" "$SRC" sles@"$n":"$DEST"
     done
 }
 
@@ -144,8 +148,8 @@ skuba_show_images() {
 
 skuba_updates() {
     # Usage:
-    # updates <target> <action>
-    # updates all disable
+    # skuba_updates <target> <action>
+    # skuba_updates all disable
 
     local target="${1:-all}"
     local action="${2:-disable}"
