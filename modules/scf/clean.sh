@@ -43,6 +43,10 @@ fi
 
 rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
 
+# delete kubecf chart bits
+rm -rf cf-operator* kubecf* assets templates Chart.yaml values.yaml Metadata.yaml \
+   imagelist.txt requirements.lock  requirements.yaml
+
 # delete SCF_CHART on cap-values configmap
 if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data.chart // empty')" ]]; then
     kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/chart"}]'
