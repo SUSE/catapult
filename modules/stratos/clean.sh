@@ -6,9 +6,7 @@
 if helm_ls 2>/dev/null | grep -qi susecf-console ; then
     helm_delete susecf-console
 fi
-if kubectl get namespaces 2>/dev/null | grep -qi stratos ; then
-    kubectl delete namespace stratos
-fi
+kubectl delete --ignore-not-found namespace stratos
 
 # delete STRATOS_CHART on cap-values configmap
 if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data["stratos-chart"] // empty')" ]]; then
