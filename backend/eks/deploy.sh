@@ -39,6 +39,9 @@ terraform apply -auto-approve
 # or:
 terraform output kubeconfig > "$KUBECONFIG"
 
+# get cluster name for eks
+terraform output cluster-name > "$(dirname "$KUBECONFIG")/cap-cluster-name"
+
 # test deployment:
 kubectl get svc
 
