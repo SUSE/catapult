@@ -5,7 +5,7 @@
 
 info "Generating stratos-metrics config values"
 
-KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server' | cut -d ':' -f 1,2)":6443"
+KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server')
 
 cp scf-config-values-for-stratos.yaml scf-config-values-for-metrics.yaml
 
