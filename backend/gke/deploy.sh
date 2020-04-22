@@ -48,8 +48,8 @@ terraform plan -out="$(pwd)"/my-plan
 terraform apply -auto-approve
 popd || exit
 
-# Create ClusterReference file for kubeconfig generation
-cat << EOF > ClusterReference.yaml
+# Create kubeclusterreference file for kubeconfig generation
+cat << EOF > kubeclusterreference
 ---
 kind: ClusterReference
 platform: gke

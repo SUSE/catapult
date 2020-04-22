@@ -1,25 +1,24 @@
 #!/usr/bin/env bash
 
 # KUBECFG can be a kubeconfig file or a cluster reference file for local deployments
-# KUBECFG has to be a ClusterReference.yaml for CI usage, check gke/deploy.sh for format
+# KUBECFG has to be a kubeclusterreference for CI usage, check gke/deploy.sh for format
 if [ ! -f "$KUBECFG" ]; then
     err "No KUBECFG given - you need to pass one!"
     exit 1
 fi
 
-if grep -Fxq "kind: ClusterReference" ${KUBECFG}; then
-    # Process ClusterReference file
-    echo "Processing ClusterReference.yaml ..."
-    ClusterReference_file=$KUBECFG
-    GKE_CLUSTER_NAME="$(yq r ${ClusterReference_file} cluster-name)"
-    export GKE_CLUSTER_NAME
-    GKE_CLUSTER_ZONE="$(yq r ${ClusterReference_file} cluster-zone)"
-    export GKE_CLUSTER_ZONE
-    GKE_PROJECT="$(yq r ${ClusterReference_file} project)"
-    export GKE_PROJECT
+if [[ $(yq r ${KUBECFG} kind) == "ClusterReference" ]]; then
+    # Process kubeclusterreference file
+    echo "Using kubeclusterreference ..."
+    GKE_CLUSTER_NAME="$(yq r ${KUBECFG} cluster-name)"
+    GKE_CLUSTER_ZONE="$(yq r ${KUBECFG} cluster-zone)"
+    GKE_PROJECT="$(yq r ${KUBECFG} project)"
+    export GKE_CLUSTER_NAME GKE_CLUSTER_ZONE GKE_PROJECT
+elif [[ $(yq r ${KUBECFG} kind) == "Config" ]]; then
+    echo "Using kubeconfig ..."
 else
-    echo "ClusterReference.yaml is not of correct format or has not been provided"
-    echo "Processing $KUBECFG as a kubeconfig.yaml ..."
+    echo "Please check your KUBECFG"
+    exit 1
 fi
 
 . ./defaults.sh
