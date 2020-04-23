@@ -7,6 +7,8 @@
 . ../../include/common.sh
 . .envrc
 
+set -x
+
 if ! aws sts get-caller-identity ; then
     info "Missing aws credentials, running aws configure…"
     # Use predefined aws env vars
@@ -15,6 +17,9 @@ if ! aws sts get-caller-identity ; then
 fi
 
 git clone https://github.com/SUSE/cap-terraform.git
+
+( cd cap-terraform ; git checkout ak-cap-1395-kubecf-177-output-cluster-name )
+
 pushd cap-terraform/eks || exit
 
 # terraform needs helm client installed and configured:
