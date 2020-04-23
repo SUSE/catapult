@@ -48,6 +48,16 @@ terraform plan -out="$(pwd)"/my-plan
 terraform apply -auto-approve
 popd || exit
 
+# Create kubeclusterreference file for kubeconfig generation
+cat << EOF > kubeclusterreference
+---
+kind: ClusterReference
+platform: gke
+cluster-name: ${GKE_CLUSTER_NAME}
+cluster-zone: ${GKE_LOCATION}
+project: ${GKE_PROJECT}
+EOF
+
 # wait for cluster ready:
 wait_ns kube-system
 
