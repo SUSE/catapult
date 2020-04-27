@@ -289,3 +289,77 @@ function wait_for {
     timeout=300
     n=0; until ((n >= timeout)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < timeout))
 }
+
+external_dns_annotate_uaa() {
+    local ns=$1;shift
+    local domain=$1;shift
+    kubectl annotate svc uaa-uaa-public \
+            -n "$ns" \
+            "external-dns.alpha.kubernetes.io/hostname=uaa.${domain}, *.uaa.${domain}"
+}
+
+external_dns_deannotate_uaa() {
+    local ns=$1;shift
+    kubectl annotate svc uaa-uaa-public \
+            -n "$ns" \
+            --overwrite \
+            "external-dns.alpha.kubernetes.io/hostname=-"
+    sleep 40 # wait for external-dns to delete the annotation and the dns entry
+}
+
+external_dns_annotate_scf() {
+    local ns=$1;shift
+    local domain=$1;shift
+    if [ "${SCF_OPERATOR}" != "true" ]; then
+        kubectl annotate svc router-gorouter-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
+        kubectl annotate svc diego-ssh-ssh-proxy-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        kubectl annotate svc tcp-router-tcp-router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
+    else
+        kubectl annotate svc router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
+        kubectl annotate svc ssh-proxy-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        kubectl annotate svc tcp-router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
+    fi
+}
+
+external_dns_deannotate_scf() {
+    local ns=$1;shift
+    if [ "${SCF_OPERATOR}" != "true" ]; then
+        kubectl annotate svc router-gorouter-public \
+                -n "$ns" \
+                --overwrite \
+                "external-dns.alpha.kubernetes.io/hostname=-"
+        kubectl annotate svc diego-ssh-ssh-proxy-public \
+                -n "$ns" \
+                --overwrite \
+                "external-dns.alpha.kubernetes.io/hostname=-"
+        kubectl annotate svc tcp-router-tcp-router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=-"
+    else
+        kubectl annotate svc router-public \
+                -n "$ns" \
+                --overwrite \
+                "external-dns.alpha.kubernetes.io/hostname=-"
+        kubectl annotate svc ssh-proxy-public \
+                -n "$ns" \
+                --overwrite \
+                "external-dns.alpha.kubernetes.io/hostname=-"
+        kubectl annotate svc tcp-router-public \
+                -n "$ns" \
+                --overwrite \
+                "external-dns.alpha.kubernetes.io/hostname=-"
+    fi
+    sleep 40 # wait for external-dns to delete annotations and dns entries
+}
