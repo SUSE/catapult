@@ -22,6 +22,7 @@ buildir:
 # General targets (Public)
 .PHONY: clean
 clean: ##@STATES Delete cluster of type $BACKEND and location build$CLUSTER_NAME
+clean: scf-clean # first scf-clean because of external-dns annotations
 	$(MAKE) -C backend/$(BACKEND) clean
 
 .PHONY: k8s
