@@ -18,6 +18,8 @@ if [ "$SCF_OPERATOR" != true ]; then
     fi
 fi
 
+kubectl patch -n kube-system configmap cap-values -p $'data:\n services: "'$SCF_SERVICES'"'
+services="$SCF_SERVICES"
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 array_external_ips=()
@@ -56,12 +58,27 @@ fi
 
 if [ "${SCF_OPERATOR}" == "true" ]; then
 
+
+if [ "$services" == ingress ]; then
+INGRESS_BLOCK="ingress:
+    enabled: true
+    tls:
+      crt: ~
+      key: ~
+    annotations: {}
+    labels: {}
+"
+else
+INGRESS_BLOCK=''
+fi
+
 cat > scf-config-values.yaml <<EOF
 system_domain: $domain
 
 features:
   eirini:
     enabled: ${ENABLE_EIRINI}
+  ${INGRESS_BLOCK}
 
 kube:
   service_cluster_ip_range: 0.0.0.0/0
@@ -74,7 +91,12 @@ kube:
   organization: "${DOCKER_ORG}"
 
 ${CONFIG_OVERRIDE}
+EOF
 
+if [ "${services}" == "lb" ]; then
+    cat >> scf-config-values.yaml <<EOF
+#  External endpoints are created for the instance groups only if
+#  features.ingress.enabled is false.
 services:
   router:
     type: LoadBalancer
@@ -92,6 +114,7 @@ services:
 high_availability: ${HA}
 
 EOF
+fi
 
 if [ "${SCF_TESTGROUP}" == "true" ]; then
 cat >> scf-config-values.yaml <<EOF
