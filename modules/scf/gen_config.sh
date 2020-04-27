@@ -90,7 +90,7 @@ kube:
     password: "${DOCKER_PASSWORD}"
   organization: "${DOCKER_ORG}"
 
-${CONFIG_OVERRIDE}
+high_availability: ${HA}
 EOF
 
 if [ "${services}" == "lb" ]; then
@@ -110,9 +110,6 @@ services:
     port_range:
       start: 20000
       end: 20008
-
-high_availability: ${HA}
-
 EOF
 fi
 
@@ -146,7 +143,13 @@ properties:
 EOF
 fi
 
+# CONFIG_OVERRIDE last, to actually override
+cat >> scf-config-values.yaml <<EOF
+${CONFIG_OVERRIDE}
+EOF
+
 else
+# SCF_OPERATOR != true
 
 cat > scf-config-values.yaml <<EOF
 env:
