@@ -4,12 +4,43 @@
 . ../../include/common.sh
 . .envrc
 
+
+# KUBECFG can be a kubeconfig file or a zip archive containing a tf directory for local deployments
+# KUBECFG has to be a zip archive for CI usage, see eks/deploy.sh for where a suitable file is created (tf-setup.zip)
+
 if [ ! -f "$KUBECFG" ]; then
     err "No KUBECFG given - you need to pass one!"
     exit 1
 fi
 
-cp "$KUBECFG" kubeconfig
+mtype=$(file --mime-type "$KUBECFG" |awk '{ print $2}')
+
+# Note: Current working directory is the active buildXXX environment, as needed.
+
+if [[ $mtype == "application/zip" ]] ; then
+    echo "Using Terraform state ..."
+
+    ( cd cap-terraform/eks
+      # ATTENTION: The next command overwrites existing files without
+      # prompting.
+      unzip -o "$KUBECFG"
+      # Reactivate/refresh terraform state - Note, we cannot use the
+      # my-plan from the zip, as the state is newer by now.
+      terraform apply -auto-approve
+    )
+    # And reconstruct the kubeconfig from it.
+    ( cd cap-terraform/eks
+      terraform output kubeconfig
+    ) > kubeconfig
+
+elif [[ $mtype == "text/plain" ]] ; then
+    echo "Using kubeconfig ..."
+
+    cp "$KUBECFG" kubeconfig
+else
+    echo "Please check your KUBECFG"
+    exit 1
+fi
 
 if ! aws sts get-caller-identity ; then
     info "Missing aws credentials, running aws configure…"
