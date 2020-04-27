@@ -5,11 +5,9 @@
 . .envrc || exit 0
 
 
-services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
 
 if [ "$EMBEDDED_UAA" != "true" ]; then
     if helm_ls 2>/dev/null | grep -qi susecf-uaa ; then
-        [ "$services" == "lb" ] && external_dns_deannotate_uaa uaa
         helm_delete susecf-uaa
     fi
     if kubectl get namespaces 2>/dev/null | grep -qi uaa ; then
@@ -18,7 +16,6 @@ if [ "$EMBEDDED_UAA" != "true" ]; then
 fi
 
 if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
-    [ "$services" == "lb" ] && external_dns_deannotate_scf scf
     helm_delete susecf-scf --namespace scf
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
