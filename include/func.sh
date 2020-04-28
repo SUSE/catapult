@@ -302,17 +302,8 @@ external_dns_annotate_uaa() {
 external_dns_annotate_scf() {
     local ns=$1;shift
     local domain=$1;shift
-    if [ "${SCF_OPERATOR}" != "true" ]; then
-        kubectl annotate svc router-gorouter-public \
-                -n "$ns" \
-                "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
-        kubectl annotate svc diego-ssh-ssh-proxy-public \
-                -n "$ns" \
-                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
-        kubectl annotate svc tcp-router-tcp-router-public \
-                -n "$ns" \
-                "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
-    else
+    if [ "${SCF_OPERATOR}" == "true" ]; then
+        # for kubecf
         kubectl annotate svc router-public \
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
@@ -320,6 +311,17 @@ external_dns_annotate_scf() {
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
         kubectl annotate svc tcp-router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
+    else
+        # for scf
+        kubectl annotate svc router-gorouter-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
+        kubectl annotate svc diego-ssh-ssh-proxy-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        kubectl annotate svc tcp-router-tcp-router-public \
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
     fi
