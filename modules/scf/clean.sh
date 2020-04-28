@@ -4,7 +4,8 @@
 . ../../include/common.sh
 . .envrc || exit 0
 
-
+# if no kubeconfig, no cf. Exit
+[ -f "$KUBECONFIG" ] || exit 0
 
 if [ "$EMBEDDED_UAA" != "true" ]; then
     if helm_ls 2>/dev/null | grep -qi susecf-uaa ; then
