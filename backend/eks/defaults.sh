@@ -16,11 +16,11 @@ HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 TF_KEY="${TF_KEY:-}"
 #
 # s3 bucket and bucket region to save state to. Ignored when
-# EKS_TF_KEY is empty (default, see above).
+# TF_KEY is empty (default, see above).
 TF_BUCKET="${TF_BUCKET:-cap-ci-tf}"
 TF_REGION="${TF_REGION:-${EKS_LOCATION}}"
 
 # DNS information (Route53). No defaults. Required.
-#R53_ZONE_ID
-#R53_ZONE_NAME
-#R53_ZONE_POLICY
+#EKS_ZONE_ID
+#EKS_ZONE_NAME
+#EKS_ZONE_POLICY

@@ -18,9 +18,9 @@ mtype=$(file --mime-type "$KUBECFG" |awk '{ print $2}')
 # Note: Current working directory is the active buildXXX environment, as needed.
 
 if [[ $mtype == "application/zip" ]] ; then
-    echo "Using Terraform state ..."
+    info "Using Terraform state ..."
 
-    ( cd cap-terraform/eks
+    ( cd cap-terraform/eks || exit
       # ATTENTION: The next command overwrites existing files without
       # prompting.
       unzip -o "$KUBECFG"
@@ -29,17 +29,16 @@ if [[ $mtype == "application/zip" ]] ; then
       terraform apply -auto-approve
     )
     # And reconstruct the kubeconfig from it.
-    ( cd cap-terraform/eks
+    ( cd cap-terraform/eks || exit
       terraform output kubeconfig
     ) > kubeconfig
 
 elif [[ $mtype == "text/plain" ]] ; then
-    echo "Using kubeconfig ..."
+    info "Using kubeconfig ..."
 
     cp "$KUBECFG" kubeconfig
 else
-    echo "Please check your KUBECFG"
-    exit 1
+    err "Please check your KUBECFG"
 fi
 
 if ! aws sts get-caller-identity ; then
