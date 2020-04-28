@@ -31,7 +31,10 @@ node_count     = "$GKE_NODE_COUNT"
 vm_type        = "UBUNTU"
 gke_sa_key     = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_CRED_JSON"
-cluster_labels = {key = "$GKE_CLUSTER_NAME"}
+cluster_labels = {
+    catapult-clustername = "$GKE_CLUSTER_NAME",
+    owner = "$(whoami)"
+}
 cluster_name   = "$GKE_CLUSTER_NAME"
 k8s_version    = "latest"
 HEREDOC
