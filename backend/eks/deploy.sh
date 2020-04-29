@@ -26,13 +26,32 @@ workstation_cidr_block = "0.0.0.0/0"
 keypair_name = "$EKS_KEYPAIR"
 eks_version = "$EKS_VERS"
 cluster_labels = $EKS_CLUSTER_LABEL
+hosted_zone_id = "${EKS_ZONE_ID}"
+hosted_zone_name = "${EKS_ZONE_NAME}"
+hosted_zone_policy_arn = "${EKS_ZONE_POLICY}"
+instance_type = "t2.large"
 HEREDOC
 
-terraform init
+if [ -n "${TF_KEY}" ] ; then
+    cat > backend.tf <<EOF
+terraform {
+  backend "s3" {
+      bucket = "${TF_BUCKET}"
+      region = "${TF_REGION}"
+      key    = "${TF_KEY}"
+  }
+}
+EOF
+fi
 
+terraform init
 terraform plan -out=my-plan
 
-terraform apply -auto-approve
+if [ -n "${TF_KEY}" ] ; then
+    zip -r9  "${BUILD_DIR}/tf-setup.zip" .
+fi
+
+terraform apply -auto-approve my-plan
 
 # get kubectl for eks:
 # aws eks --region "$EKS_LOCATION" update-kubeconfig --name "$EKS_CLUSTER_NAME"
