@@ -13,6 +13,7 @@ OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
 
 # scf-gen-config relevant:
 
+SCF_SERVICES="${SCF_SERVICES:-lb}" # lb, ingress
 GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
 DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
 STORAGECLASS="${STORAGECLASS:-persistent}"

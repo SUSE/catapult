@@ -2,8 +2,10 @@
 
 . ./defaults.sh
 . ../../include/common.sh
-. .envrc
+. .envrc || exit 0
 
+# if no kubeconfig, no cf. Exit
+[ -f "$KUBECONFIG" ] || exit 0
 
 if [ "$EMBEDDED_UAA" != "true" ]; then
     if helm_ls 2>/dev/null | grep -qi susecf-uaa ; then
@@ -51,6 +53,12 @@ fi
 # delete SCF_CHART on cap-values configmap
 if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data.chart // empty')" ]]; then
     kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/chart"}]'
+fi
+
+# delete SCF_SERVICES on cap-values configmap
+if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data.services // empty')" ]]; then
+    kubectl patch -n kube-system configmap cap-values --type json \
+            -p '[{"op": "remove", "path": "/data/services"}]'
 fi
 
 ok "Cleaned up scf from the k8s cluster"

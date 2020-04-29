@@ -289,3 +289,41 @@ function wait_for {
     timeout=300
     n=0; until ((n >= timeout)); do eval "$1" && break; n=$((n + 1)); sleep 1; done; ((n < timeout))
 }
+
+external_dns_annotate_uaa() {
+    local ns=$1;shift
+    local domain=$1;shift
+    kubectl annotate svc uaa-uaa-public \
+            -n "$ns" \
+            "external-dns.alpha.kubernetes.io/hostname=uaa.${domain}, *.uaa.${domain}"
+}
+
+
+external_dns_annotate_scf() {
+    local ns=$1;shift
+    local domain=$1;shift
+    if [ "${SCF_OPERATOR}" == "true" ]; then
+        # for kubecf
+        kubectl annotate svc router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
+        kubectl annotate svc ssh-proxy-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        kubectl annotate svc tcp-router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
+    else
+        # for scf
+        kubectl annotate svc router-gorouter-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
+        kubectl annotate svc diego-ssh-ssh-proxy-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        kubectl annotate svc tcp-router-tcp-router-public \
+                -n "$ns" \
+                "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
+    fi
+}
+
