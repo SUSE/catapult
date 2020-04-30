@@ -11,3 +11,13 @@ GKE_NODE_COUNT="${GKE_NODE_COUNT:-3}"
 GKE_DNSDOMAIN="${GKE_DNSDOMAIN:-ci.kubecf.charmedquarks.me}"
 
 HELM_VERSION="${HELM_VERSION:-v3.1.1}"
+
+# Settings for terraform state save/restore
+#
+# Set to a non-empty key to trigger state save in deploy.sh.
+TF_KEY="${TF_KEY:-}"
+#
+# s3 bucket and bucket region to save state to. Ignored when
+# TF_KEY is empty (default, see above).
+TF_BUCKET="${TF_BUCKET:-cap-ci-tf}"
+TF_REGION="${TF_REGION:-us-west-2}"
