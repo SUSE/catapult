@@ -20,7 +20,7 @@ fi
 #        --member=user:<user> \
 #        --role=roles/container.admin
 
-git clone https://github.com/SUSE/cap-terraform.git
+git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
 pushd cap-terraform/gke || exit
 
 cat <<HEREDOC > terraform.tfvars
