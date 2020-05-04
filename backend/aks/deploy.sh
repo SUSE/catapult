@@ -16,7 +16,7 @@ if ! az account show; then
        --tenant "$AZURE_TENANT_ID"
 fi
 
-git clone https://github.com/SUSE/cap-terraform.git
+git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
 pushd cap-terraform/aks || exit
 
 # terraform needs helm client installed and configured:
