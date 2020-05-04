@@ -4,14 +4,17 @@
 kubeconfig:
 	./kubeconfig.sh
 
-.PHONY: clean
-clean:
-	./clean.sh
-
 .PHONY: deps
 deps:
 	./deps.sh
 
+.PHONY: deploy
+deploy:
+	./deploy.sh
+
+.PHONY: clean
+clean:
+	./clean.sh
+
 .PHONY: all
-all: deps
-	echo "not implemented yet" && exit 0
+all: deps deploy
