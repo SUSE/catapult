@@ -14,7 +14,7 @@ if ! aws sts get-caller-identity ; then
     aws configure
 fi
 
-git clone https://github.com/SUSE/cap-terraform.git
+git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
 pushd cap-terraform/eks || exit
 
 # terraform needs helm client installed and configured:
