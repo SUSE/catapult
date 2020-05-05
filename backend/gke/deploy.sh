@@ -20,7 +20,7 @@ fi
 #        --member=user:<user> \
 #        --role=roles/container.admin
 
-git clone https://github.com/SUSE/cap-terraform.git
+git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
 pushd cap-terraform/gke || exit
 
 cat <<HEREDOC > terraform.tfvars
@@ -30,7 +30,7 @@ node_pool_name = "$GKE_CLUSTER_NAME"
 node_count     = "$GKE_NODE_COUNT"
 vm_type        = "UBUNTU"
 gke_sa_key     = "$GKE_CRED_JSON"
-gcp_dns_sa_key = "$GKE_CRED_JSON"
+gcp_dns_sa_key = "$GKE_DNSCRED_JSON"
 cluster_labels = {
     catapult-clustername = "$GKE_CLUSTER_NAME",
     owner = "$(whoami)"
