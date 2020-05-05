@@ -3,8 +3,8 @@
 # Requires:
 # - gcloud credentials present
 
-. ./defaults.sh
 . ../../include/common.sh
+. "$ROOT_DIR"/backend/gke/defaults.sh # we need CLUSTER_NAME
 . .envrc
 
 # check gcloud credentials:
