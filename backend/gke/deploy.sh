@@ -39,6 +39,18 @@ cluster_name   = "$GKE_CLUSTER_NAME"
 k8s_version    = "latest"
 HEREDOC
 
+if [ -n "${TF_KEY}" ] ; then
+    cat > backend.tf <<EOF
+terraform {
+  backend "s3" {
+      bucket = "${TF_BUCKET}"
+      region = "${TF_REGION}"
+      key    = "${TF_KEY}"
+  }
+}
+EOF
+fi
+
 # terraform needs helm client installed and configured:
 helm_init_client
 
@@ -46,9 +58,15 @@ info "Deploying GKE cluster with terraform…"
 
 terraform init
 
-terraform plan -out="$(pwd)"/my-plan
+terraform plan -out=my-plan
 
-terraform apply -auto-approve
+if [ -n "${TF_KEY}" ] ; then
+    # zip the terraform folder to use in concourse pool
+    zip -r9  "${BUILD_DIR}/tf-setup.zip" .
+fi
+
+terraform apply -auto-approve my-plan
+
 popd || exit
 
 # Create kubeclusterreference file for kubeconfig generation
