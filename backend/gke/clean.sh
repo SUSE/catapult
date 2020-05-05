@@ -15,8 +15,7 @@ if [ -d "$BUILD_DIR" ]; then
     if [ -f "$TFSTATE" ]; then
         mkdir -p cap-terraform/gke
         (cd cap-terraform/gke || exit
-          # ATTENTION: The next command overwrites existing files without
-          # prompting.
+          # ATTENTION: The next command overwrites existing files without prompting.
           unzip -o "$TFSTATE"
           sed -i "s|gke_sa_key.*|gke_sa_key=\"${GKE_CRED_JSON}\"|" terraform.tfvars
           sed -i "s|gcp_dns_sa_key.*|gcp_dns_sa_key=\"${GKE_CRED_JSON}\"|" terraform.tfvars

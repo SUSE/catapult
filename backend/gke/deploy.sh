@@ -61,6 +61,7 @@ terraform init
 terraform plan -out=my-plan
 
 if [ -n "${TF_KEY}" ] ; then
+    # zip the terraform folder to use in concourse pool
     zip -r9  "${BUILD_DIR}/tf-setup.zip" .
 fi
 
