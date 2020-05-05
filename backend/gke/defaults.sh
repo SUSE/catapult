@@ -17,6 +17,10 @@ HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 #
 # Set to a non-empty key to trigger state save in deploy.sh.
 TF_KEY="${TF_KEY:-}"
+
+# zip for terraform folder which includes tf state file.
+# set this to use clean.sh, if there is no cap-terraform folder
+TFSTATE="${TFSTATE:-}"
 #
 # s3 bucket and bucket region to save state to. Ignored when
 # TF_KEY is empty (default, see above).
