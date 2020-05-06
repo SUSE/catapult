@@ -17,4 +17,7 @@ clean:
 	./clean.sh
 
 .PHONY: all
-all: deps deploy
+all::
+	@echo 'WARNING: stil WIP. Use it on your own risk.'
+	@echo 'Kindly waiting for 5s…'; sleep 5
+all:: deps deploy
