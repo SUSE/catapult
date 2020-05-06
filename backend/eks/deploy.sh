@@ -58,6 +58,9 @@ terraform apply -auto-approve my-plan
 # or:
 terraform output kubeconfig > "$KUBECONFIG"
 
+# wait for cluster ready:
+wait_ns kube-system
+
 # test deployment:
 kubectl get svc
 
