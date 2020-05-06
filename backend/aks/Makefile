@@ -4,14 +4,20 @@
 kubeconfig:
 	./kubeconfig.sh
 
-.PHONY: clean
-clean:
-	./clean.sh
-
 .PHONY: deps
 deps:
 	./deps.sh
 
+.PHONY: deploy
+deploy:
+	./deploy.sh
+
+.PHONY: clean
+clean:
+	./clean.sh
+
 .PHONY: all
-all: deps
-	echo "not implemented yet" && exit 0
+all::
+	@echo 'WARNING: stil WIP. Use it on your own risk.'
+	@echo 'Kindly waiting for 5s…'; sleep 5
+all:: deps deploy
