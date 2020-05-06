@@ -24,6 +24,7 @@ helm_init_client
 
 # ssh_public_key needs to be a file. Build it regardless of {ssh,gpg}-agent, or
 # forwarding of agents:
+ssh-add -L
 (ssh-add -L | head -n 1) > ./sshkey.pub
 
 cat <<HEREDOC > terraform.tfvars
