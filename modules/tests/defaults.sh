@@ -36,6 +36,6 @@ SAMPLE_APP_REPO="${SAMPLE_APP_REPO:-https://github.com/cloudfoundry-samples/cf-s
 ######################
 
 KUBECF_CHECKOUT="${KUBECF_CHECKOUT:-}"
-KUBECF_TEST_SUITE="${KUBECF_TEST_SUITE:-smokes}"
+KUBECF_TEST_SUITE="${KUBECF_TEST_SUITE:-smokes}" # smokes, sits, brain, cats, cats-internetless
 KUBECF_DEPLOYMENT_NAME="${KUBECF_DEPLOYMENT_NAME:-susecf-scf}"
 KUBECF_NAMESPACE="${KUBECF_NAMESPACE:-scf}"
