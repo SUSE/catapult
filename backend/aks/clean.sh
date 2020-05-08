@@ -9,6 +9,9 @@ if [ -d "$BUILD_DIR" ]; then
     . .envrc
 
     if [ -d "cap-terraform/aks" ]; then
+
+	KUBECONFIG="$(pwd)"/cap-terraform/aks/aksk8scfg
+
         pushd cap-terraform/aks || exit
         terraform destroy -auto-approve
         popd || exit

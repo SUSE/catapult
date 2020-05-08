@@ -16,7 +16,7 @@ if ! az account show; then
        --tenant "$AZURE_TENANT_ID"
 fi
 
-git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
+git clone https://github.com/SUSE/cap-terraform.git -b cap-ci-fixes
 pushd cap-terraform/aks || exit
 
 # terraform needs helm client installed and configured:
@@ -49,7 +49,7 @@ terraform init
 terraform plan -out=my-plan
 
 # temporarily change KUBECONFIG, needed for terraform scripts:
-KUBECONFIG="$(pwd)"
+KUBECONFIG="$(pwd)"/aksk8scfg
 
 terraform apply -auto-approve
 
