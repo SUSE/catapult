@@ -91,6 +91,32 @@ kube:
   organization: "${DOCKER_ORG}"
 
 high_availability: ${HA}
+
+testing:
+  brain_tests:
+    enabled: true
+  cf_acceptance_tests:
+    enabled: true
+  smoke_tests:
+    enabled: true
+  sync_integration_tests:
+    enabled: true
+properties:
+  acceptance-tests:
+    acceptance-tests:
+      acceptance_tests:
+        timeout_scale: ${CATS_TIMEOUT_SCALE}
+        ginkgo:
+          slow_spec_threshold: 300
+          nodes: ${CATS_NODES}
+          flake_attempts: ${CATS_FLAKE_ATTEMPTS}
+  brain-tests:
+    acceptance-tests-brain:
+      acceptance_tests_brain:
+        verbose: "${BRAIN_VERBOSE}"
+        in_order: "${BRAIN_INORDER}"
+        include: "${BRAIN_INCLUDE}"
+        exclude: "${BRAIN_EXCLUDE}"
 EOF
 
 if [ "${services}" == "lb" ]; then
@@ -110,36 +136,6 @@ services:
     port_range:
       start: 20000
       end: 20008
-EOF
-fi
-
-if [ "${SCF_TESTGROUP}" == "true" ]; then
-cat >> scf-config-values.yaml <<EOF
-testing:
-  brain_tests:
-    enabled: ${SCF_TESTGROUP}
-  cf_acceptance_tests:
-    enabled: ${SCF_TESTGROUP}
-  smoke_tests:
-    enabled: ${SCF_TESTGROUP}
-  sync_integration_tests:
-    enabled: ${SCF_TESTGROUP}
-properties:
-  acceptance-tests:
-    acceptance-tests:
-      acceptance_tests:
-        timeout_scale: ${CATS_TIMEOUT_SCALE}
-        ginkgo:
-          slow_spec_threshold: 300
-          nodes: ${CATS_NODES}
-          flake_attempts: ${CATS_FLAKE_ATTEMPTS}
-  brain-tests:
-    acceptance-tests-brain:
-      acceptance_tests_brain:
-        verbose: "${BRAIN_VERBOSE}"
-        in_order: "${BRAIN_INORDER}"
-        include: "${BRAIN_INCLUDE}"
-        exclude: "${BRAIN_EXCLUDE}"
 EOF
 fi
 
