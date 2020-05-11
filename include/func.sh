@@ -307,9 +307,15 @@ external_dns_annotate_scf() {
         kubectl annotate svc router-public \
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
-        kubectl annotate svc ssh-proxy-public \
+        if [[ "${ENABLE_EIRINI}" == true ]] ; then
+            kubectl annotate svc eirinix-ssh-proxy \
+                    -n "$ns" \
+                    "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        else
+            kubectl annotate svc ssh-proxy-public \
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
+        fi
         kubectl annotate svc tcp-router-public \
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
