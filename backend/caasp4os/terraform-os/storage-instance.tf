@@ -28,102 +28,102 @@ locals {
 }
 
 data "template_file" "storage_repositories" {
-  template = "${file("cloud-init/repository.tpl")}"
-  count    = "${length(var.repositories)}"
+  template = file("cloud-init/repository.tpl")
+  count    = length(var.repositories)
 
-  vars {
-    repository_url  = "${element(values(var.repositories), count.index)}"
-    repository_name = "${element(keys(var.repositories), count.index)}"
+  vars = {
+    repository_url  = element(values(var.repositories), count.index)
+    repository_name = element(keys(var.repositories), count.index)
   }
 }
 
 data "template_file" "storage_register_scc" {
-  template = "${file("cloud-init/register-scc.tpl")}"
-  count    = "${var.caasp_registry_code == "" ? 0 : 1}"
+  template = file("cloud-init/register-scc.tpl")
+  count    = var.caasp_registry_code == "" ? 0 : 1
 
-  vars {
-    caasp_registry_code = "${var.caasp_registry_code}"
+  vars = {
+    caasp_registry_code = var.caasp_registry_code
   }
 }
 
 data "template_file" "storage_register_rmt" {
-  template = "${file("cloud-init/register-rmt.tpl")}"
-  count    = "${var.rmt_server_name == "" ? 0 : 1}"
+  template = file("cloud-init/register-rmt.tpl")
+  count    = var.rmt_server_name == "" ? 0 : 1
 
-  vars {
-    rmt_server_name = "${var.rmt_server_name}"
+  vars = {
+    rmt_server_name = var.rmt_server_name
   }
 }
 
 data "template_file" "storage_register_ibs" {
-  template = "${file("cloud-init/register-ibs.tpl")}"
+  template = file("cloud-init/register-ibs.tpl")
 }
 
 data "template_file" "storage_commands" {
-  template = "${file("cloud-init/commands.tpl")}"
+  template = file("cloud-init/commands.tpl")
 
-  vars {
-    packages = "${join(", ", local.storage_packages)}"
+  vars = {
+    packages = join(", ", local.storage_packages)
   }
 }
 
 data "template_file" "storage-cloud-init" {
-  template = "${file("cloud-init/common.tpl")}"
+  template = file("cloud-init/common.tpl")
 
-  vars {
-    authorized_keys = "${join("\n", formatlist("  - %s", var.authorized_keys))}"
+  vars = {
+    authorized_keys = join("\n", formatlist("  - %s", var.authorized_keys))
     repositories    = ""
     register_scc    = ""
     register_rmt    = ""
     register_ibs    = ""
-    commands        = "${join("\n", data.template_file.storage_commands.*.rendered)}"
-    username        = "${local.user}"
-    ntp_servers     = "${join("\n", formatlist ("    - %s", var.ntp_servers))}"
+    commands        = join("\n", data.template_file.storage_commands.*.rendered)
+    username        = local.user
+    ntp_servers     = join("\n", formatlist ("    - %s", var.ntp_servers))
   }
 }
 
 resource "openstack_compute_instance_v2" "storage" {
   count      = 1
   name       = "caasp-storage-${var.stack_name}-${count.index}"
-  image_name = "${local.image}"
+  image_name = local.image
 
   depends_on = [
-    "openstack_networking_network_v2.network",
-    "openstack_networking_subnet_v2.subnet",
+    openstack_networking_network_v2.network,
+    openstack_networking_subnet_v2.subnet,
   ]
 
-  flavor_name = "${local.flavor}"
+  flavor_name = local.flavor
 
   network {
-    name = "${var.internal_net}"
+    name = var.internal_net
   }
 
   security_groups = [
-    "${openstack_compute_secgroup_v2.storage.name}",
-    "${openstack_networking_secgroup_v2.common.name}",
+    openstack_compute_secgroup_v2.storage.name,
+    openstack_networking_secgroup_v2.common.name,
   ]
 
-  user_data = "${data.template_file.storage-cloud-init.rendered}"
+  user_data = data.template_file.storage-cloud-init.rendered
 }
 
 resource "openstack_networking_floatingip_v2" "storage_ext" {
   count = 1
-  pool  = "${var.external_net}"
+  pool  = var.external_net
 }
 
 resource "openstack_compute_floatingip_associate_v2" "storage_ext_ip" {
   count       = 1
-  floating_ip = "${element(openstack_networking_floatingip_v2.storage_ext.*.address, count.index)}"
-  instance_id = "${element(openstack_compute_instance_v2.storage.*.id, count.index)}"
+  floating_ip = element(openstack_networking_floatingip_v2.storage_ext.*.address, count.index)
+  instance_id = element(openstack_compute_instance_v2.storage.*.id, count.index)
 }
 
 resource "null_resource" "storage_wait_cloudinit" {
-  depends_on = ["openstack_compute_instance_v2.storage"]
+  depends_on = [openstack_compute_instance_v2.storage]
   count      = 1
 
   connection {
-    host = "${element(openstack_compute_floatingip_associate_v2.storage_ext_ip.*.floating_ip, count.index)}"
-    user = "${local.user}"
+    host = element(openstack_compute_floatingip_associate_v2.storage_ext_ip.*.floating_ip, count.index)
+    user = local.user
     type = "ssh"
   }
 
@@ -135,13 +135,13 @@ resource "null_resource" "storage_wait_cloudinit" {
 }
 
 resource "null_resource" "storage_reboot" {
-  depends_on = ["null_resource.storage_config"]
+  depends_on = [null_resource.storage_config]
   count      = 1
 
   provisioner "local-exec" {
     environment = {
-      user = "${local.user}"
-      host = "${element(openstack_compute_floatingip_associate_v2.storage_ext_ip.*.floating_ip, count.index)}"
+      user = local.user
+      host = element(openstack_compute_floatingip_associate_v2.storage_ext_ip.*.floating_ip, count.index)
     }
 
     command = <<EOT
@@ -153,12 +153,12 @@ EOT
 }
 
 resource "null_resource" "storage_config" {
-  depends_on = ["null_resource.storage_wait_cloudinit"]
+  depends_on = [null_resource.storage_wait_cloudinit]
   count      = 1
 
   connection {
-    host = "${element(openstack_compute_floatingip_associate_v2.storage_ext_ip.*.floating_ip, count.index)}"
-    user = "${local.user}"
+    host = element(openstack_compute_floatingip_associate_v2.storage_ext_ip.*.floating_ip, count.index)
+    user = local.user
     type = "ssh"
   }
 
@@ -249,14 +249,10 @@ resource "openstack_compute_secgroup_v2" "storage" {
   }
 }
 
-output "ip_storage_ext" {
-  value = "${openstack_networking_floatingip_v2.storage_ext.address}"
-}
-
 output "ip_storage_int" {
-  value = "${openstack_compute_instance_v2.storage.access_ip_v4}"
+  value = openstack_compute_instance_v2.storage[0].access_ip_v4
 }
 
 output "storage_share" {
-  value = "${local.nfs_share}"
+  value = local.nfs_share
 }

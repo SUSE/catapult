@@ -7,11 +7,11 @@ SKUBA_CLUSTER_NAME="$CLUSTER_NAME"
 
 _set_env_vars() {
     JSON=$(skuba_container terraform output -json)
-    LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value')"
+    LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value|to_entries|map(.value)|@tsv')"
     export LB
-    MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|@tsv')"
+    MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|to_entries|map(.value)|@tsv')"
     export MASTERS
-    WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|@tsv')"
+    WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|to_entries|map(.value)|@tsv')"
     export WORKERS
     ALL="$MASTERS $WORKERS"
     export ALL
