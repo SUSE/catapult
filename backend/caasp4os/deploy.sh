@@ -98,7 +98,7 @@ wait
 # wait
 
 # Create k8s configmap
-PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_workers.value|to_entries|map(.value)|first')"
+PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_load_balancer.value|to_entries|map(.value)|first')"
 ROOTFS=overlay-xfs
 NFS_SERVER_IP="$(skuba_container terraform output ip_storage_int)"
 NFS_PATH="$(skuba_container terraform output storage_share)"
