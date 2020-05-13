@@ -78,6 +78,8 @@ system_domain: $domain
 features:
   eirini:
     enabled: ${ENABLE_EIRINI}
+  autoscaler:
+    enabled: ${AUTOSCALER}
   ${INGRESS_BLOCK}
 
 kube:
