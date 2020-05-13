@@ -3,15 +3,14 @@
 # Functions to interact with a container that includes the client caasp4
 # binaries and terraform
 
-SKUBA_CLUSTER_NAME="$CLUSTER_NAME"
 
 _set_env_vars() {
     JSON=$(skuba_container terraform output -json)
-    LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value')"
+    LB="$(echo "$JSON" | jq -r '.ip_load_balancer.value|to_entries|map(.value)|@tsv')"
     export LB
-    MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|@tsv')"
+    MASTERS="$(echo "$JSON" | jq -r '.ip_masters.value|to_entries|map(.value)|@tsv')"
     export MASTERS
-    WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|@tsv')"
+    WORKERS="$(echo "$JSON" | jq -r '.ip_workers.value|to_entries|map(.value)|@tsv')"
     export WORKERS
     ALL="$MASTERS $WORKERS"
     export ALL
@@ -47,7 +46,7 @@ skuba_container() {
     # skuba_container <commands to run in a punctured container>
 
     local app_path="$PWD"
-    if [[ "$1" == "$SKUBA_CLUSTER_NAME" ]]; then
+    if [[ "$1" == "$CLUSTER_NAME" ]]; then
         local app_path="$PWD/$1"
         shift
     fi
@@ -162,8 +161,8 @@ skuba_updates() {
 }
 
 _init_control_plane() {
-    if ! [[ -d "$SKUBA_CLUSTER_NAME" ]]; then
-        skuba_container skuba cluster init --control-plane "$LB" "$SKUBA_CLUSTER_NAME"
+    if ! [[ -d "$CLUSTER_NAME" ]]; then
+        skuba_container skuba cluster init --control-plane "$LB" "$CLUSTER_NAME"
     fi
 }
 
@@ -173,12 +172,12 @@ for n in $1; do
     local j
     j="$(printf "%03g" $i)"
     if [[ $i -eq 0 ]]; then
-      skuba_container "$SKUBA_CLUSTER_NAME" skuba node bootstrap --user sles --sudo --target "$n" "master$j" -v "$DEBUG"
+      skuba_container "$CLUSTER_NAME" skuba node bootstrap --user sles --sudo --target "$n" "master$j" -v "$DEBUG"
       wait
     fi
 
     if [[ $i -ne 0 ]]; then
-      skuba_container "$SKUBA_CLUSTER_NAME" skuba node join --role master --user sles --sudo --target  "$n" "master$j" -v "$DEBUG"
+      skuba_container "$CLUSTER_NAME" skuba node join --role master --user sles --sudo --target  "$n" "master$j" -v "$DEBUG"
       wait
     fi
     ((++i))
@@ -190,7 +189,7 @@ _deploy_workers() {
     for n in $1; do
         local j
         j="$(printf "%03g" $i)"
-        (skuba_container "$SKUBA_CLUSTER_NAME" skuba node join --role worker --user sles --sudo --target  "$n" "worker$j" -v "$DEBUG") &
+        (skuba_container "$CLUSTER_NAME" skuba node join --role worker --user sles --sudo --target  "$n" "worker$j" -v "$DEBUG") &
         wait
         ((++i))
     done
@@ -199,12 +198,13 @@ _deploy_workers() {
 skuba_deploy() {
     # Usage: deploy
 
+    set -x
     _set_env_vars
     _init_control_plane
     pushd "$(pwd)"/ || exit
     _deploy_masters "$MASTERS"
     _deploy_workers "$WORKERS"
-    KUBECONFIG="" skuba_container $SKUBA_CLUSTER_NAME skuba cluster status
+    KUBECONFIG="" skuba_container $CLUSTER_NAME skuba cluster status
 }
 
 skuba_node_upgrade() {
@@ -219,7 +219,7 @@ skuba_node_upgrade() {
      _define_node_group "$target"
     local i=0
     for n in $GROUP; do
-        skuba_container "$SKUBA_CLUSTER_NAME" skuba node upgrade \
+        skuba_container "$CLUSTER_NAME" skuba node upgrade \
                         apply --user sles --sudo --target "$n" -v "$DEBUG"
     done
 }
