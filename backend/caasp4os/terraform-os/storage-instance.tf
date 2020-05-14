@@ -99,8 +99,8 @@ resource "openstack_compute_instance_v2" "storage" {
   }
 
   security_groups = [
-    openstack_compute_secgroup_v2.storage.name,
-    openstack_networking_secgroup_v2.common.name,
+    openstack_networking_secgroup_v2.storage.id,
+    openstack_networking_secgroup_v2.common.id
   ]
 
   user_data = data.template_file.storage-cloud-init.rendered
@@ -174,79 +174,29 @@ resource "null_resource" "storage_config" {
   }
 }
 
-resource "openstack_compute_secgroup_v2" "storage" {
+resource "openstack_networking_secgroup_v2" "storage" {
   name        = "caasp-storage-${var.stack_name}"
   description = "Basic security group"
+}
 
-  rule {
-    from_port   = -1
-    to_port     = -1
-    ip_protocol = "icmp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "storage_tcp_high" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 1024
+  port_range_max    = 65535
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.storage.id
+}
 
-  rule {
-    from_port   = 22
-    to_port     = 22
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 111
-    to_port     = 111
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 2049
-    to_port     = 2049
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 20048
-    to_port     = 20048
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 33904
-    to_port     = 33904
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 111
-    to_port     = 111
-    ip_protocol = "udp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 2049
-    to_port     = 2049
-    ip_protocol = "udp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 20048
-    to_port     = 20048
-    ip_protocol = "udp"
-    cidr        = "0.0.0.0/0"
-  }
-
-  rule {
-    from_port   = 33904
-    to_port     = 33904
-    ip_protocol = "udp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "storage_udp_high" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "udp"
+  port_range_min    = 1024
+  port_range_max    = 65535
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.storage.id
 }
 
 output "ip_storage_int" {

@@ -45,7 +45,7 @@ fi
 
 rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
 
-if [ "$SCF_OPERATOR" == true ]; then
+if [ "${SCF_OPERATOR}" == "true" ]; then
     rm -rf cf-operator* kubecf* assets templates Chart.yaml values.yaml Metadata.yaml \
        imagelist.txt requirements.lock  requirements.yaml
 fi

@@ -1,60 +1,84 @@
-resource "openstack_compute_secgroup_v2" "secgroup_cap" {
+resource "openstack_networking_secgroup_v2" "secgroup_cap" {
   name        = "${var.stack_name}-cap_lb_secgroup"
   description = "CAP security group"
+}
 
-  rule {
-    from_port   = 80
-    to_port     = 80
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "http" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 80
+  port_range_max    = 80
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 443
-    to_port     = 443
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "https" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 443
+  port_range_max    = 443
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 2222
-    to_port     = 2222
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "port_2222" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 2222
+  port_range_max    = 2222
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 2793
-    to_port     = 2793
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "port_2793" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 2793
+  port_range_max    = 2793
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 4443
-    to_port     = 4443
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "port_4443" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 4443
+  port_range_max    = 4443
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 8443
-    to_port     = 8443
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "port_7443" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 7443
+  port_range_max    = 7443
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 7443
-    to_port     = 7443
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "port_8443" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 8443
+  port_range_max    = 8443
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
+}
 
-  rule {
-    from_port   = 20000
-    to_port     = 20008
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_rule_v2" "tcp_high" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 10000
+  port_range_max    = 65535
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup_cap.id
 }
