@@ -161,13 +161,6 @@ module-experimental-eirini_release:
 	$(MAKE) -C modules/experimental eirini_release
 
 # scf-only targets:
-.PHONY: scf-deploy
-scf-deploy:
-	@echo 'WARNING: target deprecated. Please use `make k8s/kubeconfig` and then `make scf` instead.'
-	@echo 'Kindly waiting for 20s…'; sleep 20
-	$(MAKE) clean buildir
-	$(MAKE) k8s kubeconfig scf
-
 .PHONY: scf-build
 scf-build: ##@scf Build chart from source and install CF
 	$(MAKE) -C modules/scf build-scf-from-source
