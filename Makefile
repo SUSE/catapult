@@ -208,6 +208,11 @@ kubecf-build-stemcell: ##@kubecf Build stemcell for KubeCF
 	$(MAKE) -C modules/kubecf stemcell_build
 
 # scf-only targets:
+
+# Provide compatibility with kubecf by redirecting:
+#    SCF_OPERATOR=true make scf*
+# to:
+#    make kubecf
 ifeq "$(SCF_OPERATOR)" "true"
 scf-build: kubecf-build
 scf-clean: kubecf-clean
