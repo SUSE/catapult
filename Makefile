@@ -22,7 +22,7 @@ buildir:
 # General targets (Public)
 .PHONY: clean
 clean: ##@STATES Delete cluster of type $BACKEND and location build$CLUSTER_NAME
-clean: scf-clean # first scf-clean to delete PVCs, DNS entries, etc
+clean: kubecf-clean # first kubecf-clean to delete PVCs, DNS entries, etc
 	$(MAKE) -C backend/$(BACKEND) clean
 
 .PHONY: k8s
@@ -159,6 +159,53 @@ module-experimental-eirinifs:
 .PHONY: module-experimental-eirini_release
 module-experimental-eirini_release:
 	$(MAKE) -C modules/experimental eirini_release
+
+# kubecf-only targets:
+.PHONY: kubecf-build
+kubecf-build: ##@kubecf Build chart from source and install KubeCF
+	$(MAKE) -C modules/kubecf build-from-source
+	$(MAKE) kubecf-gen-config
+	$(MAKE) -C modules/kubecf install
+
+.PHONY: kubecf-clean
+kubecf-clean: ##@kubecf Only delete installation of KubeCF & related files
+	$(MAKE) -C modules/kubecf clean
+
+.PHONY: sc	f
+kubecf: ##@STATES Delete if exists then deploy KubeCF in cluster
+	$(MAKE) -C modules/kubecf
+
+.PHONY: kubecf-chart
+kubecf-chart: ##@kubecf Only obtain KubeCF chart, by file or download
+	$(MAKE) -C modules/kubecf chart
+
+.PHONY: kubecf-gen-config
+kubecf-gen-config: ##@kubecf Only generate KubeCF config yamls
+	$(MAKE) -C modules/kubecf gen-config
+
+.PHONY: kubecf-install
+kubecf-install: ##@kubecf Only install KubeCF
+	$(MAKE) -C modules/kubecf install
+
+.PHONY: kubecf-upgrade
+kubecf-upgrade: ##@kubecf Only upgrade KubeCF
+	$(MAKE) -C modules/kubecf upgrade
+
+.PHONY: kubecf-login
+kubecf-login: ##@kubecf Only perform cf login against deployed KubeCF
+	$(MAKE) -C modules/kubecf login
+
+.PHONY: kubecf-minibroker
+kubecf-minibroker: ##@kubecf Deploy minibroker & services on KubeCF
+	$(MAKE) -C modules/kubecf minibroker
+
+.PHONY: kubecf-purge
+kubecf-purge: ##@kubecf Purge all apps, buildpacks and services from KubeCF
+	$(MAKE) -C modules/kubecf purge
+
+.PHONY: kubecf-build-stemcell
+kubecf-build-stemcell: ##@kubecf Build stemcell for KubeCF
+	$(MAKE) -C modules/kubecf stemcell_build
 
 # scf-only targets:
 .PHONY: scf-build
