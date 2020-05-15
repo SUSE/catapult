@@ -21,103 +21,70 @@ if [[ $ENABLE_EIRINI == true ]] ; then
     sleep 10
 fi
 
-if [ "${EMBEDDED_UAA}" != "true" ] && [ "${SCF_OPERATOR}" != "true" ]; then
+SCF_CHART="kubecf"
+if [ -d "deploy/helm/scf" ]; then
+    SCF_CHART="deploy/helm/scf"
+fi
 
-    kubectl create namespace "uaa"
-    helm_install susecf-uaa helm/uaa --namespace uaa --values scf-config-values.yaml
+if [ "$OPERATOR_CHART_URL" = latest ]; then
+    info "Sourcing operator from kubecf charts"
+    info "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
+    OPERATOR_CHART_URL=$(yq r $SCF_CHART/Metadata.yaml operatorChartUrl)
 
-    wait_ns uaa
-    if [ "$services" == "lb" ]; then
-        external_dns_annotate_uaa uaa "$domain"
-    fi
-
-    SECRET=$(kubectl get pods --namespace uaa \
-    -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-    CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa \
-    -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-    helm_install susecf-scf helm/cf --namespace scf \
-    --values scf-config-values.yaml \
-    --set "secrets.UAA_CA_CERT=${CA_CERT}"
-
-elif [ "${SCF_OPERATOR}" == "true" ]; then
-    SCF_CHART="kubecf"
-    if [ -d "deploy/helm/scf" ]; then
-        SCF_CHART="deploy/helm/scf"
-    fi
-
+    # If still empty, grab latest one
     if [ "$OPERATOR_CHART_URL" = latest ]; then
-        info "Sourcing operator from kubecf charts"
-        info "Getting latest cf-operator chart (override with OPERATOR_CHART_URL)"
-        OPERATOR_CHART_URL=$(yq r $SCF_CHART/Metadata.yaml operatorChartUrl)
-
-        # If still empty, grab latest one
-        if [ "$OPERATOR_CHART_URL" = latest ]; then
-         info "Fallback to use latest GH release of cf-operator"
-         OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
-        fi
-    fi
-
-    info "Installing cf-operator"
-    kubectl create namespace cf-operator || true
-
-
-    echo "Installing CFO from: ${OPERATOR_CHART_URL}"
-    # Install the operator
-    helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
-        --set "operator-webhook-use-service-reference=true" --set "customResources.enableInstallation=true" \
-        --set "global.operator.watchNamespace=scf"
-
-    wait_ns cf-operator
-
-    info "Wait for cf-operator to be ready"
-    wait_for "kubectl get endpoints -n cf-operator cf-operator-webhook -o name"
-    wait_for "kubectl get crd quarksstatefulsets.quarks.cloudfoundry.org -o name"
-    wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
-    wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
-    wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
-    info "Test CRDs are ready"
-    #wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
-    wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
-    wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
-    wait_ns scf
-    #wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
-    wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
-    wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
-    ok "cf-operator ready"
-
-    # KubeCF Doesn't support to setup a cluster password yet, doing it manually.
-
-    ## Versions of cf-operator prior to 4 included deployment name in front of secrets
-    ## Note: this can be dropped once we don't test anymore kubecf 1.x. in favor of the secret without the
-    ## deployment name, or either we can clearly identify the operator version without hackish ways.
-    kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
-
-    ## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
-    kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
-
-    helm_install susecf-scf ${SCF_CHART} \
-    --namespace scf \
-    --values scf-config-values.yaml
-
-    sleep 540
-else
-
-    kubectl create namespace "scf"
-    helm_install susecf-scf helm/cf --namespace scf \
-    --values scf-config-values.yaml \
-    --set enable.uaa=true
-
-    wait_ns uaa
-    if [ "$services" == "lb" ]; then
-        external_dns_annotate_uaa uaa "$domain"
+     info "Fallback to use latest GH release of cf-operator"
+     OPERATOR_CHART_URL=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/cf-operator/releases/latest | grep "browser_download_url.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
     fi
 fi
 
+info "Installing cf-operator"
+kubectl create namespace cf-operator || true
+
+
+echo "Installing CFO from: ${OPERATOR_CHART_URL}"
+# Install the operator
+helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
+    --set "operator-webhook-use-service-reference=true" --set "customResources.enableInstallation=true" \
+    --set "global.operator.watchNamespace=scf"
+
+wait_ns cf-operator
+
+info "Wait for cf-operator to be ready"
+wait_for "kubectl get endpoints -n cf-operator cf-operator-webhook -o name"
+wait_for "kubectl get crd quarksstatefulsets.quarks.cloudfoundry.org -o name"
+wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
+wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
+wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
+info "Test CRDs are ready"
+#wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
+wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
+wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+wait_ns scf
+#wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
+wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
+wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+ok "cf-operator ready"
+
+# KubeCF Doesn't support to setup a cluster password yet, doing it manually.
+
+## Versions of cf-operator prior to 4 included deployment name in front of secrets
+## Note: this can be dropped once we don't test anymore kubecf 1.x. in favor of the secret without the
+## deployment name, or either we can clearly identify the operator version without hackish ways.
+kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
+
+## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
+kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
+
+helm_install susecf-scf ${SCF_CHART} \
+--namespace scf \
+--values scf-config-values.yaml
+
+sleep 540
+
 wait_ns scf
 if [ "$services" == "lb" ]; then
-    external_dns_annotate_scf scf "$domain"
+    external_dns_annotate_kubecf scf "$domain"
 fi
 
 ok "SCF deployed successfully"
