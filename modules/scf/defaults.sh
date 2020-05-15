@@ -51,3 +51,6 @@ SCF_LOCAL="${SCF_LOCAL:-}"
 
 SCF_OPERATOR="${SCF_OPERATOR:-false}"
 HELM_VERSION="${HELM_VERSION:-v3.1.1}"
+
+SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
+SCF_BRANCH="${SCF_BRANCH:-develop}"
