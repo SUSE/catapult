@@ -208,6 +208,19 @@ kubecf-build-stemcell: ##@kubecf Build stemcell for KubeCF
 	$(MAKE) -C modules/kubecf stemcell_build
 
 # scf-only targets:
+ifeq "$(SCF_OPERATOR)" "true"
+scf-build: kubecf-build
+scf-clean: kubecf-clean
+scf: kubecf
+scf-chart: kubecf-chart
+scf-gen-config: kubecf-gen-config
+scf-install: kubecf-install
+scf-upgrade: kubecf-upgrade
+scf-login: kubecf-login
+scf-minibroker: kubecf-minibroker
+scf-purge: kubecf-purge
+scf-build-stemcell: kubecf-build-stemcell
+else
 .PHONY: scf-build
 scf-build: ##@scf Build chart from source and install CF
 	$(MAKE) -C modules/scf build-scf-from-source
@@ -253,6 +266,7 @@ scf-purge: ##@scf Purge all apps, buildpacks and services from CF
 .PHONY: scf-build-stemcell
 scf-build-stemcell: ##@scf Build stemcell
 	$(MAKE) -C modules/scf stemcell_build
+endif
 
 # stratos-only targets:
 .PHONY: stratos
