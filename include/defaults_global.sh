@@ -3,8 +3,6 @@
 # Global options
 ################
 
-export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
-export SCF_BRANCH="${SCF_BRANCH:-develop}"
 export DOCKER_REGISTRY="${DOCKER_REGISTRY:-registry.suse.com}"
 export DOCKER_ORG="${DOCKER_ORG:-cap}"
 

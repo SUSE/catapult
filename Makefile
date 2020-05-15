@@ -22,7 +22,7 @@ buildir:
 # General targets (Public)
 .PHONY: clean
 clean: ##@STATES Delete cluster of type $BACKEND and location build$CLUSTER_NAME
-clean: scf-clean # first scf-clean to delete PVCs, DNS entries, etc
+clean: kubecf-clean # first kubecf-clean to delete PVCs, DNS entries, etc
 	$(MAKE) -C backend/$(BACKEND) clean
 
 .PHONY: k8s
@@ -63,7 +63,7 @@ force-clean: buildir clean
 
 .PHONY: all
 all: ## Alias for `make k8s scf scf-login`
-all: scf-deploy scf-login # TODO remove scf-deploy
+all: k8s kubecf kubecf-login # TODO remove scf-deploy
 
 # kind targets:
 
@@ -160,14 +160,72 @@ module-experimental-eirinifs:
 module-experimental-eirini_release:
 	$(MAKE) -C modules/experimental eirini_release
 
-# scf-only targets:
-.PHONY: scf-deploy
-scf-deploy:
-	@echo 'WARNING: target deprecated. Please use `make k8s/kubeconfig` and then `make scf` instead.'
-	@echo 'Kindly waiting for 20s…'; sleep 20
-	$(MAKE) clean buildir
-	$(MAKE) k8s kubeconfig scf
+# kubecf-only targets:
+.PHONY: kubecf-build
+kubecf-build: ##@kubecf Build chart from source and install KubeCF
+	$(MAKE) -C modules/kubecf build-from-source
+	$(MAKE) kubecf-gen-config
+	$(MAKE) -C modules/kubecf install
 
+.PHONY: kubecf-clean
+kubecf-clean: ##@kubecf Only delete installation of KubeCF & related files
+	$(MAKE) -C modules/kubecf clean
+
+.PHONY: sc	f
+kubecf: ##@STATES Delete if exists then deploy KubeCF in cluster
+	$(MAKE) -C modules/kubecf
+
+.PHONY: kubecf-chart
+kubecf-chart: ##@kubecf Only obtain KubeCF chart, by file or download
+	$(MAKE) -C modules/kubecf chart
+
+.PHONY: kubecf-gen-config
+kubecf-gen-config: ##@kubecf Only generate KubeCF config yamls
+	$(MAKE) -C modules/kubecf gen-config
+
+.PHONY: kubecf-install
+kubecf-install: ##@kubecf Only install KubeCF
+	$(MAKE) -C modules/kubecf install
+
+.PHONY: kubecf-upgrade
+kubecf-upgrade: ##@kubecf Only upgrade KubeCF
+	$(MAKE) -C modules/kubecf upgrade
+
+.PHONY: kubecf-login
+kubecf-login: ##@kubecf Only perform cf login against deployed KubeCF
+	$(MAKE) -C modules/kubecf login
+
+.PHONY: kubecf-minibroker
+kubecf-minibroker: ##@kubecf Deploy minibroker & services on KubeCF
+	$(MAKE) -C modules/kubecf minibroker
+
+.PHONY: kubecf-purge
+kubecf-purge: ##@kubecf Purge all apps, buildpacks and services from KubeCF
+	$(MAKE) -C modules/kubecf purge
+
+.PHONY: kubecf-build-stemcell
+kubecf-build-stemcell: ##@kubecf Build stemcell for KubeCF
+	$(MAKE) -C modules/kubecf stemcell_build
+
+# scf-only targets:
+
+# Provide compatibility with kubecf by redirecting:
+#    SCF_OPERATOR=true make scf*
+# to:
+#    make kubecf
+ifeq "$(SCF_OPERATOR)" "true"
+scf-build: kubecf-build
+scf-clean: kubecf-clean
+scf: kubecf
+scf-chart: kubecf-chart
+scf-gen-config: kubecf-gen-config
+scf-install: kubecf-install
+scf-upgrade: kubecf-upgrade
+scf-login: kubecf-login
+scf-minibroker: kubecf-minibroker
+scf-purge: kubecf-purge
+scf-build-stemcell: kubecf-build-stemcell
+else
 .PHONY: scf-build
 scf-build: ##@scf Build chart from source and install CF
 	$(MAKE) -C modules/scf build-scf-from-source
@@ -213,6 +271,7 @@ scf-purge: ##@scf Purge all apps, buildpacks and services from CF
 .PHONY: scf-build-stemcell
 scf-build-stemcell: ##@scf Build stemcell
 	$(MAKE) -C modules/scf stemcell_build
+endif
 
 # stratos-only targets:
 .PHONY: stratos

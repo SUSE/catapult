@@ -8,7 +8,7 @@ rm -rf helm chart scf_chart_url suse kubecf
 
 if [ -z "$SCF_CHART" ] && [ -z "$SCF_HELM_VERSION" ]; then
     warn "No chart url given - using latest public release from GH"
-    SCF_CHART=$(curl -s https://api.github.com/repos/SUSE/scf/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
+    SCF_CHART=$(curl -s https://api.github.com/repos/cloudfoundry-incubator/kubecf/releases/latest | grep "browser_download_url.*bundle.*tgz" | cut -d : -f 2,3 | tr -d \" | tr -d " ")
 fi
 
 if [ -n "$SCF_HELM_VERSION" ]; then
@@ -64,6 +64,12 @@ if echo "$SCF_CHART" | grep -q "tgz"; then
 else
     unzip -o chart
 fi
+
+if echo "$SCF_CHART" | grep -q "bundle"; then
+    tar xvzf cf-operator*.tgz
+    tar xvzf kubecf*.tgz
+fi
+cp -rfv kubecf*/* ./
 
 # save SCF_CHART on cap-values configmap
 kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'

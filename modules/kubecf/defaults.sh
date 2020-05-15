@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# SCF options
-#############
+# KUBECF options
+################
 
-# scf-chart revelant:
+# kubecf-chart revelant:
 
 CHART_URL="${CHART_URL:-}" # FIXME deprecated, used in SCF_CHART
 SCF_CHART="${SCF_CHART:-$CHART_URL}"
@@ -11,7 +11,7 @@ SCF_CHART="${SCF_CHART:-$CHART_URL}"
 SCF_HELM_VERSION="${SCF_HELM_VERSION:-}"
 OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
 
-# scf-gen-config relevant:
+# kubecf-gen-config relevant:
 
 SCF_SERVICES="${SCF_SERVICES:-lb}" # lb, ingress
 GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
@@ -43,7 +43,7 @@ CATS_FLAKE_ATTEMPTS="${CATS_FLAKE_ATTEMPTS:-5}"
 CATS_TIMEOUT_SCALE="${CATS_TIMEOUT_SCALE:-3.0}"
 
 
-# scf-build relevant:
+# kubecf-build relevant:
 
 SCF_LOCAL="${SCF_LOCAL:-}"
 
@@ -51,5 +51,5 @@ SCF_LOCAL="${SCF_LOCAL:-}"
 
 HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 
-SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
-SCF_BRANCH="${SCF_BRANCH:-develop}"
+SCF_REPO="${SCF_REPO:-https://github.com/cloudfoundry-incubator/kubecf}"
+SCF_BRANCH="${SCF_BRANCH:-master}"
