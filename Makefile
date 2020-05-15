@@ -63,7 +63,7 @@ force-clean: buildir clean
 
 .PHONY: all
 all: ## Alias for `make k8s scf scf-login`
-all: scf-deploy scf-login # TODO remove scf-deploy
+all: k8s kubecf kubecf-login # TODO remove scf-deploy
 
 # kind targets:
 
