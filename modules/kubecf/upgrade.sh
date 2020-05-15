@@ -17,4 +17,4 @@ sleep 10
 
 wait_ns scf
 
-ok "SCF deployment upgraded successfully"
+ok "KubeCF deployment upgraded successfully"

@@ -59,4 +59,4 @@ if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.da
             -p '[{"op": "remove", "path": "/data/services"}]'
 fi
 
-ok "Cleaned up scf from the k8s cluster"
+ok "Cleaned up KubeCF from the k8s cluster"

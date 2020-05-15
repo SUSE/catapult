@@ -87,4 +87,4 @@ if [ "$services" == "lb" ]; then
     external_dns_annotate_kubecf scf "$domain"
 fi
 
-ok "SCF deployed successfully"
+ok "KubeCF deployed successfully"

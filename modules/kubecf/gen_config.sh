@@ -5,7 +5,7 @@
 . .envrc
 
 
-info "Generating SCF config values"
+info "Generating KubeCF config values"
 
 kubectl patch -n kube-system configmap cap-values -p $'data:\n services: "'$SCF_SERVICES'"'
 services="$SCF_SERVICES"
@@ -106,4 +106,4 @@ cat >> scf-config-values.yaml <<EOF
 ${CONFIG_OVERRIDE}
 EOF
 
-ok "SCF config values generated"
+ok "KubeCF config values generated"
