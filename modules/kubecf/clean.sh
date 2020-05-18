@@ -33,7 +33,7 @@ if helm_ls 2>/dev/null | grep -qi metrics-server ; then
     helm_delete metrics-server
 fi
 
-rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
+rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf
 
 rm -rf cf-operator* kubecf* assets templates Chart.yaml values.yaml Metadata.yaml \
    imagelist.txt requirements.lock  requirements.yaml
