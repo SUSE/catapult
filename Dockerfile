@@ -19,7 +19,7 @@ RUN zypper ar --priority 100 https://download.opensuse.org/repositories/Cloud:To
   zypper --gpg-auto-import-keys -n in --no-recommends -y Cloud_Tools:kubernetes-client
 
 RUN helm_version=v3.1.1 \
-&& wget https://get.helm.sh/helm-${helm_version}-linux-amd64.tar.gz -O - | tar xz -C /usr/bin --strip-components=1 linux-amd64/helm
+  && wget https://get.helm.sh/helm-${helm_version}-linux-amd64.tar.gz -O - | tar xz -C /usr/bin --strip-components=1 linux-amd64/helm
 
 # k8s backends dependencies:
 RUN zypper in --no-recommends -y terraform
