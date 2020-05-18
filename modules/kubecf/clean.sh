@@ -26,13 +26,11 @@ if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
     kubectl delete --ignore-not-found namespace cf-operator
 fi
 
-if [[ "$ENABLE_EIRINI" == true ]] ; then
-    if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
-        kubectl delete --ignore-not-found namespace eirini
-    fi
-    if helm_ls 2>/dev/null | grep -qi metrics-server ; then
-        helm_delete metrics-server
-    fi
+if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
+    kubectl delete --ignore-not-found namespace eirini
+fi
+if helm_ls 2>/dev/null | grep -qi metrics-server ; then
+    helm_delete metrics-server
 fi
 
 rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
