@@ -48,7 +48,7 @@ RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && 
 
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
-RUN zypper clean --all
+RUN zypper rm -y glibc-locale && zypper clean --all
 
 ADD . /catapult
 WORKDIR /catapult
