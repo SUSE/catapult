@@ -3,7 +3,7 @@
 . include/common.sh
 . .envrc
 
-curl -s -Lo kube-ready-state-check.sh https://github.com/cloudfoundry-incubator/kubecf/raw/master/bin/dev/kube-ready-state-check.sh
+curl -s -Lo kube-ready-state-check.sh https://raw.githubusercontent.com/cloudfoundry-incubator/kubecf/master/dev/kube/kube-ready-state-check.sh
 chmod +x kube-ready-state-check.sh
 mv kube-ready-state-check.sh bin/
 
