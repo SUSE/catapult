@@ -38,7 +38,7 @@ BRAIN_INORDER="${BRAIN_INORDER:-false}"
 BRAIN_INCLUDE="${BRAIN_INCLUDE:-}"
 BRAIN_EXCLUDE="${BRAIN_EXCLUDE:-}"
 
-CATS_NODES="${CATS_NODES:-1}"
+CATS_NODES="${CATS_NODES:-corenumber}" # if "corenumber": set it to number of cores. Else, a numeric value.
 CATS_FLAKE_ATTEMPTS="${CATS_FLAKE_ATTEMPTS:-5}"
 CATS_TIMEOUT_SCALE="${CATS_TIMEOUT_SCALE:-3.0}"
 
