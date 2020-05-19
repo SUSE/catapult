@@ -10,7 +10,8 @@ if [ -d "$BUILD_DIR" ]; then
 
     if [ -d "cap-terraform/aks" ]; then
 
-	export KUBECONFIG="$(pwd)"/cap-terraform/aks/aksk8scfg
+	KUBECONFIG="$(pwd)"/cap-terraform/aks/aksk8scfg
+	export KUBECONFIG
 
         pushd cap-terraform/aks || exit
         terraform destroy -auto-approve
