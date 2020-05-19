@@ -478,10 +478,10 @@ help: ##@other Show help
 	@echo
 	@echo '  Main state targets and their cleaning targets:	'
 	@echo
-	@echo '     {} ─┬─> k8s        ─┬─> scf ────> tests ────> stratos ────> metrics	'
+	@echo '     {} ─┬─> k8s        ─┬─> kubecf ────> tests ────> stratos ────> metrics	'
 	@echo '         └─> kubeconfig ─┘																								'
 	@echo
-	@echo '             clean           scf-clean           stratos-clean   metrics-clean'
+	@echo '             clean           kubecf-clean           stratos-clean   metrics-clean'
 	@echo
 	@echo '  Calling `make k8s` creates a buildfoo folder on catapult/'
 	@echo '  All states operate against the files in that buildfoo folder'
@@ -504,11 +504,11 @@ help: ##@other Show help
 	@echo '  cluster creation.'
 	@echo
 	@echo 'EXAMPLES:'
-	@echo '  Deploy a kind cluster, then scf on top. Result in `buildkind` folder'
-	@echo '  > make k8s scf'
+	@echo '  Deploy a kind cluster, then KubeCF on top. Result in `buildkind` folder'
+	@echo '  > make k8s kubecf'
 	@echo
-	@echo '  Deploy an EKS cluster, then scf, then stratos. Result in `buildeks` folder'
-	@echo '  > BACKEND=eks make k8s scf stratos'
+	@echo '  Deploy an EKS cluster, then KubeCF, then stratos. Result in `buildeks` folder'
+	@echo '  > BACKEND=eks make k8s kubecf stratos'
 	@echo
 	@echo '  Target the cluster `eks` manually'
 	@echo '  > cd buildeks; source .envrc; kubectl get pods -A'
@@ -518,9 +518,6 @@ help: ##@other Show help
 	@echo
 	@echo '  Import existing cluster kubeconfig by creating a `buildfoo` folder'
 	@echo '   BACKEND=imported CLUSTER_NAME=foo KUBECFG=/tmp/kubeconfig make k8s'
-	@echo
-	@echo '  Install latest released kubecf chart against previous cluster example'
-	@echo '  > BACKEND=imported CLUSTER_NAME=foo SCF_OPERATOR=true make scf'
 	@echo
 	@echo 'For more info, see make help-all.'
 
