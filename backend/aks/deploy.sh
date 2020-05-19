@@ -24,6 +24,7 @@ helm_init_client
 
 # ssh_public_key needs to be a file. Build it regardless of {ssh,gpg}-agent, or
 # forwarding of agents:
+ssh-add -L
 (ssh-add -L | head -n 1) > ./sshkey.pub
 
 cat <<HEREDOC > terraform.tfvars
@@ -48,7 +49,7 @@ terraform init
 terraform plan -out=my-plan
 
 # temporarily change KUBECONFIG, needed for terraform scripts:
-KUBECONFIG="$(pwd)"
+KUBECONFIG="$(pwd)"/aksk8scfg
 
 terraform apply -auto-approve
 
@@ -66,8 +67,8 @@ kubectl get svc
 
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
-PUBLIC_IP="$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address' | head -n 1)"
-DOMAIN="$PUBLIC_IP.$MAGICDNS"
+wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-nginx-ingress-controller -o json | jq -r '.status[].ingress[].ip' 2>/dev/null)"'
+DOMAIN="$CLUSTER_NAME.$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
