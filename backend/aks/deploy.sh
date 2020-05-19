@@ -16,7 +16,7 @@ if ! az account show; then
        --tenant "$AZURE_TENANT_ID"
 fi
 
-git clone https://github.com/SUSE/cap-terraform.git -b cap-ci-fixes
+git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
 pushd cap-terraform/aks || exit
 
 # terraform needs helm client installed and configured:
@@ -64,7 +64,7 @@ kubectl get svc
 
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
-wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-controller -o json | jq -r '.status[].ingress[].ip' 2>/dev/null)"'
+wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-nginx-ingress-controller -o json | jq -r '.status[].ingress[].ip' 2>/dev/null)"'
 DOMAIN="$CLUSTER_NAME.$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
