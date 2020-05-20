@@ -79,6 +79,8 @@ metadata:
 provisioner: kubernetes.io/cinder
 HEREDOC
     fi
+    kubectl patch storageclass persistent \
+            -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 }
 
 
