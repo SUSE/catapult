@@ -32,10 +32,10 @@ else
 INGRESS_BLOCK=''
 fi
 
-last_worker=$(kubectl get nodes | tail -1 | cut -f 1 -d ' ')
-num_cores=$(kubectl describe node "$last_worker" | \
-          grep Allocatable -A 2 | grep cpu | tr -s ' ' | cut -f 3 -d ' ')
 if [ "$CATS_NODES" == corenumber ]; then
+    last_worker=$(kubectl get nodes | tail -1 | cut -f 1 -d ' ')
+    num_cores=$(kubectl describe node "$last_worker" | \
+                    grep Allocatable -A 2 | grep cpu | tr -s ' ' | cut -f 3 -d ' ')
     CATS_NODES="$num_cores"
 fi
 
