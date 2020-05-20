@@ -19,8 +19,6 @@ DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
 STORAGECLASS="${STORAGECLASS:-persistent}"
 AUTOSCALER="${AUTOSCALER:-false}"
 
-EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
-
 HA="${HA:-false}"
 if [ "$HA" = "true" ]; then
     SIZING="${SIZING:-2}"

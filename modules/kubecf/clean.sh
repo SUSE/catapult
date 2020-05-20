@@ -7,14 +7,9 @@
 # if no kubeconfig, no cf. Exit
 [ -f "$KUBECONFIG" ] || exit 0
 
-if [ "$EMBEDDED_UAA" != "true" ]; then
-    if helm_ls 2>/dev/null | grep -qi susecf-uaa ; then
-        helm_delete susecf-uaa
-    fi
-    if kubectl get namespaces 2>/dev/null | grep -qi uaa ; then
-        kubectl delete --ignore-not-found namespace uaa
-    fi
-fi
+# clean pvcs
+kubectl get -n scf pvc -o name \
+    | xargs --no-run-if-empty kubectl delete -n scf
 
 if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf --namespace scf
@@ -34,16 +29,14 @@ if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
     kubectl delete --ignore-not-found namespace cf-operator
 fi
 
-if [[ "$ENABLE_EIRINI" == true ]] ; then
-    if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
-        kubectl delete --ignore-not-found namespace eirini
-    fi
-    if helm_ls 2>/dev/null | grep -qi metrics-server ; then
-        helm_delete metrics-server
-    fi
+if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
+    kubectl delete --ignore-not-found namespace eirini
+fi
+if helm_ls 2>/dev/null | grep -qi metrics-server ; then
+    helm_delete metrics-server
 fi
 
-rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf kube-ready-state-check.sh
+rm -rf scf-config-values.yaml chart helm kube "$CF_HOME"/.cf
 
 rm -rf cf-operator* kubecf* assets templates Chart.yaml values.yaml Metadata.yaml \
    imagelist.txt requirements.lock  requirements.yaml
