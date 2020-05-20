@@ -7,9 +7,11 @@
 # if no kubeconfig, no cf. Exit
 [ -f "$KUBECONFIG" ] || exit 0
 
-# clean pvcs
-kubectl get -n scf pvc -o name \
-    | xargs --no-run-if-empty kubectl delete -n scf
+# TODO disabling for now, it blocks indefinitely here with the pvc states in
+# "Terminating"
+# # clean pvcs
+# kubectl get -n scf pvc -o name \
+#     | xargs --no-run-if-empty kubectl delete -n scf
 
 if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf --namespace scf
