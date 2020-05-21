@@ -70,7 +70,7 @@ properties:
         timeout_scale: ${CATS_TIMEOUT_SCALE}
         ginkgo:
           slow_spec_threshold: 300
-          extra_flags: ${GINKGO_EXTRA_FLAGS}
+          extra_flags: "${GINKGO_EXTRA_FLAGS}"
           nodes: ${CATS_NODES}
           flake_attempts: ${CATS_FLAKE_ATTEMPTS}
   brain-tests:
