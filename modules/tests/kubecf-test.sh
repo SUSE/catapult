@@ -126,9 +126,10 @@ EOF
 
 create_cats_internetless_secret() {
   info "Creating cats secret to use internetless CATS test suite"
+
+  qjob="$(get_resource_name qjob "acceptance-tests")"
   cats_secret_name="$(
-    kubectl get qjobs -n "${KUBECF_NAMESPACE}" \
-    "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests -o json | \
+    kubectl get ${qjob} --namespace "${KUBECF_NAMESPACE}" -o json | \
     jq -r '.spec.template.spec.template.spec.volumes[] | select(.name=="ig-resolved").secret.secretName')"
 
   cats_secret="$(kubectl get secrets --export -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o yaml)"
@@ -146,8 +147,9 @@ create_cats_internetless_secret() {
 }
 
 mount_cats_internetless_secret() {
+  qjob="$(get_resource_name qjob "acceptance-tests")"
   original_volumes=$(
-    kubectl get qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" -o json | \
+    kubectl get ${qjob} --namespace "${KUBECF_NAMESPACE}" -o json | \
     jq -r '.spec.template.spec.template.spec.volumes')
 
   updated_volumes=$(echo ${original_volumes} | \
@@ -155,8 +157,7 @@ mount_cats_internetless_secret() {
 
   patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${updated_volumes}' } } } } } }'
 
-  kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests \
-    --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${patch}"
+  kubectl patch ${qjob} --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${patch}"
 }
 
 # Re-enables internet access again and mounts the original secret in the qjob
@@ -166,7 +167,9 @@ cleanup_cats_internetless() {
   isolate_network 0
   revert_patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${original_volumes}' } } } } } }'
   echo "$(blue "Mounting the original secret in acceptance tests qjob")"
-  kubectl patch qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${revert_patch}"
+  qjob="$(get_resource_name qjob "acceptance-tests")"
+  kubectl patch ${qjob} --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${revert_patch}"
+
   kubectl delete secret -n ${KUBECF_NAMESPACE} --ignore-not-found cats-internetless
   trap "exit \$rv" EXIT
 }
@@ -194,8 +197,9 @@ case "${KUBECF_TEST_SUITE}" in
     ;;
   cats-internetless)
     # Cleanup trap will need this
+    qjob="$(get_resource_name qjob "acceptance-tests")"
     original_volumes=$(
-      kubectl get qjob "${KUBECF_DEPLOYMENT_NAME}"-acceptance-tests --namespace "${KUBECF_NAMESPACE}" -o json | \
+      kubectl get --namespace ${KUBECF_NAMESPACE} ${qjob} --namespace "${KUBECF_NAMESPACE}" -o json | \
       jq -r '.spec.template.spec.template.spec.volumes')
 
     isolate_network 1
