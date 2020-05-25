@@ -37,6 +37,7 @@ if [ "${EMBEDDED_UAA}" != "true" ]; then
     CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa \
     -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
+    kubectl create namespace "scf"
     helm_install susecf-scf helm/cf --namespace scf \
     --values scf-config-values.yaml \
     --set "secrets.UAA_CA_CERT=${CA_CERT}"

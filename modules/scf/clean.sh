@@ -9,7 +9,7 @@
 
 if [ "$EMBEDDED_UAA" != "true" ]; then
     if helm_ls 2>/dev/null | grep -qi susecf-uaa ; then
-        helm_delete susecf-uaa
+        helm_delete susecf-uaa --namespace uaa
     fi
     if kubectl get namespaces 2>/dev/null | grep -qi uaa ; then
         kubectl delete --ignore-not-found namespace uaa
