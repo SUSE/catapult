@@ -4,8 +4,8 @@
 . ../../include/common.sh
 . .envrc
 
-curl -Lo klog.sh "$SCF_REPO"/raw/"$SCF_BRANCH"/container-host-files/opt/scf/bin/klog.sh
+curl -Lo klog.sh "$SCF_REPO"/raw/"$SCF_BRANCH"/dev/kube/klog.sh
 chmod +x klog.sh
 mv klog.sh bin/
 
-klog.sh
+HOME=${BUILD_DIR} klog.sh -f ${KUBECF_NAMESPACE} 
