@@ -17,11 +17,11 @@ if ! az account show; then
        --tenant "$AZURE_TENANT_ID"
 fi
 
-# Check that KUBECTL_VERSION specified is available in azure location
+# Check that KUBE_VERSION specified is available in azure location
 available_kube_versions=$(az aks get-versions -l $AZURE_LOCATION | jq -c '[.orchestrators[] | select(.orchestratorType == "Kubernetes") | .orchestratorVersion]')
-if [[ -z $(jq 'index("'${KUBECTL_VERSION#v}'") // empty' <<< $available_kube_versions) ]]; then
-    err "kubectl version ${KUBECTL_VERSION#v} not available in aks location $AZURE_LOCATION"
-    info "Check KUBECTL_VERSION and AZURE_LOCATION settings"
+if [[ -z $(jq 'index("'${KUBE_VERSION#v}'") // empty' <<< $available_kube_versions) ]]; then
+    err "kubectl version ${KUBE_VERSION#v} not available in aks location $AZURE_LOCATION"
+    info "Check KUBE_VERSION and AZURE_LOCATION settings"
     info "Available versions in $AZURE_LOCATION: $available_kube_versions"
     exit 1
 fi
@@ -37,6 +37,7 @@ ssh-add -L
 (ssh-add -L | head -n 1) > ./sshkey.pub
 
 cat <<HEREDOC > terraform.tfvars
+cluster_name      = "$AZURE_CLUSTER_NAME"
 az_resource_group = "$AZURE_RESOURCE_GROUP"
 client_id         = "$AZURE_APP_ID"
 client_secret     = "$AZURE_PASSWORD"
@@ -45,10 +46,10 @@ ssh_public_key    = "./sshkey.pub"
 location          = "$AZURE_LOCATION"
 agent_admin       = "cap-admin"
 cluster_labels    = {
-    "catapult-cluster" = "$(whoami)-cap-$CLUSTER_NAME",
+    "catapult-cluster" = "$AZURE_CLUSTER_NAME",
     "owner"            = "$(whoami)"
 }
-k8s_version       = "$KUBECTL_VERSION"
+k8s_version       = "$KUBE_VERSION"
 azure_dns_json    = "$AZURE_DNS_JSON"
 dns_zone_rg       = "$AZURE_DNS_RESOURCE_GROUP"
 HEREDOC
@@ -77,7 +78,7 @@ kubectl get svc
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
 wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-nginx-ingress-controller -o json | jq -r '.status[].ingress[].ip' 2>/dev/null)"'
-DOMAIN="$CLUSTER_NAME.$MAGICDNS"
+DOMAIN="$AZURE_CLUSTER_NAME.$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
