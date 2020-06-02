@@ -14,9 +14,12 @@ kube-ready-state-check.sh kube || true
 info "Adding cap-values configmap if missing"
 if ! kubectl get configmap cap-values -n kube-system 2>/dev/null | grep -qi cap-values; then
     ROOTFS=overlay-xfs
-    # take first worker node as public ip:
+    # take first worker node as public ip if DOMAIN is not explicitly set:
     PUBLIC_IP="$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address' | head -n 1)"
-    DOMAIN="$PUBLIC_IP.$MAGICDNS"
+
+    if [ -z "${DOMAIN}" ]; then
+      DOMAIN="$PUBLIC_IP.$MAGICDNS"
+    fi
     if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
         kubectl create configmap -n kube-system cap-values \
                 --from-literal=garden-rootfs-driver="${ROOTFS}" \
