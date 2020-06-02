@@ -7,24 +7,24 @@
 . ../../include/common.sh
 . .envrc
 
-
 if ! az account show; then
     info "Missing azure credentials, running az login…"
     # https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest#sign-in-using-a-service-principal
     az login --service-principal \
-       --username "$AZURE_APP_ID" \
-       --password "$AZURE_PASSWORD" \
-       --tenant "$AZURE_TENANT_ID"
+       --username "${AZURE_APP_ID}" \
+       --password "${AZURE_PASSWORD}" \
+       --tenant "${AZURE_TENANT_ID}"
 fi
 
 # Check that KUBE_VERSION specified is available in azure location
-available_kube_versions=$(az aks get-versions -l $AZURE_LOCATION | jq -c '[.orchestrators[] | select(.orchestratorType == "Kubernetes") | .orchestratorVersion]')
+available_kube_versions=$(az aks get-versions -l "${AZURE_LOCATION}" | jq -c '[.orchestrators[] | select(.orchestratorType == "Kubernetes") | .orchestratorVersion]')
 if [[ -z $(jq 'index("'${KUBE_VERSION#v}'") // empty' <<< $available_kube_versions) ]]; then
-    err "kubectl version ${KUBE_VERSION#v} not available in aks location $AZURE_LOCATION"
+    err "kubectl version ${KUBE_VERSION#v} not available in aks location ${AZURE_LOCATION}"
     info "Check KUBE_VERSION and AZURE_LOCATION settings"
-    info "Available versions in $AZURE_LOCATION: $available_kube_versions"
+    info "Available versions in ${AZURE_LOCATION}: $available_kube_versions"
     exit 1
 fi
+
 git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
 pushd cap-terraform/aks || exit
 
@@ -37,37 +37,54 @@ ssh-add -L
 (ssh-add -L | head -n 1) > ./sshkey.pub
 
 cat <<HEREDOC > terraform.tfvars
-cluster_name      = "$AZURE_CLUSTER_NAME"
-az_resource_group = "$AZURE_RESOURCE_GROUP"
-client_id         = "$AZURE_APP_ID"
-client_secret     = "$AZURE_PASSWORD"
+cluster_name      = "${AZURE_CLUSTER_NAME}"
+az_resource_group = "${AZURE_RESOURCE_GROUP}"
+client_id         = "${AZURE_APP_ID}"
+client_secret     = "${AZURE_PASSWORD}"
 ssh_public_key    = "./sshkey.pub"
-
-location          = "$AZURE_LOCATION"
+instance_count    = "${AZURE_NODE_COUNT}"
+location          = "${AZURE_LOCATION}"
 agent_admin       = "cap-admin"
 cluster_labels    = {
-    "catapult-cluster" = "$AZURE_CLUSTER_NAME",
+    "catapult-cluster" = "${AZURE_CLUSTER_NAME}",
     "owner"            = "$(whoami)"
 }
-k8s_version       = "$KUBE_VERSION"
-azure_dns_json    = "$AZURE_DNS_JSON"
-dns_zone_rg       = "$AZURE_DNS_RESOURCE_GROUP"
+k8s_version       = "${KUBE_VERSION}"
+azure_dns_json    = "${AZURE_DNS_JSON}"
+dns_zone_rg       = "${AZURE_DNS_RESOURCE_GROUP}"
 HEREDOC
+
+if [ -n "${TF_KEY}" ] ; then
+    cat > backend.tf <<EOF
+terraform {
+  backend "s3" {
+      bucket = "${TF_BUCKET}"
+      region = "${TF_REGION}"
+      key    = "${TF_KEY}"
+  }
+}
+EOF
+fi
 
 terraform init
 
 terraform plan -out=my-plan
 
+if [ -n "${TF_KEY}" ] ; then
+    # zip the terraform folder to use in concourse pool
+    zip -r9  "${BUILD_DIR}/tf-setup.zip" .
+fi
+
 # temporarily change KUBECONFIG, needed for terraform scripts:
 KUBECONFIG="$(pwd)"/aksk8scfg
 
-terraform apply -auto-approve
+terraform apply -auto-approve my-plan
 
 # restore correct KUBECONFIG:
-KUBECONFIG="$BUILD_DIR"/kubeconfig
+KUBECONFIG="${BUILD_DIR}"/kubeconfig
 
 # get kubectl for aks:
-cp aksk8scfg "$KUBECONFIG"
+cp aksk8scfg "${KUBECONFIG}"
 
 # wait for cluster ready:
 wait_ns kube-system
