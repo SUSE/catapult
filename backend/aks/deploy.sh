@@ -16,11 +16,11 @@ if ! az account show; then
        --tenant "${AZURE_TENANT_ID}"
 fi
 
-# Check that KUBE_VERSION specified is available in azure location
+# Check that KUBECTL_VERSION specified is available in azure location
 available_kube_versions=$(az aks get-versions -l "${AZURE_LOCATION}" | jq -c '[.orchestrators[] | select(.orchestratorType == "Kubernetes") | .orchestratorVersion]')
-if [[ -z $(jq 'index("'${KUBE_VERSION#v}'") // empty' <<< $available_kube_versions) ]]; then
-    err "kubectl version ${KUBE_VERSION#v} not available in aks location ${AZURE_LOCATION}"
-    info "Check KUBE_VERSION and AZURE_LOCATION settings"
+if [[ -z $(jq 'index("'${KUBECTL_VERSION#v}'") // empty' <<< $available_kube_versions) ]]; then
+    err "kubectl version ${KUBECTL_VERSION#v} not available in aks location ${AZURE_LOCATION}"
+    info "Check KUBECTL_VERSION and AZURE_LOCATION settings"
     info "Available versions in ${AZURE_LOCATION}: $available_kube_versions"
     exit 1
 fi
@@ -49,7 +49,7 @@ cluster_labels    = {
     "catapult-cluster" = "${AZURE_CLUSTER_NAME}",
     "owner"            = "$(whoami)"
 }
-k8s_version       = "${KUBE_VERSION}"
+k8s_version       = "${KUBECTL_VERSION}"
 azure_dns_json    = "${AZURE_DNS_JSON}"
 dns_zone_rg       = "${AZURE_DNS_RESOURCE_GROUP}"
 HEREDOC
