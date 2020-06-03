@@ -4,7 +4,7 @@
     $> make all
 
 This will start a local [Kind](https://github.com/kubernetes-sigs/kind) cluster
-and deploy scf on top of it. Remove everything with `make clean`.
+and deploy kubecf on top of it. Remove everything with `make clean`.
 
 Next, check the [First steps wiki page](https://github.com/SUSE/catapult/wiki/First-steps)
 or do:
@@ -19,7 +19,7 @@ Catapult is a CI implementation for [KubeCF](https://github.com/SUSE/kubecf),
 [SCF](https://github.com/SUSE/scf) &
 [Stratos](https://github.com/cloudfoundry/stratos),
 designed from the ground-up to work locally. This allows iterating and using it
-for manual tests and development of the product, in addition to running it in
+for manual tests and development of the products, in addition to running it in
 your favourite CI scheduler (Concourse, Gitlab…).
 
 Catapult supports several k8s backends: can create CaaSP4, GKE, EKS clusters on its
@@ -45,7 +45,7 @@ For now, all documentation is in the [project wiki](https://github.com/SUSE/cata
 
 # Contributing
 
-Please run catapult linting, unit tests, integration tests, etc for a full TDD
+Please run catapult's linting, unit tests, integration tests, etc for a full TDD
 experience, as PRs are gated through them (see "build status" label):
 
      $> make catapult-tests
