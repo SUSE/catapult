@@ -12,6 +12,10 @@ GKE_NODE_COUNT="${GKE_NODE_COUNT:-3}"
 GKE_PREEMPTIBLE="${GKE_PREEMPTIBLE:-false}"
 GKE_DNSDOMAIN="${GKE_DNSDOMAIN:-${GKE_CLUSTER_NAME}.ci.kubecf.charmedquarks.me}"
 
+# Set to non-empty string to change from terraform's default
+# Eg: n1-highcpu-16 for 1-node cluster
+GKE_INSTANCE_TYPE="${GKE_INSTANCE_TYPE:-}"
+
 HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 
 # Settings for terraform state save/restore

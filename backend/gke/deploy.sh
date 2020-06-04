@@ -40,6 +40,12 @@ cluster_name   = "$GKE_CLUSTER_NAME"
 k8s_version    = "latest"
 HEREDOC
 
+if [ -n "${GKE_INSTANCE_TYPE}" ] ; then
+    cat >> terraform.tfvars <<EOF
+instance_type   = "$GKE_INSTANCE_TYPE"
+EOF
+fi
+
 if [ -n "${TF_KEY}" ] ; then
     cat > backend.tf <<EOF
 terraform {
