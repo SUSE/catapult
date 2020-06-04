@@ -8,7 +8,7 @@
 . .envrc
 
 if ! az account show; then
-    info "Missing azure credentials, running az login…"
+    info "Missing azure credentials, running az login into the account."
     # https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest#sign-in-using-a-service-principal
     az login --service-principal \
        --username "${AZURE_APP_ID}" \
@@ -35,9 +35,6 @@ helm_init_client
 
 # ssh_public_key needs to be a file. Build it regardless of {ssh,gpg}-agent, or
 # forwarding of agents:
-eval "$(ssh-agent)"
-ssh-keygen -q -t rsa -N '' -f /tmp/sshkey 2>/dev/null <<< y >/dev/null
-ssh-add /tmp/sshkey
 ssh-add -L
 (ssh-add -L | head -n 1) > ./sshkey.pub
 
