@@ -19,6 +19,13 @@ if [ -d "$BUILD_DIR" ]; then
         )
     fi
     if [ -d "cap-terraform/aks" ]; then
+        # Required env vars for deploying via Azure SP.
+        # see: https://www.terraform.io/docs/providers/azurerm/guides/service_principal_client_secret.html#configuring-the-service-principal-in-terraform
+        export ARM_CLIENT_ID="${AZURE_APP_ID}"
+        export ARM_CLIENT_SECRET="${AZURE_PASSWORD}"
+        export ARM_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}"
+        export ARM_TENANT_ID="${AZURE_TENANT_ID}"
+        
         pushd cap-terraform/aks || exit
         terraform destroy -auto-approve
         popd || exit

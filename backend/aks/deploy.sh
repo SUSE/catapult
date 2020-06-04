@@ -8,12 +8,14 @@
 . .envrc
 
 if ! az account show; then
-    info "Missing azure credentials, running az login…"
+    info "Missing azure credentials, running az login into the account."
     # https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest#sign-in-using-a-service-principal
     az login --service-principal \
        --username "${AZURE_APP_ID}" \
        --password "${AZURE_PASSWORD}" \
        --tenant "${AZURE_TENANT_ID}"
+
+    az account set --subscription="${AZURE_SUBSCRIPTION_ID}"
 fi
 
 # Check that KUBECTL_VERSION specified is available in azure location
@@ -49,7 +51,7 @@ cluster_labels    = {
     "catapult-cluster" = "${AZURE_CLUSTER_NAME}",
     "owner"            = "$(whoami)"
 }
-k8s_version       = "${KUBECTL_VERSION}"
+k8s_version       = "${KUBECTL_VERSION#v}"
 azure_dns_json    = "${AZURE_DNS_JSON}"
 dns_zone_rg       = "${AZURE_DNS_RESOURCE_GROUP}"
 HEREDOC
@@ -65,6 +67,13 @@ terraform {
 }
 EOF
 fi
+
+# Required env vars for deploying via Azure SP.
+# see: https://www.terraform.io/docs/providers/azurerm/guides/service_principal_client_secret.html#configuring-the-service-principal-in-terraform
+export ARM_CLIENT_ID="${AZURE_APP_ID}"
+export ARM_CLIENT_SECRET="${AZURE_PASSWORD}"
+export ARM_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}"
+export ARM_TENANT_ID="${AZURE_TENANT_ID}"
 
 terraform init
 
@@ -95,12 +104,11 @@ kubectl get svc
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
 wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-nginx-ingress-controller -o json | jq -r '.status[].ingress[].ip' 2>/dev/null)"'
-DOMAIN="$AZURE_CLUSTER_NAME.$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=public-ip="${PUBLIC_IP}" \
-            --from-literal=domain="${DOMAIN}" \
+            --from-literal=domain="${AZURE_DNS_DOMAIN}" \
             --from-literal=platform=aks
 fi
 
