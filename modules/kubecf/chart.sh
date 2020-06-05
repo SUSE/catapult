@@ -65,7 +65,7 @@ else
     unzip -o chart
 fi
 
-if echo "$SCF_CHART" | grep -q "bundle"; then
+if echo "$SCF_CHART" | grep -q -E 'bundle|CAP'; then
     tar xvzf cf-operator*.tgz
     tar xvzf kubecf*.tgz
 fi
