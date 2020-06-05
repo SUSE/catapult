@@ -238,7 +238,7 @@ done
 
 # save results of tests to file
 mkdir -p artifacts
-log="artifacts/$(date +'%Y-%m-%d-%H:%M')_${pod_name#*/}.log"
+log="artifacts/$(date +'%Y-%m-%d-%H-%M')_${pod_name#*/}.log"
 kubectl logs "${pod_name}" --namespace "${KUBECF_NAMESPACE}" --container "$container_name" > "${log}"
 
 if [ "${exit_code}" -ne 0 ]; then
