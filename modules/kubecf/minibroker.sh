@@ -18,6 +18,7 @@ fi
 ORG=$(cf target | grep "org:" | tr -s " " | cut -d " " -f 2)
 
 kubectl create namespace minibroker
+helm repo add suse https://kubernetes-charts.suse.com/ && helm repo update
 helm_install minibroker suse/minibroker --namespace minibroker --set "defaultNamespace=minibroker"
 
 wait_ns minibroker
