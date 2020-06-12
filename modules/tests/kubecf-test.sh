@@ -174,28 +174,42 @@ cleanup_cats_internetless() {
   trap "exit \$rv" EXIT
 }
 
-# Delete any pending job
-kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
+# This function should be used to cleanup any old (left-over) pods and jobs from
+# previous runs. quarks job deletes the job but doesn't always delete the pod
+# (needs the "delete: pod" label to be set).
+cleanup() {
+  kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
+
+  pod_name="$(get_resource_name pod ${1} || echo '')"
+  if [ ! -z "${pod_name}" ]; then
+    echo "Found left-over pod: ${pod_name}, deleting it..."
+    kubectl delete "${pod_name}" -n "${KUBECF_NAMESPACE}" --wait || true
+  fi
+}
 
 timeout="300"
 
 case "${KUBECF_TEST_SUITE}" in
   smokes)
+    cleanup "smoke-tests"
     trigger_test_suite smoke-tests
     pod_name="$(get_resource_name pod smoke-tests)"
     container_name="smoke-tests-smoke-tests"
     ;;
   sits)
+    cleanup "sync-integration-tests"
     trigger_test_suite sync-integration-tests
     pod_name="$(get_resource_name pod sync-integration-tests)"
     container_name="sync-integration-tests-sync-integration-tests"
     ;;
   brain)
+    cleanup "brain-tests"
     trigger_test_suite brain-tests
     pod_name="$(get_resource_name pod brain-tests)"
     container_name="acceptance-tests-brain-acceptance-tests-brain"
     ;;
   cats-internetless)
+    cleanup "acceptance-tests"
     # Cleanup trap will need this
     qjob="$(get_resource_name qjob "acceptance-tests")"
     original_volumes=$(
@@ -214,6 +228,7 @@ case "${KUBECF_TEST_SUITE}" in
     container_name="acceptance-tests-acceptance-tests"
     ;;
   *)
+    cleanup_pod "acceptance-tests"
     trigger_test_suite acceptance-tests
     pod_name="$(get_resource_name pod acceptance-tests)"
     container_name="acceptance-tests-acceptance-tests"
@@ -245,7 +260,5 @@ if [ "${exit_code}" -ne 0 ]; then
     err "${KUBECF_TEST_SUITE} failed"
     exit "${exit_code}"
 fi
-# remove job, tests were successful
-kubectl delete jobs -n "${KUBECF_NAMESPACE}"  --all --wait || true
 
 ok "${KUBECF_TEST_SUITE} passed"
