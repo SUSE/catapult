@@ -228,7 +228,7 @@ case "${KUBECF_TEST_SUITE}" in
     container_name="acceptance-tests-acceptance-tests"
     ;;
   *)
-    cleanup_pod "acceptance-tests"
+    cleanup "acceptance-tests"
     trigger_test_suite acceptance-tests
     pod_name="$(get_resource_name pod acceptance-tests)"
     container_name="acceptance-tests-acceptance-tests"
