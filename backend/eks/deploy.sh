@@ -29,7 +29,6 @@ cluster_labels = $EKS_CLUSTER_LABEL
 hosted_zone_id = "${EKS_ZONE_ID}"
 hosted_zone_name = "${EKS_ZONE_NAME}"
 hosted_zone_policy_arn = "${EKS_ZONE_POLICY}"
-instance_type = "t2.large"
 HEREDOC
 
 if [ -n "${TF_KEY}" ] ; then
