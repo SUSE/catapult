@@ -9,7 +9,7 @@ if cf service-brokers 2>/dev/null | grep -qi minibroker ; then
     cf delete-service-broker minibroker -f
 fi
 if helm_ls 2>/dev/null | grep -qi minibroker ; then
-    helm_delete minibroker
+    helm_delete minibroker --namespace minibroker
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi minibroker ; then
     kubectl delete --ignore-not-found namespace minibroker
@@ -17,6 +17,8 @@ fi
 
 ORG=$(cf target | grep "org:" | tr -s " " | cut -d " " -f 2)
 
+kubectl create namespace minibroker
+helm repo add suse https://kubernetes-charts.suse.com/ && helm repo update
 helm_install minibroker suse/minibroker --namespace minibroker --set "defaultNamespace=minibroker"
 
 wait_ns minibroker

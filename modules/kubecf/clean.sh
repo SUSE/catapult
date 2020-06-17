@@ -13,6 +13,13 @@
 # kubectl get -n scf pvc -o name \
 #     | xargs --no-run-if-empty kubectl delete -n scf
 
+if helm_ls 2>/dev/null | grep -qi minibroker ; then
+    helm_delete minibroker --namespace minibroker
+fi
+if kubectl get namespaces 2>/dev/null | grep -qi minibroker ; then
+    kubectl delete --ignore-not-found namespace minibroker
+fi
+
 if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf --namespace scf
 fi
