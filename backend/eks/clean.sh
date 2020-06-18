@@ -6,6 +6,8 @@
 . ./defaults.sh
 . ../../include/common.sh
 
+set -exuo pipefail
+
 if [ -d "${BUILD_DIR}" ]; then
     . .envrc
     if [ -f "${TFSTATE}" ]; then
