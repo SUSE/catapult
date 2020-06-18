@@ -24,8 +24,12 @@ KUBE_AUTHORIZED_ROLE_ARN="${KUBE_AUTHORIZED_ROLE_ARN:-}"
 #
 # Set to a non-empty key to trigger state save in deploy.sh.
 TF_KEY="${TF_KEY:-}"
+
+# zip for terraform folder which includes tf state file.
+# set this to use clean.sh, if there is no cap-terraform folder
+TFSTATE="${TFSTATE:-}"
 #
 # s3 bucket and bucket region to save state to. Ignored when
 # TF_KEY is empty (default, see above).
 TF_BUCKET="${TF_BUCKET:-cap-ci-tf}"
-TF_REGION="${TF_REGION:-${EKS_LOCATION}}"
+TF_REGION="${TF_REGION:-us-west-2}"
