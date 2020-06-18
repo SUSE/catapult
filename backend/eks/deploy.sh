@@ -21,14 +21,20 @@ pushd cap-terraform/eks || exit
 helm_init_client
 
 cat <<HEREDOC > terraform.tfvars
-region = "$EKS_LOCATION"
-workstation_cidr_block = "0.0.0.0/0"
-keypair_name = "$EKS_KEYPAIR"
-eks_version = "$EKS_VERS"
-cluster_labels = $EKS_CLUSTER_LABEL
-hosted_zone_id = "${EKS_ZONE_ID}"
-hosted_zone_name = "${EKS_ZONE_NAME}"
-hosted_zone_policy_arn = "${EKS_ZONE_POLICY}"
+cluster_name = "${EKS_CLUSTER_NAME}"
+region = "${EKS_LOCATION}"
+keypair_name = "${EKS_KEYPAIR}"
+eks_version = "${EKS_VERS}"
+cluster_labels = ${EKS_CLUSTER_LABEL}
+hosted_zone_name = "${EKS_HOSTED_ZONE_NAME}"
+external_dns_aws_access_key = "${AWS_ACCESS_KEY_ID}"
+external_dns_aws_secret_key = "${AWS_SECRET_ACCESS_KEY}"
+deployer_role_arn = "${EKS_DEPLOYER_ROLE_ARN}"
+cluster_role_name = "${EKS_CLUSTER_ROLE_NAME}"
+cluster_role_arn = "${EKS_CLUSTER_ROLE_ARN}"
+worker_node_role_name = "${EKS_WORKER_NODE_ROLE_NAME}"
+worker_node_role_arn = "${EKS_WORKER_NODE_ROLE_ARN}"
+kube_authorized_role_arn = "${KUBE_AUTHORIZED_ROLE_ARN}"
 HEREDOC
 
 if [ -n "${TF_KEY}" ] ; then
@@ -66,12 +72,11 @@ kubectl get svc
 ROOTFS=overlay-xfs
 # take first worker node as public ip:
 PUBLIC_IP="$(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address' | head -n 1)"
-DOMAIN="$PUBLIC_IP.$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=public-ip="${PUBLIC_IP}" \
-            --from-literal=domain="${DOMAIN}" \
+            --from-literal=domain="${EKS_DOMAIN}" \
             --from-literal=platform=eks
 fi
 

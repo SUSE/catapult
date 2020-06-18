@@ -3,12 +3,17 @@
 # Requires:
 # - aws credentials present
 
+. ./defaults.sh
 . ../../include/common.sh
 
-if [ -d "$BUILD_DIR" ]; then
+if [ -d "${BUILD_DIR}" ]; then
     . .envrc
-
-
+    if [ -f "${TFSTATE}" ]; then
+        mkdir -p cap-terraform/eks
+        (cd cap-terraform/eks || exit
+          unzip -o "${TFSTATE}"
+        )
+    fi
     if [ -d "cap-terraform/eks" ]; then
         pushd cap-terraform/eks || exit
         terraform destroy -auto-approve
@@ -17,5 +22,7 @@ if [ -d "$BUILD_DIR" ]; then
     fi
 
     popd || exit
-    rm -rf "$BUILD_DIR"
+    rm -rf "${BUILD_DIR}"
 fi
+
+ok "EKS cluster deleted successfully"
