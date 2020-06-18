@@ -207,6 +207,10 @@ kubecf-purge: ##@kubecf Purge all apps, buildpacks and services from KubeCF
 kubecf-build-stemcell: ##@kubecf Build stemcell for KubeCF
 	$(MAKE) -C modules/kubecf stemcell_build
 
+.PHONY: kubecf-klog
+kubecf-klog: ##@kubecf Retrieve and run klog.sh
+	$(MAKE) -C modules/kubecf klog
+
 # scf-only targets:
 
 # Provide compatibility with kubecf by redirecting:
@@ -225,6 +229,7 @@ scf-login: kubecf-login
 scf-minibroker: kubecf-minibroker
 scf-purge: kubecf-purge
 scf-build-stemcell: kubecf-build-stemcell
+scf-klog: kubecf-klog
 else
 .PHONY: scf-build
 scf-build: ##@scf Build chart from source and install CF
@@ -271,6 +276,10 @@ scf-purge: ##@scf Purge all apps, buildpacks and services from CF
 .PHONY: scf-build-stemcell
 scf-build-stemcell: ##@scf Build stemcell
 	$(MAKE) -C modules/scf stemcell_build
+
+.PHONY: scf-klog
+scf-klog: ##@scf retreive and run klog.sh
+	$(MAKE) -C modules/scf scf-klog
 endif
 
 # stratos-only targets:
