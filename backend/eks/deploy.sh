@@ -29,7 +29,6 @@ cluster_labels = ${EKS_CLUSTER_LABEL}
 hosted_zone_name = "${EKS_HOSTED_ZONE_NAME}"
 external_dns_aws_access_key = "${AWS_ACCESS_KEY_ID}"
 external_dns_aws_secret_key = "${AWS_SECRET_ACCESS_KEY}"
-instance_type = "t2.large"
 deployer_role_arn = "${EKS_DEPLOYER_ROLE_ARN}"
 cluster_role_name = "${EKS_CLUSTER_ROLE_NAME}"
 cluster_role_arn = "${EKS_CLUSTER_ROLE_ARN}"
