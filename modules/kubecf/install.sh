@@ -48,6 +48,9 @@ helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
     --set "operator-webhook-use-service-reference=true" --set "customResources.enableInstallation=true" \
     --set "global.operator.watchNamespace=scf"
 
+# fixes operator readiness issue on AKS.
+sleep 240
+
 wait_ns cf-operator
 
 info "Wait for cf-operator to be ready"
