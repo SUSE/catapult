@@ -331,7 +331,7 @@ external_dns_annotate_scf() {
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
     else
-        kubectl annotate svc diego-ssh-diego-ssh-proxy-public \
+        kubectl annotate svc diego-ssh-ssh-proxy-public \
                 -n "$ns" \
                 "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
     fi
