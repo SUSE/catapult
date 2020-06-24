@@ -41,12 +41,23 @@ fi
 info "Installing cf-operator"
 kubectl create namespace cf-operator || true
 
+# Detect the chart version to handle different install parameters
+operator_version="$(helm_chart_app_version "${OPERATOR_CHART_URL}")"
+operator_install_args=(
+    --set "operator-webhook-use-service-reference=true"
+    --set "customResources.enableInstallation=true"
+)
+if [[ "${operator_version%%.*}" -ge 5 ]]; then
+    operator_install_args+=(--set "global.singleNamespace.name=scf")
+else
+    # quarks-operator 4.x uses a different key to target namespace to watch
+    operator_install_args+=(--set "global.operator.watchNamespace=scf")
+fi
 
 echo "Installing CFO from: ${OPERATOR_CHART_URL}"
 # Install the operator
 helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
-    --set "operator-webhook-use-service-reference=true" --set "customResources.enableInstallation=true" \
-    --set "global.operator.watchNamespace=scf"
+    "${operator_install_args[@]}"
 
 # fixes operator readiness issue on AKS.
 sleep 240
