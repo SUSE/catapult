@@ -174,6 +174,87 @@ cleanup_cats_internetless() {
   trap "exit \$rv" EXIT
 }
 
+create_cats_eirini_secret() {
+  info "Creating cats secret to use in Eirini CATS test suite"
+
+  qjob="$(get_resource_name qjob "acceptance-tests")"
+  cats_secret_name="$(
+    kubectl get ${qjob} --namespace "${KUBECF_NAMESPACE}" -o json | \
+    jq -r '.spec.template.spec.template.spec.volumes[] | select(.name=="ig-resolved").secret.secretName')"
+
+  cats_secret="$(kubectl get secrets --export -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o yaml)"
+  # This is what upstream Eirini was running and was green:
+  # https://github.com/cloudfoundry-incubator/eirini-ci/blob/09dcce6d9e900f693dfc1a6da70b5a526cf7de18/pipelines/dhall-modules/jobs/run-core-cats.dhall#L52-L86
+
+  # Normally, it only makes sense to disable test groups that enabled by default
+  # and enable those that aren't:
+  # https://github.com/cloudfoundry/cf-acceptance-tests#test-configuration
+  # Below we keep the full (explicit) list though, to make it easier to switch
+  # groups on and off.
+  suites=$(paste -d',' -s <(cat <<-SUITES
++apps
+capi_no_bridge
+container_networking
+detect
+docker
+internet_dependent
+routing
+sso
+v3
+zipkin
+ssh
+-backend_compatibility
+deployments
+isolation_segments
+private_docker_registry
+route_services
+routing_isolation_segments
+security_groups
+services
+service_discovery
+service_instance_sharing
+tasks
+SUITES
+))
+
+  cats_updated_properties="$(
+    kubectl get secret -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o json  | \
+    jq -r '.data."properties.yaml"' | base64 -d | \
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.include" "${suites}" |
+    base64 -w 0 )"
+
+  cats_updated="$(echo "$cats_secret" | yq w - 'data[properties.yaml]' $cats_updated_properties)"
+  cats_updated="$(echo "$cats_updated" | yq w - 'metadata.name' 'cats-eirini')"
+  kubectl apply -f <(echo "${cats_updated}") -n "${KUBECF_NAMESPACE}"
+}
+
+mount_cats_eirini_secret() {
+  qjob="$(get_resource_name qjob "acceptance-tests")"
+  original_volumes=$(
+    kubectl get ${qjob} --namespace "${KUBECF_NAMESPACE}" -o json | \
+    jq -r '.spec.template.spec.template.spec.volumes')
+
+  updated_volumes=$(echo ${original_volumes} | \
+    jq -r 'map((select(.name=="ig-resolved") | .secret.secretName) |= "cats-eirini")')
+
+  patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${updated_volumes}' } } } } } }'
+
+  kubectl patch ${qjob} --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${patch}"
+}
+
+# Re-enables internet access again and mounts the original secret in the qjob
+# to allow internet-full cats.
+cleanup_cats_eirini() {
+  rv=$?
+  revert_patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${original_volumes}' } } } } } }'
+  echo "$(blue "Mounting the original secret in acceptance tests qjob")"
+  qjob="$(get_resource_name qjob "acceptance-tests")"
+  kubectl patch ${qjob} --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${revert_patch}"
+
+  kubectl delete secret -n ${KUBECF_NAMESPACE} --ignore-not-found cats-eirini
+  trap "exit \$rv" EXIT
+}
+
 # This function should be used to cleanup any old (left-over) pods and jobs from
 # previous runs. quarks job deletes the job but doesn't always delete the pod
 # (needs the "delete: pod" label to be set).
@@ -207,6 +288,24 @@ case "${KUBECF_TEST_SUITE}" in
     trigger_test_suite brain-tests
     pod_name="$(get_resource_name pod brain-tests)"
     container_name="acceptance-tests-brain-acceptance-tests-brain"
+    ;;
+  cats-eirini)
+    cleanup "acceptance-tests"
+    # Cleanup trap will need this
+    qjob="$(get_resource_name qjob "acceptance-tests")"
+    original_volumes=$(
+      kubectl get --namespace ${KUBECF_NAMESPACE} ${qjob} --namespace "${KUBECF_NAMESPACE}" -o json | \
+      jq -r '.spec.template.spec.template.spec.volumes')
+
+    create_cats_eirini_secret
+    mount_cats_eirini_secret
+
+    # Allow network traffic again.
+    trap cleanup_cats_eirini EXIT
+
+    trigger_test_suite acceptance-tests
+    pod_name="$(get_resource_name pod acceptance-tests)"
+    container_name="acceptance-tests-acceptance-tests"
     ;;
   cats-internetless)
     cleanup "acceptance-tests"
