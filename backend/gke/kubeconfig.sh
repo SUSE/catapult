@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+. ./defaults.sh
+. ../../include/common.sh
+. .envrc
+
 # KUBECFG can be a kubeconfig file or a cluster reference file for local deployments
 # KUBECFG has to be a kubeclusterreference for CI usage, check gke/deploy.sh for format
 if [ ! -f "$KUBECFG" ]; then
@@ -20,10 +24,6 @@ else
     echo "Please check your KUBECFG"
     exit 1
 fi
-
-. ./defaults.sh
-. ../../include/common.sh
-. .envrc
 
 # check gcloud credentials:
 info "Using creds from GKE_CRED_JSON…"
