@@ -16,9 +16,8 @@ else
 fi
 
 GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
-rm -rfv bazel-bin/deploy/helm/kubecf/* || true
-bazel build //deploy/helm/kubecf
-tar -xvf bazel-bin/deploy/helm/kubecf/kubecf.tgz -C "$BUILD_DIR"
+./scripts/kubecf-build.sh
+tar -xvf "$(ls -t1 output/kubecf-*.tgz | head -n 1 )" -C "$BUILD_DIR"
 SCF_CHART=kubecf-"$GIT_HEAD"
 popd || exit
 
