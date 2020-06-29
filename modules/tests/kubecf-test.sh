@@ -186,7 +186,7 @@ create_cats_eirini_secret() {
   # This is what upstream Eirini was running and was green:
   # https://github.com/cloudfoundry-incubator/eirini-ci/blob/09dcce6d9e900f693dfc1a6da70b5a526cf7de18/pipelines/dhall-modules/jobs/run-core-cats.dhall#L52-L86
 
-  # Normally, it only makes sense to disable test groups that enabled by default
+  # Normally, it only makes sense to disable test groups that are enabled by default
   # and enable those that aren't:
   # https://github.com/cloudfoundry/cf-acceptance-tests#test-configuration
   # Below we keep the full (explicit) list though, to make it easier to switch
@@ -242,8 +242,7 @@ mount_cats_eirini_secret() {
   kubectl patch ${qjob} --namespace "${KUBECF_NAMESPACE}" --type merge --patch "${patch}"
 }
 
-# Re-enables internet access again and mounts the original secret in the qjob
-# to allow internet-full cats.
+# Mounts the original secret in the qjob
 cleanup_cats_eirini() {
   rv=$?
   revert_patch='{ "spec": { "template": { "spec": { "template": { "spec": { "volumes": '${original_volumes}' } } } } } }'
