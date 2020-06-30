@@ -27,7 +27,8 @@ cat <<HEREDOC > terraform.tfvars
 project        = "$GKE_PROJECT"
 location       = "$GKE_LOCATION"
 node_pool_name = "$GKE_CLUSTER_NAME"
-node_count     = "$GKE_NODE_COUNT"
+instance_count = "$GKE_NODE_COUNT"
+preemptible    = "$GKE_PREEMPTIBLE"
 vm_type        = "UBUNTU"
 gke_sa_key     = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_DNSCRED_JSON"
@@ -38,6 +39,12 @@ cluster_labels = {
 cluster_name   = "$GKE_CLUSTER_NAME"
 k8s_version    = "latest"
 HEREDOC
+
+if [ -n "${GKE_INSTANCE_TYPE}" ] ; then
+    cat >> terraform.tfvars <<EOF
+instance_type   = "$GKE_INSTANCE_TYPE"
+EOF
+fi
 
 if [ -n "${TF_KEY}" ] ; then
     cat > backend.tf <<EOF

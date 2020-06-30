@@ -9,7 +9,11 @@ GKE_CLUSTER_NAME="${GKE_CLUSTER_NAME:-$(whoami)-cap}"
 GKE_CRED_JSON="${GKE_CRED_JSON:-}"
 GKE_DNSCRED_JSON="${GKE_DNSCRED_JSON:-${GKE_CRED_JSON}}"
 GKE_NODE_COUNT="${GKE_NODE_COUNT:-3}"
+GKE_PREEMPTIBLE="${GKE_PREEMPTIBLE:-false}"
 GKE_DNSDOMAIN="${GKE_DNSDOMAIN:-${GKE_CLUSTER_NAME}.ci.kubecf.charmedquarks.me}"
+
+# Instance type of the nodes: empty string for terraform's default, or for example n1-highcpu-16 for 1-node cluster
+GKE_INSTANCE_TYPE="${GKE_INSTANCE_TYPE:-}"
 
 HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 
