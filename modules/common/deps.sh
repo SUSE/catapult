@@ -57,12 +57,6 @@ fi
 if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
     ok "Skipping downloading catapult dependencies, using host binaries"
 else
-    bazelpath=bin/bazel
-    if [ ! -e "$bazelpath" ]; then
-        wget "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64" -O $bazelpath
-        chmod +x $bazelpath
-    fi
-
     yamlpatchpath=bin/yaml-patch
     if [ ! -e "$yamlpatchpath" ]; then
         wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml_patch_${YAMLPATCH_OS_TYPE}" -O $yamlpatchpath
