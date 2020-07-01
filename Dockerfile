@@ -1,6 +1,6 @@
 FROM opensuse/tumbleweed:latest
 # Catapult dependencies:
-RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq curl which unzip direnv
+RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq curl which unzip bazel1.2 direnv
 RUN echo 'eval $(direnv hook bash)' >> ~/.bashrc
 
 RUN wget "https://github.com/mikefarah/yq/releases/download/3.2.1/yq_linux_amd64" -O /usr/local/bin/yq && \
