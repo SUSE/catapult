@@ -68,24 +68,24 @@ install_helm_and_tiller() {
   fi
 }
 
-create_nfs_storageclass() {
-    # Create nfs storageclass with provided nfs server
+create_cpi_storageclass() {
     if ! kubectl get storageclass 2>/dev/null | grep -qi persistent; then
-        NFS_SERVER_IP=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["nfs-server-ip"]')
-        NFS_PATH=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["nfs-path"]')
-        helm_install nfs-client-provisioner stable/nfs-client-provisioner \
-             --set nfs.server="$NFS_SERVER_IP" \
-             --set nfs.path="$NFS_PATH" \
-             --set storageClass.name=persistent \
-             --set storageClass.reclaimPolicy=Delete \
-             --set storageClass.archiveOnDelete=false
-        kubectl patch storageclass persistent \
-                -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+        kubectl apply -f - <<HEREDOC
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: persistent
+provisioner: kubernetes.io/cinder
+HEREDOC
     fi
+    kubectl patch storageclass persistent \
+            -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 }
+
 
 create_rolebinding
 install_helm_and_tiller
-create_nfs_storageclass
+create_cpi_storageclass
 
 ok "CaaSP4 on Openstack succesfully prepared!"

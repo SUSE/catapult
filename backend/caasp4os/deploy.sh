@@ -8,13 +8,16 @@
 # - Key on the ssh keyring. If not, will put one
 
 . ./defaults.sh
-. ./lib/skuba.sh
 . ../../include/common.sh
 . .envrc
 
 # nip.io doesn't seem to work well with ECP, use omg.h.w instead:
 export MAGICDNS=omg.howdoi.website
+
+# Create STACK var for terraform, and for the node names in lib/skuba.sh:
 STACK=${STACK:-"$(whoami)-caasp4-${CAASP_VER::3}-$CLUSTER_NAME"}
+# shellcheck disable=SC1090
+. "$ROOT_DIR"/backend/caasp4os/lib/skuba.sh
 
 if [[ ! -v OS_PASSWORD ]]; then
     err "Missing openstack credentials" && exit 1
@@ -73,6 +76,9 @@ sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
     -e "s%#~placeholder_sshkey~#%$(escapeSubst "$SSHKEY")%g" \
     "$ROOT_DIR"/backend/caasp4os/terraform-os/terraform.tfvars.skel > \
     deployment/terraform.tfvars
+# enable cpi
+sed -i '/cpi_enable/s/^#//g' deployment/cpi.auto.tfvars
+# inject our terraform files
 cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
 pushd deployment || exit
@@ -86,9 +92,13 @@ skuba_container terraform apply -auto-approve my-plan
 info "Bootstrapping k8s with skuba…"
 
 skuba_container skuba version
+skuba_init
+# inject cloud/openstack.conf for cpi
+cp openstack.conf my-cluster/cloud/openstack/openstack.conf
+
 skuba_deploy
 wait
-cp -f ./"$CLUSTER_NAME"/admin.conf ../kubeconfig
+cp -f ./my-cluster/admin.conf ../kubeconfig
 
 info "Disabling node updates…"
 skuba_updates all disable
@@ -98,10 +108,8 @@ wait
 # wait
 
 # Create k8s configmap
-PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_workers.value|to_entries|map(.value)|first')"
+PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_load_balancer.value|to_entries|map(.value)|first')"
 ROOTFS=overlay-xfs
-NFS_SERVER_IP="$(skuba_container terraform output ip_storage_int)"
-NFS_PATH="$(skuba_container terraform output storage_share)"
 DOMAIN="$PUBLIC_IP"."$MAGICDNS"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
@@ -109,8 +117,6 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
             --from-literal=public-ip="${PUBLIC_IP}" \
             --from-literal=domain="${DOMAIN}" \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
-            --from-literal=nfs-server-ip="${NFS_SERVER_IP}" \
-            --from-literal=nfs-path="${NFS_PATH}" \
             --from-literal=platform=caasp4
 fi
 ok "CaaSP4 on Openstack succesfully deployed!"

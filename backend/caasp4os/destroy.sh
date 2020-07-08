@@ -8,13 +8,13 @@
 # - Key on the ssh keyring
 
 . ./defaults.sh
-. ./lib/skuba.sh
 . ../../include/common.sh
+# shellcheck disable=SC1090
+. "$ROOT_DIR"/backend/caasp4os/lib/skuba.sh
 
 if [ -d "$BUILD_DIR" ]; then
     . .envrc
     if kubectl get storageclass 2>/dev/null | grep -qi persistent; then
-        # destroy storageclass, allowing nfs server to delete the share
         kubectl delete storageclass persistent
         wait
     fi
@@ -27,6 +27,10 @@ if [ -d "$BUILD_DIR" ]; then
         fi
         skuba_container terraform destroy -auto-approve
         info "Terraform infrastructure destroyed"
+        # TODO see deployment/my-cluster/cloud/
+        # TODO one needs to manually delete cinder volumes and LB
+        # TODO external-dns will fail to delete DNS entries
+        # https://github.com/kubernetes-sigs/external-dns/pull/1255
         popd || exit
     else
         info "No Terraform infrastructure present"

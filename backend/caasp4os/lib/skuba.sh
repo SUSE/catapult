@@ -3,6 +3,11 @@
 # Functions to interact with a container that includes the client caasp4
 # binaries and terraform
 
+# to test this by hand:
+# $> export CLUSTER_NAME=caasp4os; source backend/caasp4os/defaults.sh; source backend/caasp4os/lib/skuba.sh
+# $> skuba_container skuba version
+
+SKUBA_CLUSTER_NAME="my-cluster"
 
 _set_env_vars() {
     JSON=$(skuba_container terraform output -json)
@@ -35,29 +40,25 @@ _define_node_group() {
 }
 
 DEBUG_MODE=${DEBUG_MODE:-false}
-if [ $DEBUG_MODE = true ]; then
-    DEBUG=1
+if [ "$DEBUG_MODE" = true ]; then
+    SKUBA_DEBUG=1
 else
-    DEBUG=0
+    SKUBA_DEBUG=0
 fi
 
 skuba_container() {
-    # Usage:
-    # skuba_container <commands to run in a punctured container>
+    # Usage: skuba_container <commands to run in container>
+    # the container is normally skuba/update, which contains the caasp4 product,
+    # skuba, terraform, etc.
 
-    local app_path="$PWD"
-    if [[ "$1" == "$CLUSTER_NAME" ]]; then
-        local app_path="$PWD/$1"
-        shift
-    fi
     docker run -i --rm \
-    -v "$app_path":/app:rw \
+    -v "$(pwd)":/app:rw \
     -v "$(dirname "$SSH_AUTH_SOCK")":"$(dirname "$SSH_AUTH_SOCK")" \
     -v "/etc/passwd:/etc/passwd:ro" \
     --env-file <( env| cut -f1 -d= ) \
     -e SSH_AUTH_SOCK="$SSH_AUTH_SOCK" \
     -u "$(id -u)":"$(id -g)" \
-    skuba/$CAASP_VER "$@"
+    skuba/"$CAASP_VER" "$@"
 }
 
 _ssh2() {
@@ -81,16 +82,16 @@ skuba_wait_ssh() {
     for n in $GROUP; do
         secs=0
         set +e
-        _ssh2 $n exit
+        _ssh2 "$n" exit
         while test $? -gt 0
         do
-            if [ $secs -gt $timeout ] ; then
+            if [ $secs -gt "$timeout" ] ; then
                 echo "Timeout while waiting for $n"
                 exit 2
             else
                 sleep 5
                 secs=$(( secs + 5 ))
-                _ssh2 $n exit
+                _ssh2 "$n" exit
             fi
         done
         set -e
@@ -98,8 +99,7 @@ skuba_wait_ssh() {
 }
 
 skuba_reboots() {
-    # usage:
-    # reboots disable
+    # usage: skuba_reboots disable
 
     local action="${1:-disable}"
 
@@ -112,9 +112,9 @@ skuba_reboots() {
 
 skuba_run_cmd() {
     # Usage:
-    # run_cmd <target> "sudo ..."
-    # run_cmd all "sudo ..."
-    # run_cmd masters "sudo ..."
+    # skuba_run_cmd <target> "sudo ..."
+    # skuba_run_cmd all "sudo ..."
+    # skuba_run_cmd masters "sudo ..."
 
     local target="${1:-all}"
 
@@ -126,9 +126,9 @@ skuba_run_cmd() {
 
 skuba_use_scp() {
     # Usage:
-    # use_scp <target> <src_files> <dest_files>
-    # use_scp masters <src_files> <dest_files>
-    # use_scp workers <src_files> <dest_files>
+    # skuba_use_scp <target> <src_files> <dest_files>
+    # skuba_use_scp masters <src_files> <dest_files>
+    # skuba_use_scp workers <src_files> <dest_files>
 
     local target="${1:-all}"
 
@@ -138,7 +138,7 @@ skuba_use_scp() {
     local options="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -F /dev/null -o LogLevel=ERROR -r"
 
     for n in $GROUP; do
-        scp "$options" "$SRC" sles@$n:"$DEST"
+        scp "$options" "$SRC" sles@"$n":"$DEST"
     done
 }
 
@@ -148,8 +148,8 @@ skuba_show_images() {
 
 skuba_updates() {
     # Usage:
-    # updates <target> <action>
-    # updates all disable
+    # skuba_updates <target> <action>
+    # skuba_updates all disable
 
     local target="${1:-all}"
     local action="${2:-disable}"
@@ -161,50 +161,62 @@ skuba_updates() {
 }
 
 _init_control_plane() {
-    if ! [[ -d "$CLUSTER_NAME" ]]; then
-        skuba_container skuba cluster init --control-plane "$LB" "$CLUSTER_NAME"
-    fi
+    skuba_container skuba cluster init \
+                    --cloud-provider openstack \
+                    --control-plane "$LB" "$SKUBA_CLUSTER_NAME"
 }
 
 _deploy_masters() {
-local i=0
-for n in $1; do
-    local j
-    j="$(printf "%03g" $i)"
-    if [[ $i -eq 0 ]]; then
-      skuba_container "$CLUSTER_NAME" skuba node bootstrap --user sles --sudo --target "$n" "master$j" -v "$DEBUG"
-      wait
-    fi
+    local i=0
+    for n in $1; do
+        if [[ $i -eq 0 ]]; then
+            # bootstrap first master
+            skuba_container skuba node bootstrap \
+                            --user sles --sudo \
+                            --target "$n" "caasp-master-$STACK-$i" -v "$SKUBA_DEBUG"
+            wait
+        fi
 
-    if [[ $i -ne 0 ]]; then
-      skuba_container "$CLUSTER_NAME" skuba node join --role master --user sles --sudo --target  "$n" "master$j" -v "$DEBUG"
-      wait
-    fi
-    ((++i))
-done
+        if [[ $i -ne 0 ]]; then
+            skuba_container skuba node join \
+                            --role master \
+                            --user sles --sudo \
+                            --target "$n" "caasp-master-$STACK-$i" -v "$SKUBA_DEBUG"
+            wait
+        fi
+        ((++i))
+    done
 }
 
 _deploy_workers() {
     local i=0
     for n in $1; do
-        local j
-        j="$(printf "%03g" $i)"
-        (skuba_container "$CLUSTER_NAME" skuba node join --role worker --user sles --sudo --target  "$n" "worker$j" -v "$DEBUG") &
+        # bootstrap in parallel:
+        (skuba_container skuba node join \
+                         --role worker \
+                         --user sles --sudo \
+                         --target  "$n" "caasp-worker-$STACK-$i" -v "$SKUBA_DEBUG") &
         wait
         ((++i))
     done
 }
 
-skuba_deploy() {
-    # Usage: deploy
-
-    set -x
+skuba_init() {
+    # Usage: deployment$ skuba_init
+    # calls skuba init
     _set_env_vars
     _init_control_plane
-    pushd "$(pwd)"/ || exit
+}
+
+skuba_deploy() {
+    # Usage: deployment$ skuba_deploy
+    # calls skuba init
+    _set_env_vars
+    pushd "$SKUBA_CLUSTER_NAME" || exit
     _deploy_masters "$MASTERS"
     _deploy_workers "$WORKERS"
-    KUBECONFIG="" skuba_container $CLUSTER_NAME skuba cluster status
+    skuba_container skuba cluster status
+    popd
 }
 
 skuba_node_upgrade() {
@@ -219,7 +231,7 @@ skuba_node_upgrade() {
      _define_node_group "$target"
     local i=0
     for n in $GROUP; do
-        skuba_container "$CLUSTER_NAME" skuba node upgrade \
-                        apply --user sles --sudo --target "$n" -v "$DEBUG"
+        skuba_container skuba node upgrade \
+                        apply --user sles --sudo --target "$n" -v "$SKUBA_DEBUG"
     done
 }
