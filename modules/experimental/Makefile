@@ -8,3 +8,11 @@ eirini_release:
 .PHONY: eirinifs
 eirinifs:
 	./eirinifs.sh
+
+.PHONY: airgap-up
+airgap-up: airgap-down
+	./airgap_up.sh
+
+PHONY: airgap-down
+airgap-down:
+	./airgap_down.sh
