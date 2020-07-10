@@ -20,5 +20,9 @@ install:
 upgrade:
 	./upgrade.sh
 
+.PHONY: reachable
+reachable:
+	./reachable.sh
+
 .PHONY: all
-all: clean chart gen-config install
+all: clean chart gen-config install reachable
