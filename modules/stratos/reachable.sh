@@ -33,8 +33,6 @@ if [ $exit_code -ne 0 ] ; then
    err "Not reachable via IP"
 fi
 
-set -x
-
 # check via the domain name
 # It might take some time for external DNS records to update so make a few attempts to login before bailing out.
 n=0
