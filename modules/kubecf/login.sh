@@ -17,12 +17,21 @@ mkdir -p "$CF_HOME"
 n=0
 until [ $n -ge 20 ]
 do
-   cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$CLUSTER_PASSWORD" -o system && break
+   cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$CLUSTER_PASSWORD" -o system
+   exit_code=$?
+   if [ $exit_code -eq 0 ]; then
+
+      cf create-space tmp
+      cf target -s tmp
+
+      ok "Logged in to KubeCF"
+      break
+   fi
+
    n=$[$n+1]
    sleep 60
 done
 
-cf create-space tmp
-cf target -s tmp
-
-ok "Logged in to SCF"
+if [ $exit_code -ne 0 ] ; then
+   err "Could not log into KubeCF"
+fi
