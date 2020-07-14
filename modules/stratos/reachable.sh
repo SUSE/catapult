@@ -42,7 +42,7 @@ do
    curl -k https://console."${domain}":"${port}" | grep "SUSE Stratos Console"
    exit_code=$?
    if [ $exit_code -eq 0 ]; then
-      err "Reachable via IP"
+      ok "Reachable via hostname https://console.${domain}:${port}" 
       break
    fi
    
