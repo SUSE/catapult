@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# Common options
+##################
+
+OWNER="${OWNER:-$(whoami)}"
+
 # AKS options
 ##################
 
 KUBECTL_VERSION="${KUBECTL_VERSION:-v1.18.2}"
 
-AZURE_CLUSTER_NAME="${AZURE_CLUSTER_NAME:-$(whoami)-cap}"
+AZURE_CLUSTER_NAME="${AZURE_CLUSTER_NAME:-${OWNER}-cap}"
 AZURE_NODE_COUNT="${AZURE_NODE_COUNT:-3}"
 AZURE_LOCATION="${AZURE_LOCATION:-westus}"
 AZURE_RESOURCE_GROUP="${AZURE_RESOURCE_GROUP:-}"
