@@ -304,6 +304,14 @@ external_dns_annotate_uaa() {
             "external-dns.alpha.kubernetes.io/hostname=uaa.${domain}, *.uaa.${domain}"
 }
 
+external_dns_annotate_stratos() {
+    local ns=$1;shift
+    local domain=$1;shift
+    kubectl annotate svc suse-console-ui-ext \
+            -n "$ns" \
+            "external-dns.alpha.kubernetes.io/hostname=console.${domain}, *.console.${domain}"
+}
+
 external_dns_annotate_kubecf() {
     local ns=$1;shift
     local domain=$1;shift
