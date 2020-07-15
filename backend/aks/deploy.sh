@@ -49,7 +49,7 @@ location          = "${AZURE_LOCATION}"
 agent_admin       = "cap-admin"
 cluster_labels    = {
     "catapult-cluster" = "${AZURE_CLUSTER_NAME}",
-    "owner"            = "$(whoami)"
+    "owner"            = "${OWNER}"
 }
 k8s_version       = "${KUBECTL_VERSION#v}"
 azure_dns_json    = "${AZURE_DNS_JSON}"

@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# Common options
+##################
+
+OWNER="${OWNER:-$(whoami)}"
+
 # GKE options
 #############
 
 GKE_PROJECT="${GKE_PROJECT:-suse-css-platform}"
 GKE_LOCATION="${GKE_LOCATION:-europe-west4-a}"
-GKE_CLUSTER_NAME="${GKE_CLUSTER_NAME:-$(whoami)-cap}"
+GKE_CLUSTER_NAME="${GKE_CLUSTER_NAME:-${OWNER}-cap}"
 GKE_CRED_JSON="${GKE_CRED_JSON:-}"
 GKE_DNSCRED_JSON="${GKE_DNSCRED_JSON:-${GKE_CRED_JSON}}"
 GKE_NODE_COUNT="${GKE_NODE_COUNT:-3}"
