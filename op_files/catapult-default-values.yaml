@@ -1,0 +1,100 @@
+--- # catapult default values
+
+develop: true
+quiet_output: false
+download_bins: true
+download_catapult_deps: true
+
+kubectl_ver: v1.17.0
+helm_ver: v3.2.4
+
+kubeproxy_port: 2224
+
+domain: foo 
+
+backend:
+  tf:
+    key: ~
+    state: ~
+    bucket: cap-ci-tf
+    region: us-west-2
+  aks:
+    kubectl_ver: v1.18.2
+    cluster_name: $(whoami)-cap
+    node_count: 3
+    location: westus
+    resource_group: ~
+    app_id: ~
+    password: ~
+    tenant_id: ~
+    subscription_id: ~
+    dns_json: ~
+    dns_resource_group: susecap-domain
+    dns_domain: $(aks.cluster_name).susecap.net
+  caasp:
+    version: update # devel, staging, update, product
+    kubectl_ver: v1.17.4
+    helm_ver: v3.2.4
+  ekcp:
+    host: ~
+    proxy: ~
+    force_delete: false
+    helm_ver: v3.2.4
+  eks:
+    cluster_name: $(whoami)-cap
+    location: us-west-2
+    keypair: $(whoami)-terraform
+    k8s_ver: 1.14
+    cluster_label: { key = "$(whoami)-eks-cluster" }
+    helm_ver: v3.2.4
+    hosted_zone_name: qa.aws.howdoi.website
+    domain: $(eks.cluster_name).$(eks.hosted_zone_name)
+    deployer_role_arn: ~
+    cluster_role_name: ~
+    cluster_role_arn: ~
+    worker_node_role_name: ~
+    worker_node_role_arn: ~
+    kube_authorized_role_arn: ~
+  gke:
+    project: suse-css-platform
+    location: europe-west4-a
+    cluster_name: $(whoami)-cap
+    cred_json: ~
+    dns_cred_json: ~
+    node_count: 3
+    preemptible: false
+    dns_domain: $(gke.cluster_name).ci.kubecf.charmedquarks.me
+    instance_type: ~
+  imported:
+    kubecfg_path: ~
+  kind:
+    kind_ver: 0.6.1
+    kind_api_ver: kind.sigs.k8s.io/v1alpha3
+    kubectl_ver: v1.16.3
+  minikube:
+    runtime: docker # docker, containerd, cri-o
+
+docker:
+  registry: registry.suse.com
+  username: ~
+  passowrd: ~
+  org: cap
+magicdns: omg.howdoi.website
+
+
+cluster_password: password # to be removed
+
+kubecf:
+  scf_chart: ~
+  operator_chart_url: latest
+  scf_services: lb
+  local_repo: ~
+  repo: https://github.com/cloudfoundry-incubator/kubecf
+  repo_branch: master
+  namespace: scf
+
+stratos:
+  stratos_chart: latest
+  namespace: stratos
+
+
