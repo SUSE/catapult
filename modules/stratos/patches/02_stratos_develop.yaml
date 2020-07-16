@@ -1,0 +1,13 @@
+--- # dependency constraints
+spec: 0.0.1
+apply_to: stratos
+
+--- # add to stratos
+kube:
+  registry:
+    hostname: "registry.suse.com"
+    username: "staging.registry.howdoi.website"
+    # password: "ournicepassword"
+    password: (( grab $DOCKER_PASSWORD ))
+    # password: (( vault .stratos.dockerorg.password ))
+  organization: splatform
