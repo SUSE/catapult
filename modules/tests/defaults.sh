@@ -39,3 +39,11 @@ KUBECF_CHECKOUT="${KUBECF_CHECKOUT:-}"
 KUBECF_TEST_SUITE="${KUBECF_TEST_SUITE:-smokes}" # smokes, sits, brain, cats, cats-internetless
 KUBECF_DEPLOYMENT_NAME="${KUBECF_DEPLOYMENT_NAME:-susecf-scf}"
 KUBECF_NAMESPACE="${KUBECF_NAMESPACE:-scf}"
+
+# Stress test options
+#####################
+
+STRESS_TEST_REPO="${STRESS_TEST_REPO:-https://github.com/mudler/cf-benchmark-tools}"
+TEST_CONCURRENCY="${TEST_CONCURRENCY:-2}"
+TEST_RATE="${TEST_RATE:-2}"
+TEST_DURATION="${TEST_DURATION:-20m}"

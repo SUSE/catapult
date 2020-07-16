@@ -32,6 +32,10 @@ cats:
 cats-scf:
 	./cats_scf.sh
 
+.PHONY: stress
+stress:
+	./stress.sh
+
 .PHONY: sample
 sample:
 	./sample.sh

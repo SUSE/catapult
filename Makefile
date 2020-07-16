@@ -377,6 +377,10 @@ tests-cats-scf:
 tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler
 
+.PHONY: tests-stress
+tests-stress:
+	$(MAKE) -C modules/tests stress
+
 # Samples and fixtures
 .PHONY: sample
 sample: ##@tests Deploy sample app
