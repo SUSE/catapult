@@ -70,11 +70,13 @@ else
     fi
 fi
 
-selective-mergepath=bin/selective-merge
-mv "$ROOT_DIR"/include/selective-merge.rb "$selective-mergepath"
-chmod +x "$selective-mergepath"
-pushd "$ROOT_DIR"/include/selective-merge_bundle
-bundle install
-popd
+selectivemerge_path=bin/selective-merge
+if [ ! -e "$selectivemerge_path" ]; then
+    cp "$ROOT_DIR"/include/selective-merge/selective-merge.rb "$selectivemerge_path"
+    chmod +x "$selectivemerge_path"
+    pushd "$ROOT_DIR"/include/selective-merge
+    bundle install
+    popd
+fi
 
 ok "Deps correctly downloaded"
