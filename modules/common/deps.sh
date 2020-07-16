@@ -75,7 +75,12 @@ if [ ! -e "$selectivemerge_path" ]; then
     cp "$ROOT_DIR"/include/selective-merge/selective-merge.rb "$selectivemerge_path"
     chmod +x "$selectivemerge_path"
     pushd "$ROOT_DIR"/include/selective-merge
-    bundle install
+    if [ ! -f /etc/debian_version ]; then
+        # TODO use rvm for installation
+        # https://bundler.io/blog/2019/05/14/solutions-for-cant-find-gem-bundler-with-executable-bundle.html
+        # gem update
+        bundle install
+    fi
     popd
 fi
 
