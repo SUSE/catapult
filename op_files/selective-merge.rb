@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # example usage:
-# ./selective_merge.rb -d kubecf=kubecf-values.yaml -p stratos-loadbalancer-patch.yaml
+# ./selective_merge.rb -d kubecf=kubecf-values.yaml -d stratos=stratos-values.yaml -p stratos-loadbalancer-patch.yaml
 
 require 'yaml'
 require 'json'
@@ -14,7 +14,7 @@ opts = Slop.parse do |o|
   o.array "-d", "--dependency", "path to a yaml file of a dependency"
 end
 
-template_path = opts[:patch]
+patch_path = opts[:patch]
 dependency_definitions = opts[:dependency]
 
 class Spec
@@ -134,21 +134,18 @@ class Template
 end
 
 
-
-
 dependencies = {}
 dependency_definitions.each do |definition|
   name, path = definition.split("=")
   dependencies[name] = YAML.load_file(path)
 end
 
-spec_yaml, template_yaml = YAML.load_stream(File.read(template_path))
+spec_yaml, template_yaml = YAML.load_stream(File.read(patch_path))
 spec = Spec.new(spec_yaml, dependencies)
+template = Template.new(template_yaml)
 
 if spec.match_conditions?
-  template = Template.new(template_yaml)
-
-  if spec.target.nil?
+  if !spec.target
     puts YAML.dump(template.evaluate(dependencies))
   else
     result = template.apply(spec.target_yaml, dependencies)
