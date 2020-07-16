@@ -5,7 +5,7 @@ depends_on:
   ver: "> 2.2"
   conditions:
   - ".services[] | select(.type ==  \"LoadBalancer\") | any"
-apply_to: kubecf # optional
+apply_to: stratos # optional
 
 --- # patch for stratos
 console:
