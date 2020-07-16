@@ -42,8 +42,13 @@ class Spec
         output, status = Open3.capture2e("jq", "-e", condition, stdin_data: @dependencies[dep["name"]].to_json)
 
         if !status.success?
-          STDERR.puts "Running jq failed on the condition '#{condition}':\n\n#{output}"
-          exit 1
+          if status.exitstatus == 2 || # Usage or system error
+            status.exitstatus == 3    # Compile error
+            STDERR.puts "Running jq failed on the condition '#{condition}':\n\n#{output}"
+            exit 2
+          else
+            false
+          end
         else
           true
         end
