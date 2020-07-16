@@ -1,0 +1,6 @@
+--- # dependency constraints
+spec: 0.0.1
+apply_to: kubecf
+
+--- # add to kubecf
+(( grab $CONFIG_OVERRIDE ))

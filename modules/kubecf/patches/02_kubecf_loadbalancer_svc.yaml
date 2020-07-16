@@ -1,0 +1,35 @@
+--- # dependency constraints
+spec: 0.0.1
+depends_on:
+
+# - name: catapult
+#   conditions:
+#   - ".services == lb"
+
+- name: kubecf
+  conditions:
+  #  External endpoints are created for the instance groups only if
+  #  features.ingress.enabled is false.
+  - ".features.ingress | select(.enabled == false) | any"
+
+# - name: k8s
+#   conditions:
+#   # for external_ips
+#   - ".items[].status.addresses[] | select(.type == 'InternalIP').address | any"
+
+apply_to: kubecf
+
+--- # add to kubecf
+services:
+  router:
+    type: LoadBalancer
+    externalIPs: [(( grab $external_ips ))]
+  ssh-proxy:
+    type: LoadBalancer
+    externalIPs: [(( grab $external_ips ))]
+  tcp-router:
+    type: LoadBalancer
+    externalIPs: [(( grab $external_ips ))]
+    port_range:
+      start: 20000
+      end: 20008

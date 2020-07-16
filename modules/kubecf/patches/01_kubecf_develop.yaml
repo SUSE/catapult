@@ -1,0 +1,43 @@
+
+--- # dependency constraints
+spec: 0.0.1
+apply_to: kubecf
+
+--- # add to kubecf
+testing:
+  brain_tests:
+    enabled: true
+  cf_acceptance_tests:
+    enabled: true
+  smoke_tests:
+    enabled: true
+  sync_integration_tests:
+    enabled: true
+properties:
+  acceptance-tests:
+    acceptance-tests:
+      acceptance_tests:
+        timeout_scale: (( grab $CATS_TIMEOUT_SCALE ))
+        ginkgo:
+          slow_spec_threshold: 300
+          extra_flags: (( grab $GINKGO_EXTRA_FLAGS ))
+          nodes: (( grab $CATS_NODES ))
+          flake_attempts: (( grab $CATS_FLAKE_ATTEMPTS ))
+  brain-tests:
+    acceptance-tests-brain:
+      acceptance_tests_brain:
+        verbose: (( grab $BRAIN_VERBOSE ))
+        in_order: (( grab $BRAIN_INORDER ))
+        include: (( grab $BRAIN_INCLUDE ))
+        exclude: (( grab $BRAIN_EXCLUDE ))
+
+kube:
+  service_cluster_ip_range: 0.0.0.0/0
+  pod_cluster_ip_range: 0.0.0.0/0
+
+  registry:
+    hostname: (( grab $DOCKER_REGISTRY ))
+    # hostname: (( grab catapult#docker_registry ))
+    username: (( grab $DOCKER_USERNAME ))
+    password: (( grab $DOCKER_PASSWORD ))
+  organization: (( grab $DOCKER_ORG ))
