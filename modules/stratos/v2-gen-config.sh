@@ -5,12 +5,12 @@
 
 info "Generating stratos config values from scf values"
 
-cp scf-config-values.yaml scf-config-values-for-stratos.yaml
+cp scf-config-values.yaml stratos-config-values.yaml
 for patch in "$ROOT_DIR"/modules/stratos/patches/*.yaml; do
-    selective-merge -d kubecf=scf-config-values-for-stratos.yaml \
+    selective-merge -d kubecf=scf-config-values.yaml \
                     -p "$patch" \
-                    > scf-config-values-for-stratos_temp.yaml
-    mv scf-config-values-for-stratos_temp.yaml scf-config-values-for-stratos.yaml
+                    > stratos-config-values_temp.yaml
+    mv stratos-config-values_temp.yaml stratos-config-values.yaml
 done
 
 ok "Stratos config values generated"
