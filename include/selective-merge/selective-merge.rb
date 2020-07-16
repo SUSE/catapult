@@ -72,7 +72,11 @@ class Operation
 
     case op
     when "grab"
-      @dependencies[target].dig(*path.split("."))
+      if path.start_with?("$")
+        ENV[path[1..-1]]
+      else
+        @dependencies[target].dig(*path.split("."))
+      end
     end
   end
 
@@ -80,7 +84,13 @@ class Operation
 
   def parse_operation(string)
     result = string.match(/\(\(\s*(\w+)\s(.*)\#(.*)\)\)/)
-    [result[1], result[2].strip, result[3].strip]
+    return [result[1], result[2].strip, result[3].strip] if result
+
+    result = string.match(/\(\(\s*(\w+)\s(.*)\)\)/)
+    return [result[1], nil, result[2].strip] if result
+
+    STDERR.puts "Could not parse operation #{string}"
+    exit 1
   end
 end
 
