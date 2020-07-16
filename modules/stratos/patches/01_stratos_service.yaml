@@ -1,0 +1,16 @@
+--- # dependency constraints
+spec: 0.0.1
+depends_on:
+- name: kubecf
+  ver: "> 2.2"
+  conditions:
+  - ".services[] | select(.type ==  \"LoadBalancer\") | any"
+apply_to: kubecf # optional
+
+--- # patch for stratos
+console:
+  service:
+    externalIPs: (( grab kubecf#services.router.externalIPs ))
+    servicePort: 8443
+services:
+  loadbalanced: true
