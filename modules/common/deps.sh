@@ -70,5 +70,11 @@ else
     fi
 fi
 
+selective-mergepath=bin/selective-merge
+mv "$ROOT_DIR"/include/selective-merge.rb "$selective-mergepath"
+chmod +x "$selective-mergepath"
+pushd "$ROOT_DIR"/include/selective-merge_bundle
+bundle install
+popd
 
 ok "Deps correctly downloaded"

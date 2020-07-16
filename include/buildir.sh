@@ -37,6 +37,9 @@ export MINIKUBE_HOME="$(pwd)"/.minikube
 export CLOUDSDK_CONFIG="$(pwd)/.config/gcloud"
 export AWS_CONFIG_FILE="$(pwd)/.aws/config"
 export AWS_SHARED_CREDENTIALS_FILE="$(pwd)/.aws/credentials"
+
+export GEM_HOME="$(pwd)/.gem_home"
+export GEM_PATH="$(pwd)/.gem_home"
 HEREDOC_APPEND
 
 info "Generating default options file"
