@@ -10,7 +10,7 @@ KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.ser
 cp stratos-config-values.yaml stratos-metrics-config-values.yaml
 for patch in "$ROOT_DIR"/modules/metrics/patches/*.yaml; do
     echo "Applying patch $patch"
-    selective-merge -d stratos=stratos-config-values.yaml \
+    trunion -d stratos=stratos-config-values.yaml \
                     -d metrics=stratos-metrics-config-values.yaml \
                     -p "$patch" \
                     > stratos-metrics-config-values_temp.yaml

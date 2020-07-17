@@ -70,11 +70,11 @@ else
     fi
 fi
 
-selectivemerge_path=bin/selective-merge
-if [ ! -e "$selectivemerge_path" ]; then
-    cp "$ROOT_DIR"/include/selective-merge/selective-merge.rb "$selectivemerge_path"
-    chmod +x "$selectivemerge_path"
-    pushd "$ROOT_DIR"/include/selective-merge
+trunion_path=bin/trunion
+if [ ! -e "$trunion_path" ]; then
+    cp "$ROOT_DIR"/include/trunion/trunion.rb "$trunion_path"
+    chmod +x "$trunion_path"
+    pushd "$ROOT_DIR"/include/trunion
     if [ ! -f /etc/debian_version ]; then
         # TODO use rvm for installation
         # https://bundler.io/blog/2019/05/14/solutions-for-cant-find-gem-bundler-with-executable-bundle.html

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # example usage:
-# ./selective_merge.rb -d kubecf=kubecf-values.yaml -d stratos=stratos-values.yaml -p stratos-loadbalancer-patch.yaml
+# $0.rb -d kubecf=kubecf-values.yaml -d stratos=stratos-values.yaml -p stratos-loadbalancer-patch.yaml
 
 require 'yaml'
 require 'json'

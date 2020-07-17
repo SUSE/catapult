@@ -29,7 +29,7 @@ export external_ips
 cp values.yaml kubecf-config-values.yaml
 for patch in "$ROOT_DIR"/modules/kubecf/patches/*.yaml; do
     echo "Applying patch $patch"
-    selective-merge -d kubecf=kubecf-config-values.yaml \
+    trunion -d kubecf=kubecf-config-values.yaml \
                     -p "$patch" \
                     > kubecf-config-values_temp.yaml
     mv kubecf-config-values_temp.yaml kubecf-config-values.yaml

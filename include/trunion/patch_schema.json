@@ -1,0 +1,146 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://github.com/SUSE/kubecf-tools/trunion",
+    "type": "object",
+    "title": "trunion schema",
+    "description": "The root schema comprises the entire JSON schema for trunion patches",
+    "default": {},
+    "examples": [
+        {
+            "spec": "0.0.1",
+            "depends_on": [
+                {
+                    "name": "kubecf",
+                    "ver": "> 2.2",
+                    "conditions": [
+                        ".services[] | select(.type ==  \"LoadBalancer\") | any"
+                    ]
+                }
+            ],
+            "apply_to": "kubecf"
+        }
+    ],
+    "required": [
+        "spec",
+        "depends_on"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "spec": {
+            "$id": "#/properties/spec",
+            "type": "string",
+            "title": "The spec schema",
+            "description": "spec version of the patch",
+            "default": "",
+            "examples": [
+                "0.0.1"
+            ]
+        },
+        "depends_on": {
+            "$id": "#/properties/depends_on",
+            "type": "array",
+            "title": "The depends_on schema",
+            "description": "Set of dependencies for this patch",
+            "default": [],
+            "examples": [
+                [
+                    {
+                        "name": "kubecf",
+                        "ver": "> 2.2",
+                        "conditions": [
+                            ".services[] | select(.type ==  \"LoadBalancer\") | any"
+                        ]
+                    }
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "$id": "#/properties/depends_on/items/anyOf/0",
+                        "type": "object",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "name": "kubecf",
+                                "ver": "> 2.2",
+                                "conditions": [
+                                    ".services[] | select(.type ==  \"LoadBalancer\") | any"
+                                ]
+                            }
+                        ],
+                        "required": [
+                            "name",
+                            "ver",
+                            "conditions"
+                        ],
+                        "additionalProperties": true,
+                        "properties": {
+                            "name": {
+                                "$id": "#/properties/depends_on/items/anyOf/0/properties/name",
+                                "type": "string",
+                                "title": "The name schema",
+                                "description": "Name of the dependency",
+                                "default": "",
+                                "examples": [
+                                    "kubecf"
+                                ]
+                            },
+                            "ver": {
+                                "$id": "#/properties/depends_on/items/anyOf/0/properties/ver",
+                                "type": "string",
+                                "title": "The ver schema",
+                                "description": "Version of the dependency",
+                                "default": "",
+                                "examples": [
+                                    "> 2.2"
+                                ]
+                            },
+                            "conditions": {
+                                "$id": "#/properties/depends_on/items/anyOf/0/properties/conditions",
+                                "type": "array",
+                                "title": "The conditions schema",
+                                "description": "Conditions regarding this dependency when the patch is applied",
+                                "default": [],
+                                "examples": [
+                                    [
+                                        ".services[] | select(.type ==  \"LoadBalancer\") | any"
+                                    ]
+                                ],
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/depends_on/items/anyOf/0/properties/conditions/items/anyOf/0",
+                                            "type": "string",
+                                            "title": "The first anyOf schema",
+                                            "description": "An explanation about the purpose of this instance.",
+                                            "default": "",
+                                            "examples": [
+                                                ".services[] | select(.type ==  \"LoadBalancer\") | any"
+                                            ]
+                                        }
+                                    ],
+                                    "$id": "#/properties/depends_on/items/anyOf/0/properties/conditions/items"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "$id": "#/properties/depends_on/items"
+            }
+        },
+        "apply_to": {
+            "$id": "#/properties/apply_to",
+            "type": "string",
+            "title": "The apply_to schema",
+            "description": "Additional values which to apply/merge the patch against",
+            "default": "",
+            "examples": [
+                "kubecf"
+            ]
+        }
+    }
+}
