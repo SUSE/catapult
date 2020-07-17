@@ -19,7 +19,7 @@ if ! az account show; then
 fi
 
 # Check that KUBECTL_VERSION specified is available in azure location
-available_kube_versions=$(az aks get-versions -l "${AZURE_LOCATION}" | jq -c '[.orchestrators[] | select(.orchestratorType == "Kubernetes") | .orchestratorVersion]')
+available_kube_versions=$(az aks get-versions --output json -l "${AZURE_LOCATION}" | jq -c '[.orchestrators[] | select(.orchestratorType == "Kubernetes") | .orchestratorVersion]')
 if [[ -z $(jq 'index("'${KUBECTL_VERSION#v}'") // empty' <<< $available_kube_versions) ]]; then
     err "kubectl version ${KUBECTL_VERSION#v} not available in aks location ${AZURE_LOCATION}"
     info "Check KUBECTL_VERSION and AZURE_LOCATION settings"
