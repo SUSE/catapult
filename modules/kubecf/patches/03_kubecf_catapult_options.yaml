@@ -1,0 +1,14 @@
+--- # dependency constraints
+spec: 0.0.1
+apply_to: kubecf
+
+--- # add to kubecf
+system_domain: (( grab $domain ))
+
+features:
+  eirini:
+    enabled: (( grab $ENABLE_EIRINI ))
+  autoscaler:
+    enabled: (( grab $AUTOSCALER ))
+
+high_availability: (( grab $HA ))
