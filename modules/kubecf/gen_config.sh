@@ -32,7 +32,7 @@ else
 INGRESS_BLOCK=''
 fi
 
-cat > scf-config-values.yaml <<EOF
+cat > kubecf-config-values.yaml <<EOF
 system_domain: $domain
 
 features:
@@ -83,7 +83,7 @@ properties:
 EOF
 
 if [ "${services}" == "lb" ]; then
-    cat >> scf-config-values.yaml <<EOF
+    cat >> kubecf-config-values.yaml <<EOF
 #  External endpoints are created for the instance groups only if
 #  features.ingress.enabled is false.
 services:
@@ -103,7 +103,7 @@ EOF
 fi
 
 # CONFIG_OVERRIDE last, to actually override
-cat >> scf-config-values.yaml <<EOF
+cat >> kubecf-config-values.yaml <<EOF
 ${CONFIG_OVERRIDE}
 EOF
 

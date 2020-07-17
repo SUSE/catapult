@@ -92,7 +92,7 @@ kubectl create secret generic -n scf var-cf-admin-password --from-literal=passwo
 
 helm_install susecf-scf ${SCF_CHART} \
 --namespace scf \
---values scf-config-values.yaml
+--values kubecf-config-values.yaml
 
 sleep 540
 

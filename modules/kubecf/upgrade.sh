@@ -12,7 +12,7 @@ fi
 
 helm_upgrade susecf-scf kubecf/ \
              --namespace scf \
-             --values scf-config-values.yaml
+             --values kubecf-config-values.yaml
 sleep 10
 
 wait_ns scf
