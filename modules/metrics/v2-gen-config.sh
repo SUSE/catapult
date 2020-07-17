@@ -13,7 +13,7 @@ for patch in "$ROOT_DIR"/modules/metrics/patches/*.yaml; do
     selective-merge -d stratos=stratos-config-values.yaml \
                     -d metrics=stratos-metrics-config-values.yaml \
                     -p "$patch" \
-                    > metrics-config-values_temp.yaml
+                    > stratos-metrics-config-values_temp.yaml
     mv stratos-metrics-config-values_temp.yaml stratos-metrics-config-values.yaml
 done
 
