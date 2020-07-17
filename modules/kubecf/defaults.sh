@@ -56,3 +56,4 @@ SCF_BRANCH="${SCF_BRANCH:-master}"
 # klog relevant:
 
 KUBECF_NAMESPACE="${KUBECF_NAMESPACE:-scf}"
+KUBE_POD_GRAPH=${KUBE_POD_GRAPH:-true}

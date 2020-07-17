@@ -1,9 +1,11 @@
 #!/bin/bash
 
 . ./defaults.sh
+if [[ ${KUBE_POD_GRAPH} == true ]]; then
+  . ../../include/kubectl-get-pods-monitoring.sh
+fi
 . ../../include/common.sh
 . .envrc
-
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
@@ -90,11 +92,14 @@ kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-lit
 ## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
 kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
+if [[ "${KUBE_POD_GRAPH}" == true ]]; then
+  monitor_kubectl_pods kube-pod-data &
+fi
 helm_install susecf-scf ${SCF_CHART} \
 --namespace scf \
 --values scf-config-values.yaml
 
-sleep 540
+sleep 60
 
 wait_ns scf
 if [ "$services" == "lb" ]; then
@@ -102,3 +107,7 @@ if [ "$services" == "lb" ]; then
 fi
 
 ok "KubeCF deployed successfully"
+if [[ "${KUBE_POD_GRAPH}" == true ]]; then
+  kill %1
+  generate_json kube-pod-data > kube-pod-data/kube-pod-graph-${CLUSTER_NAME}-$(date +"%m_%d_%Y-%H_%M").json
+fi
