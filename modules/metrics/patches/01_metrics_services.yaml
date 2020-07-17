@@ -1,0 +1,21 @@
+--- # dependency constraints
+spec: 0.0.1
+depends_on:
+- name: stratos
+  ver: "> 2.1"
+
+apply_to: metrics
+
+--- # add to metrics
+env:
+  DOPPLER_PORT: 443
+kubernetes:
+  apiEndpoint: (( grab $KUBE_API_ENDPOINT ))
+prometheus:
+  kubeStateMetrics:
+    enabled: true
+nginx:
+  username: username
+  password: password
+services:
+  loadbalanced: (( grab stratos#services.loadbalanced ))
