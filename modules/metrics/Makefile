@@ -10,7 +10,7 @@ chart:
 
 .PHONY: gen-config
 gen-config:
-	./gen-config.sh
+	./v2-gen-config.sh
 
 .PHONY: install
 install:
