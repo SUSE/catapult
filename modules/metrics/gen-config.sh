@@ -7,7 +7,7 @@ info "Generating stratos-metrics config values"
 
 KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server')
 
-cp stratos-config-values.yaml scf-config-values-for-metrics.yaml
+cp stratos-config-values.yaml stratos-metrics-config-values.yaml
 
 cat <<EOF > op.yml
 - op: add
@@ -33,9 +33,9 @@ cat <<EOF > op.yml
     "${DOCKER_ORG}"
 EOF
 
-yamlpatch op.yml scf-config-values-for-metrics.yaml
+yamlpatch op.yml stratos-metrics-config-values.yaml
 
-cat <<HEREDOC > stratos-metrics-values.yaml
+cat <<HEREDOC >> stratos-metrics-config-values.yaml
 ---
 env:
   DOPPLER_PORT: 443
