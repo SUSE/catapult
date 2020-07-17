@@ -13,6 +13,6 @@ if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.da
     kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/stratos-chart"}]'
 fi
 
-rm -rf console scf-config-values-for-stratos.yaml
+rm -rf console stratos-config-values.yaml
 
 ok "Stratos removed"

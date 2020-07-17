@@ -11,7 +11,7 @@ if [[ "$HELM_VERSION" == v3* ]]; then
 fi
 helm_install suse-console ./console \
     --namespace stratos \
-    --values scf-config-values-for-stratos.yaml
+    --values stratos-config-values.yaml
 
 wait_ns stratos
 

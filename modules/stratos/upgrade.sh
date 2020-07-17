@@ -9,7 +9,7 @@ kubectl patch -n kube-system configmap cap-values -p $'data:\n stratos-chart: "'
 
 helm_upgrade suse-console ./console \
      --namespace stratos \
-     --values scf-config-values-for-stratos.yaml
+     --values stratos-config-values.yaml
 
 wait_ns stratos
 
