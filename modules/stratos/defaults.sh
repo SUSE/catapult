@@ -3,4 +3,4 @@
 # stratos module options
 ########################
 
-STRATOS_CHART="${STRATOS_CHART:-latest}"
+export STRATOS_CHART="${STRATOS_CHART:-latest}"

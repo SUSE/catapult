@@ -3,4 +3,4 @@
 # Metrics options
 #################
 
-METRICS_CHART="${METRICS_CHART:-latest}"
+export METRICS_CHART="${METRICS_CHART:-latest}"

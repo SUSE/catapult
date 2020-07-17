@@ -5,51 +5,51 @@
 
 # scf-chart revelant:
 
-CHART_URL="${CHART_URL:-}" # FIXME deprecated, used in SCF_CHART
-SCF_CHART="${SCF_CHART:-$CHART_URL}"
+export CHART_URL="${CHART_URL:-}" # FIXME deprecated, used in SCF_CHART
+export SCF_CHART="${SCF_CHART:-$CHART_URL}"
 
-SCF_HELM_VERSION="${SCF_HELM_VERSION:-}"
-OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
+export SCF_HELM_VERSION="${SCF_HELM_VERSION:-}"
+export OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
 
 # scf-gen-config relevant:
 
-SCF_SERVICES="${SCF_SERVICES:-lb}" # lb, ingress
-GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
-DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
-STORAGECLASS="${STORAGECLASS:-persistent}"
-AUTOSCALER="${AUTOSCALER:-false}"
+export SCF_SERVICES="${SCF_SERVICES:-lb}" # lb, ingress
+export GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
+export DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
+export STORAGECLASS="${STORAGECLASS:-persistent}"
+export AUTOSCALER="${AUTOSCALER:-false}"
 
-EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
+export EMBEDDED_UAA="${EMBEDDED_UAA:-false}"
 
-HA="${HA:-false}"
+export HA="${HA:-false}"
 if [ "$HA" = "true" ]; then
-    SIZING="${SIZING:-2}"
+    export SIZING="${SIZING:-2}"
 else
-    SIZING="${SIZING:-1}"
+    export SIZING="${SIZING:-1}"
 fi
 
-UAA_UPGRADE="${UAA_UPGRADE:-true}"
+export UAA_UPGRADE="${UAA_UPGRADE:-true}"
 
 OVERRIDE="${OVERRIDE:-}"
-CONFIG_OVERRIDE="${CONFIG_OVERRIDE:-$OVERRIDE}"
+export CONFIG_OVERRIDE="${CONFIG_OVERRIDE:-$OVERRIDE}"
 
-BRAIN_VERBOSE="${BRAIN_VERBOSE:-false}"
-BRAIN_INORDER="${BRAIN_INORDER:-false}"
-BRAIN_INCLUDE="${BRAIN_INCLUDE:-}"
-BRAIN_EXCLUDE="${BRAIN_EXCLUDE:-}"
+export BRAIN_VERBOSE="${BRAIN_VERBOSE:-false}"
+export BRAIN_INORDER="${BRAIN_INORDER:-false}"
+export BRAIN_INCLUDE="${BRAIN_INCLUDE:-}"
+export BRAIN_EXCLUDE="${BRAIN_EXCLUDE:-}"
 
-CATS_NODES="${CATS_NODES:-1}"
-CATS_FLAKE_ATTEMPTS="${CATS_FLAKE_ATTEMPTS:-5}"
-CATS_TIMEOUT_SCALE="${CATS_TIMEOUT_SCALE:-3.0}"
+export CATS_NODES="${CATS_NODES:-1}"
+export CATS_FLAKE_ATTEMPTS="${CATS_FLAKE_ATTEMPTS:-5}"
+export CATS_TIMEOUT_SCALE="${CATS_TIMEOUT_SCALE:-3.0}"
 
 
 # scf-build relevant:
 
-SCF_LOCAL="${SCF_LOCAL:-}"
+export SCF_LOCAL="${SCF_LOCAL:-}"
 
 # relevant to several:
 
-HELM_VERSION="${HELM_VERSION:-v3.1.1}"
+export HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 
-SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
-SCF_BRANCH="${SCF_BRANCH:-develop}"
+export SCF_REPO="${SCF_REPO:-https://github.com/SUSE/scf}"
+export SCF_BRANCH="${SCF_BRANCH:-develop}"
