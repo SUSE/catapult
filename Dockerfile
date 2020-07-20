@@ -49,7 +49,7 @@ RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && 
   rm ./install.py
 
 # KubeCF dependencies:
-RUN zypper in --no-recommends -y python3-yamllint shellcheck
+RUN zypper in --no-recommends -y python3-yamllint ShellCheck
 
 RUN zypper rm -y glibc-locale && zypper clean --all
 
