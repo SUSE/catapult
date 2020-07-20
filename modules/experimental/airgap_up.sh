@@ -31,11 +31,16 @@ EOS
 EOF
 }
 
-# --selector '!node-role.kubernetes.io/master'
 kube_nodes=$(kubectl get nodes -o json | jq -r '.items[] | .status.addresses[] | select(.type=="InternalIP").address')
-for kube_node in ${kube_nodes}; do
+kube_nodes_unreachable=$(kubectl get nodes -o json | jq -C -r '[.items[] |  select((.spec.taints // [])[] | .key == "node.kubernetes.io/unreachable") | .status.addresses[] | select(.type=="InternalIP").address] | unique[]')
+kube_nodes_reachable=$(comm -23 <(echo "${kube_nodes}") <(echo "${kube_nodes_unreachable}"))
+for kube_node in ${kube_nodes_reachable}; do
   airgap_up_node ${kube_node}
 done
+kubectl create namespace cf-operator 2>/dev/null|| true
+kubectl create namespace scf 2>/dev/null || true
+kubectl create -n cf-operator -f ../modules/experimental/cilium-block-egress.yaml
+kubectl create -n scf -f ../modules/experimental/cilium-block-egress.yaml
 
 info "Cluster ${CLUSTER_NAME} is now running a simulated airgapped setup. Run \`make module-experimental-airgap-down\` to restore internet access"
 

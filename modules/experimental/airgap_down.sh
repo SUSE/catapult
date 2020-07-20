@@ -7,7 +7,7 @@
 . .envrc
 
 if [[ ${BACKEND} != "caasp4os" ]]; then
-  err "airgap simulation only works with caasp4os type backends"
+  err "airgap simulation only works with caasp4os type backends. Nothing to clean"
   exit 1
 fi
 
@@ -21,23 +21,26 @@ airgap_down_node() {
   fi
   ssh -T sles@${kube_node} << EOF
 sudo -s << 'EOS'
-  if ! iptables -D OUTPUT -j DROP -d 0.0.0.0/0 2>/dev/null; then
-    echo "Could not remove DROP 0.0.0.0/0 in OUTPUT chain. Aborting"
-    exit
+  if iptables -D OUTPUT -j DROP -d 0.0.0.0/0 2>/dev/null; then
+    iptables -D OUTPUT -j ACCEPT -d ${host_ip} 2>/dev/null || true
+    iptables -D OUTPUT -j ACCEPT -d 0.0.0.0 2>/dev/null || true
+    iptables -D OUTPUT -j ACCEPT -d 10.0.0.0/8 2>/dev/null || true
+    iptables -D OUTPUT -j ACCEPT -d 100.64.0.0/10 2>/dev/null || true
+    iptables -D OUTPUT -j ACCEPT -d 127.0.0.0/8 2>/dev/null || true
+    iptables -D OUTPUT -j ACCEPT -d 172.16.0.0/12 2>/dev/null || true
+    iptables -D OUTPUT -j ACCEPT -d 192.168.0.0/16 2>/dev/null || true
+  else
+    echo "Could not remove DROP 0.0.0.0/0 in OUTPUT chain. Skipping other iptable deletions"
   fi
-  iptables -D OUTPUT -j ACCEPT -d ${host_ip} 2>/dev/null || true
-  iptables -D OUTPUT -j ACCEPT -d 0.0.0.0 2>/dev/null || true
-  iptables -D OUTPUT -j ACCEPT -d 10.0.0.0/8 2>/dev/null || true
-  iptables -D OUTPUT -j ACCEPT -d 100.64.0.0/10 2>/dev/null || true
-  iptables -D OUTPUT -j ACCEPT -d 127.0.0.0/8 2>/dev/null || true
-  iptables -D OUTPUT -j ACCEPT -d 172.16.0.0/12 2>/dev/null || true
-  iptables -D OUTPUT -j ACCEPT -d 192.168.0.0/16 2>/dev/null || true
 EOS
 EOF
 }
 
-# --selector '!node-role.kubernetes.io/master'
 kube_nodes=$(kubectl get nodes -o json | jq -r '.items[] | .status.addresses[] | select(.type=="InternalIP").address')
-for kube_node in ${kube_nodes}; do
+kube_nodes_unreachable=$(kubectl get nodes -o json | jq -C -r '[.items[] |  select((.spec.taints // [])[] | .key == "node.kubernetes.io/unreachable") | .status.addresses[] | select(.type=="InternalIP").address] | unique[]')
+kube_nodes_reachable=$(comm -23 <(echo "${kube_nodes}") <(echo "${kube_nodes_unreachable}"))
+for kube_node in ${kube_nodes_reachable}; do
   airgap_down_node ${kube_node}
 done
+kubectl delete --ignore-not-found -n cf-operator -f ../modules/experimental/cilium-block-egress.yaml
+kubectl delete --ignore-not-found -n scf -f ../modules/experimental/cilium-block-egress.yaml
