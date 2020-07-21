@@ -17,4 +17,11 @@ wait_ns stratos
 
 kubectl get services suse-console-ui-ext -n stratos
 
+domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
+
+if [ "$services" == "lb" ]; then
+    external_dns_annotate_stratos stratos "$domain"
+fi
+
 ok "Stratos deployed successfully"

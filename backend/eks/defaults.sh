@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
+# Common options
+##################
+
+OWNER="${OWNER:-$(whoami)}"
+
 # EKS options
 #############
 
-EKS_CLUSTER_NAME="${EKS_CLUSTER_NAME:-$(whoami)-cap}"
+EKS_CLUSTER_NAME="${EKS_CLUSTER_NAME:-${OWNER}-cap}"
 EKS_LOCATION="${EKS_LOCATION:-us-west-2}"
-EKS_KEYPAIR="${EKS_KEYPAIR:-$(whoami)-terraform}"
+EKS_KEYPAIR="${EKS_KEYPAIR:-${OWNER}-terraform}"
 EKS_VERS="${EKS_VERS:-1.14}"
-EKS_CLUSTER_LABEL=${EKS_CLUSTER_LABEL:-\{key = \"$(whoami)-eks-cluster\"\}}
+EKS_CLUSTER_LABEL=${EKS_CLUSTER_LABEL:-\{key = \"${OWNER}-eks-cluster\"\}}
 
 EKS_HOSTED_ZONE_NAME="${EKS_HOSTED_ZONE_NAME:-qa.aws.howdoi.website}"
 EKS_DOMAIN="${EKS_DOMAIN:-${EKS_CLUSTER_NAME}.${EKS_HOSTED_ZONE_NAME}}"
