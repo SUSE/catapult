@@ -14,4 +14,6 @@ if [ -n "$EKCP_PROXY" ]; then
     export https_proxy=socks5://127.0.0.1:${KUBEPROXY_PORT}
 fi
 
-bash ./start_benchmark.sh
+./start_benchmark.sh
+
+ok "stressbenchmark finished, results in $BUILD_DIR/$STRESS_FOLDER"

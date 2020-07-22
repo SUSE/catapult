@@ -377,9 +377,9 @@ tests-cats-scf:
 tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler
 
-.PHONY: tests-stress
+.PHONY: tests-stress-benchmark
 tests-stress:
-	$(MAKE) -C modules/tests stress
+	$(MAKE) -C modules/tests stress-benchmark
 
 # Samples and fixtures
 .PHONY: sample

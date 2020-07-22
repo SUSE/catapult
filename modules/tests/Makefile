@@ -32,9 +32,9 @@ cats:
 cats-scf:
 	./cats_scf.sh
 
-.PHONY: stress
+.PHONY: stress-benchmark
 stress:
-	./stress.sh
+	./stress-benchmark.sh
 
 .PHONY: sample
 sample:
