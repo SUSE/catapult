@@ -307,6 +307,10 @@ stratos-install: ##@stratos Only install Stratos console
 stratos-upgrade: ##@stratos Only upgrade Stratos console
 	$(MAKE) -C modules/stratos upgrade
 
+.PHONY: stratos-reachable
+stratos-reachable: ##@stratos Do a simple check if the stratos UI is reachable
+	$(MAKE) -C modules/stratos reachable
+
 # metrics-only targets:
 .PHONY: metrics
 metrics: ##@STATES Delete if exists then deploy Stratos metrics
