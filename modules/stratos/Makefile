@@ -25,4 +25,4 @@ reachable:
 	./reachable.sh
 
 .PHONY: all
-all: clean chart gen-config install reachable
+all: clean chart gen-config install

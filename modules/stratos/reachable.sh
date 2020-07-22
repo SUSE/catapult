@@ -51,5 +51,5 @@ do
 done
 
 if [ $exit_code -ne 0 ] ; then
-   fail "Not reachable via IP"
+   fail "Not reachable via hostname https://console.${domain}:${port}"
 fi
