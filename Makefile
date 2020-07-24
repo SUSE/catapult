@@ -382,7 +382,7 @@ tests-autoscaler:
 	$(MAKE) -C modules/tests autoscaler
 
 .PHONY: tests-stress-benchmark
-tests-stress:
+tests-stress-benchmark:
 	$(MAKE) -C modules/tests stress-benchmark
 
 # Samples and fixtures
