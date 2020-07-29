@@ -39,8 +39,6 @@ yamlpatch op.yml scf-config-values-for-metrics.yaml
 
 cat <<HEREDOC > stratos-metrics-values.yaml
 ---
-env:
-  DOPPLER_PORT: 443
 kubernetes:
   apiEndpoint: "${KUBE_API_ENDPOINT}"
 cloudFoundry:
@@ -51,11 +49,6 @@ cloudFoundry:
 prometheus:
   kubeStateMetrics:
     enabled: true
-nginx:
-  username: username
-  password: password
-services:
-  loadbalanced: true
 HEREDOC
 
 ok "Stratos-metrics config values generated"
