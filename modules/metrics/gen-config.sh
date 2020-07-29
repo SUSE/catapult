@@ -7,6 +7,7 @@ info "Generating stratos-metrics config values"
 
 KUBE_API_ENDPOINT=$(kubectl config view -o json | jq -r '.clusters[].cluster.server')
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+UAAADMINCLIENTSECRET=$(kubectl get secret var-uaa-admin-client-secret -n scf --output jsonpath="{.data['password']}" | base64 --decode)
 
 cp scf-config-values-for-stratos.yaml scf-config-values-for-metrics.yaml
 
@@ -40,13 +41,12 @@ cat <<HEREDOC > stratos-metrics-values.yaml
 ---
 env:
   DOPPLER_PORT: 443
-  DOMAIN: "${DOMAIN}"
 kubernetes:
   apiEndpoint: "${KUBE_API_ENDPOINT}"
 cloudFoundry:
   apiEndpoint: "api.${DOMAIN}"
   uaaAdminClient: admin
-  uaaAdminClientSecret: "${CLUSTER_PASSWORD}"
+  uaaAdminClientSecret: "${UAAADMINCLIENTSECRET}"
   skipSslVerification: "true"
 prometheus:
   kubeStateMetrics:
