@@ -21,7 +21,7 @@ if [[ $ENABLE_EIRINI == true ]] ; then
     sleep 10
 fi
 
-SCF_CHART="kubecf"
+SCF_CHART="${SCF_CHART:-kubecf}"
 if [ -d "deploy/helm/scf" ]; then
     SCF_CHART="deploy/helm/scf"
 fi
