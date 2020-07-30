@@ -15,8 +15,8 @@ conditions and changes, and outputs a reconfigured/created values.yaml:
     +-------------------+       |                 |
                                 |                 |
     +-------------------+       |                 |
-    |stratos-values.yaml|       |                 +------> reconfigured/created
-    |                   +------>+     Trunion     +------>   values.yaml
+    |stratos-values.yaml|       |                 +------\ reconfigured/created
+    |                   +------>+     Trunion     +------/   values.yaml
     +-------------------+       |                 |
                                 |                 |
     +-------------------+       |                 |
@@ -35,14 +35,19 @@ Trunion patches are 2 yaml documents shipped in a file.
   true to apply the changes. These are valid `jq` queries
 2. The second yaml document contains the changes. It also contains possible
   operations to apply for the changes, eg:
-  * `(( grab kubecf#system_domain ))` to grab the value of key `system_domain`
-  from the dependency named kubecf
-  * `(( grab $env_var ))` to grab the value of `$env_var`
+    * `(( grab kubecf#system_domain ))` to grab the value of key `system_domain`
+    from the dependency named kubecf
+    * `(( grab $env_var ))` to grab the value of `$env_var`
 
 We publish a spec for the patches, with matching json schema. Currently at `0.0.1`.
 
 
 ## Example of a Trunion patch ##
+
+Let's see a patch that reconfigures the stratos config-values.yaml when our
+cluster (and kubecf) is set up with LoadBalanced services.
+
+We depend on kubecf to read from it, and stratos, to modify the already existing config.
 
 To apply the patch, you run:
 ```sh
@@ -60,7 +65,7 @@ depends_on:
   ver: "> 2.2" # metadata
   conditions:
   - ".services[] | select(.type ==  \"LoadBalancer\") | any"
-apply_to: stratos # optional
+apply_to: stratos
 
 --- # patch for stratos
 console:
@@ -70,6 +75,9 @@ console:
 services:
   loadbalanced: true
 ```
+
+Note the dependency on kubecf, on the condition that there is services type
+`LoadBalancer`, and how we apply the result into stratos dependency.
 
 
 ## Why use it? ##
@@ -92,9 +100,9 @@ that ship those patches.
 
 Following the approach of patches (declarative logic + changes) shipped with the
 charts allows us to compute all the configurations for all the charts, taking
-into account dependencies, ___without the need_ to `helm install` anything. This
-simplifies linting, diffing possible changes to deployments, testing, ownership
-of the changes needed for dependencies, etc
+into account dependencies, _without the need_ to `helm install` anything. This
+simplifies linting, diffing possible changes to deployments before even
+deploying, testing, ownership of the changes needed for dependencies…
 
 ## Work lives in: ##
 
