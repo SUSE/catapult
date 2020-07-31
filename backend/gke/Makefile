@@ -4,8 +4,12 @@
 kubeconfig:
 	./kubeconfig.sh
 
+.PHONY: tfsetup
+tfsetup:
+	./tfsetup.sh
+
 .PHONY: clean
-clean:
+clean: tfsetup
 	./clean.sh
 
 .PHONY: deps
@@ -13,7 +17,7 @@ deps:
 	./deps.sh
 
 .PHONY: deploy
-deploy:
+deploy: tfsetup
 	./deploy.sh
 
 .PHONY: all

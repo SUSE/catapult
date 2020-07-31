@@ -27,47 +27,6 @@ if [[ -z $(jq 'index("'${KUBECTL_VERSION#v}'") // empty' <<< $available_kube_ver
     exit 1
 fi
 
-git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
-pushd cap-terraform/aks || exit
-
-# terraform needs helm client installed and configured:
-helm_init_client
-
-# ssh_public_key needs to be a file. Build it regardless of {ssh,gpg}-agent, or
-# forwarding of agents:
-ssh-add -L
-(ssh-add -L | head -n 1) > ./sshkey.pub
-
-cat <<HEREDOC > terraform.tfvars
-cluster_name      = "${AZURE_CLUSTER_NAME}"
-az_resource_group = "${AZURE_RESOURCE_GROUP}"
-client_id         = "${AZURE_APP_ID}"
-client_secret     = "${AZURE_PASSWORD}"
-ssh_public_key    = "./sshkey.pub"
-instance_count    = "${AZURE_NODE_COUNT}"
-location          = "${AZURE_LOCATION}"
-agent_admin       = "cap-admin"
-cluster_labels    = {
-    "catapult-cluster" = "${AZURE_CLUSTER_NAME}",
-    "owner"            = "${OWNER}"
-}
-k8s_version       = "${KUBECTL_VERSION#v}"
-azure_dns_json    = "${AZURE_DNS_JSON}"
-dns_zone_rg       = "${AZURE_DNS_RESOURCE_GROUP}"
-HEREDOC
-
-if [ -n "${TF_KEY}" ] ; then
-    cat > backend.tf <<EOF
-terraform {
-  backend "s3" {
-      bucket = "${TF_BUCKET}"
-      region = "${TF_REGION}"
-      key    = "${TF_KEY}"
-  }
-}
-EOF
-fi
-
 # Required env vars for deploying via Azure SP.
 # see: https://www.terraform.io/docs/providers/azurerm/guides/service_principal_client_secret.html#configuring-the-service-principal-in-terraform
 export ARM_CLIENT_ID="${AZURE_APP_ID}"
@@ -75,14 +34,15 @@ export ARM_CLIENT_SECRET="${AZURE_PASSWORD}"
 export ARM_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}"
 export ARM_TENANT_ID="${AZURE_TENANT_ID}"
 
+pushd cap-terraform/aks || exit
+# ssh_public_key needs to be a file. Build it regardless of {ssh,gpg}-agent, or
+# forwarding of agents:
+ssh-add -L
+(ssh-add -L | head -n 1) > ./sshkey.pub
+
 terraform init
 
 terraform plan -out=my-plan
-
-if [ -n "${TF_KEY}" ] ; then
-    # zip the terraform folder to use in concourse pool
-    zip -r9  "${BUILD_DIR}/tf-setup.zip" .
-fi
 
 # temporarily change KUBECONFIG, needed for terraform scripts:
 KUBECONFIG="$(pwd)"/aksk8scfg
@@ -94,6 +54,7 @@ KUBECONFIG="${BUILD_DIR}"/kubeconfig
 
 # get kubectl for aks:
 cp aksk8scfg "${KUBECONFIG}"
+popd
 
 # wait for cluster ready:
 wait_ns kube-system

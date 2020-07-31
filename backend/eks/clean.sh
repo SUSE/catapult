@@ -8,12 +8,6 @@
 
 if [ -d "${BUILD_DIR}" ]; then
     . .envrc
-    if [ -f "${TFSTATE}" ]; then
-        mkdir -p cap-terraform/eks
-        (cd cap-terraform/eks || exit
-          unzip -o "${TFSTATE}"
-        )
-    fi
     if [ -d "cap-terraform/eks" ]; then
         pushd cap-terraform/eks || exit
         terraform destroy -auto-approve
@@ -23,6 +17,8 @@ if [ -d "${BUILD_DIR}" ]; then
 
     popd || exit
     rm -rf "${BUILD_DIR}"
+    ok "EKS cluster deleted successfully"
+else
+    warn "BUILD_DIR ${BUILD_DIR} not found"
 fi
 
-ok "EKS cluster deleted successfully"
