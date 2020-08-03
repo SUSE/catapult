@@ -138,7 +138,7 @@ create_cats_internetless_secret() {
     kubectl get secret -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o json  | \
     jq -r '.data."properties.yaml"' | base64 -d | \
     yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.include" '=internetless' | \
-    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.credhub_mode" '"off"' | \
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.credhub_mode" 'off' | \
     base64 -w 0 )"
 
   cats_updated="$(echo "$cats_secret" | yq w - 'data[properties.yaml]' $cats_updated_properties)"
@@ -220,7 +220,8 @@ SUITES
   cats_updated_properties="$(
     kubectl get secret -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o json  | \
     jq -r '.data."properties.yaml"' | base64 -d | \
-    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.include" "${suites}" |
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.include" "${suites}" | \
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.credhub_mode" 'off' | \
     base64 -w 0 )"
 
   cats_updated="$(echo "$cats_secret" | yq w - 'data[properties.yaml]' $cats_updated_properties)"
