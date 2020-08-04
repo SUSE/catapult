@@ -8,6 +8,12 @@ SAMPLE_FOLDER=$(basename "$SAMPLE_APP_REPO")
 
 [ ! -d "$SAMPLE_FOLDER" ] && git clone --recurse-submodules "$SAMPLE_APP_REPO" "$SAMPLE_FOLDER"
 
+if [ -f "${SAMPLE_FOLDER}/gradlew" ]; then
+  pushd "$SAMPLE_FOLDER"
+  ./gradlew clean assemble
+  popd
+fi
+
 pushd "$SAMPLE_FOLDER" || exit
 
 if [ -n "$EKCP_PROXY" ]; then
