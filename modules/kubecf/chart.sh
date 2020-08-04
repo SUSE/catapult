@@ -30,7 +30,7 @@ else
     if echo "$SCF_CHART" | grep -q "http"; then
         wget "$SCF_CHART" -O chart
     else
-        echo "fail?"
+        info "Grabbing chart from local file $CHART_URL"
         cp -rfv "$SCF_CHART" chart
     fi
 fi
@@ -43,6 +43,7 @@ if echo "$SCF_CHART" | grep -q "tgz"; then
 fi
 
 for file in *tgz; do
+    [ -f "$file" ] || continue # no file matches, skip
     tar -xvf "$file" -C ./
     rm -f "$file"
 done
