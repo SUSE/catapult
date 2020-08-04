@@ -8,10 +8,11 @@ SAMPLE_FOLDER=$(basename "$SAMPLE_APP_REPO")
 
 [ ! -d "$SAMPLE_FOLDER" ] && git clone --recurse-submodules "$SAMPLE_APP_REPO" "$SAMPLE_FOLDER"
 
+# if we have a java spring app we need to built it before pushing
 if [ -f "${SAMPLE_FOLDER}/gradlew" ]; then
-  pushd "$SAMPLE_FOLDER"
+  cd "$SAMPLE_FOLDER" || return
   ./gradlew clean assemble
-  popd
+  cd .. || return
 fi
 
 pushd "$SAMPLE_FOLDER" || exit
