@@ -10,9 +10,9 @@ SAMPLE_FOLDER=$(basename "$SAMPLE_APP_REPO")
 
 # if we have a java spring app we need to built it before pushing
 if [ -f "${SAMPLE_FOLDER}/gradlew" ]; then
-  cd "$SAMPLE_FOLDER" || return
+  pushd "$SAMPLE_FOLDER" || exit 1
   ./gradlew clean assemble
-  cd .. || return
+  popd || exit 1
 fi
 
 pushd "$SAMPLE_FOLDER" || exit
