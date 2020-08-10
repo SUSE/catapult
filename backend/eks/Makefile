@@ -13,12 +13,12 @@ tfsetup:
 	./tfsetup.sh
 
 .PHONY: deploy
-deploy: tfsetup
+deploy: deps tfsetup
 	./deploy.sh
 
 .PHONY: clean
-clean: tfsetup
+clean: deps tfsetup
 	./clean.sh
 
 .PHONY: all
-all: deps deploy
+all: deploy

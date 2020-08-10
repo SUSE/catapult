@@ -8,3 +8,7 @@ eirini_release:
 .PHONY: eirinifs
 eirinifs:
 	./eirinifs.sh
+
+.PHONY: tf_force_clean
+tf_force_clean:
+	./tf_force_clean.sh

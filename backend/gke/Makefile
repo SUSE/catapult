@@ -8,17 +8,17 @@ kubeconfig:
 tfsetup:
 	./tfsetup.sh
 
-.PHONY: clean
-clean: tfsetup
-	./clean.sh
-
 .PHONY: deps
 deps:
 	./deps.sh
 
+.PHONY: clean
+clean: deps tfsetup
+	./clean.sh
+
 .PHONY: deploy
-deploy: tfsetup
+deploy: deps tfsetup
 	./deploy.sh
 
 .PHONY: all
-all: deps deploy
+all: deploy

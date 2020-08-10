@@ -13,15 +13,15 @@ tfsetup:
 	./tfsetup.sh
 
 .PHONY: deploy
-deploy: tfsetup
+deploy: deps tfsetup
 	./deploy.sh
 
 .PHONY: clean
-clean: tfsetup
+clean: deps tfsetup
 	./clean.sh
 
 .PHONY: all
 all::
 	@echo 'WARNING: stil WIP. Use it on your own risk.'
 	@echo 'Kindly waiting for 5s…'; sleep 5
-all:: deps deploy
+all:: deploy

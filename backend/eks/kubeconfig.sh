@@ -42,10 +42,10 @@ else
 fi
 
 if ! aws sts get-caller-identity ; then
-    info "Missing aws credentials, running aws configure…"
+    err "Missing aws credentials, run aws configure"
     # Use predefined aws env vars
     # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
-    aws configure
+    exit 1
 fi
 
 kubectl get nodes  > /dev/null 2>&1 || exit

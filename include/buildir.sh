@@ -35,8 +35,6 @@ export CF_HOME="$(pwd)"
 export PATH="$(pwd)"/bin:"$PATH"
 export MINIKUBE_HOME="$(pwd)"/.minikube
 export CLOUDSDK_CONFIG="$(pwd)/.config/gcloud"
-export AWS_CONFIG_FILE="$(pwd)/.aws/config"
-export AWS_SHARED_CREDENTIALS_FILE="$(pwd)/.aws/credentials"
 HEREDOC_APPEND
 
 info "Generating default options file"
