@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 . ../../include/common.sh
+[[ -d "${BUILD_DIR}" ]] || exit 0
 . .envrc
 
 if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
