@@ -19,7 +19,7 @@ fi
 
 terraformpath=bin/terraform
 if [ ! -e "$terraformpath" ]; then
-    curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+    curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip
     unzip terraform.zip && rm -rf terraform.zip
     chmod +x terraform && mv terraform bin/
 fi
