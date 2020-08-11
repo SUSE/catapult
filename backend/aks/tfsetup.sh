@@ -6,10 +6,10 @@
 . .envrc
 
 if ! [[ -d cap-terraform ]]; then
-    git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
+    git clone https://github.com/SUSE/cap-terraform.git -b "${CAP_TERRAFORM_BRANCH}"
 fi
 pushd cap-terraform/aks || exit
-git checkout cap-ci
+git checkout "${CAP_TERRAFORM_BRANCH}"
 git pull 
 
 # terraform needs helm client installed and configured:

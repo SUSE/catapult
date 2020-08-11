@@ -10,10 +10,10 @@
 
 
 if ! [[ -d cap-terraform ]]; then
-    git clone https://github.com/SUSE/cap-terraform.git -b cap-ci
+    git clone https://github.com/SUSE/cap-terraform.git -b "${CAP_TERRAFORM_BRANCH}"
 fi
 pushd cap-terraform/gke || exit
-git checkout cap-ci
+git checkout "${CAP_TERRAFORM_BRANCH}"
 git pull
 
 cat <<HEREDOC > terraform.tfvars

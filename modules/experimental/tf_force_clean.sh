@@ -29,7 +29,7 @@ cd "${BUILD_DIR}"
 rm -rf cap-terraform
 . .envrc
 
-git clone https://github.com/suse/cap-terraform -b cap-ci
+git clone https://github.com/suse/cap-terraform -b "${CAP_TERRAFORM_BRANCH}"
 cd "cap-terraform/${BACKEND}"
 ARN="$(aws iam get-user --query User.Arn --output text | sed 's@:user/.*@:role/eksServiceRole@')"
 aws eks update-kubeconfig --name Concourse --region eu-central-1 --role-arn "${ARN}" --kubeconfig "${KUBECONFIG}"
