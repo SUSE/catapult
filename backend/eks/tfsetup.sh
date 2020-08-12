@@ -22,7 +22,6 @@ cat <<HEREDOC > terraform.tfvars
 cluster_name = "${EKS_CLUSTER_NAME}"
 region = "${EKS_LOCATION}"
 keypair_name = "${EKS_KEYPAIR}"
-eks_version = "${EKS_VERS}"
 cluster_labels = ${EKS_CLUSTER_LABEL}
 hosted_zone_name = "${EKS_HOSTED_ZONE_NAME}"
 external_dns_aws_access_key = "${AWS_ACCESS_KEY_ID}"
