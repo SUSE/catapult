@@ -11,7 +11,7 @@ OWNER="${OWNER:-$(whoami)}"
 EKS_CLUSTER_NAME="${EKS_CLUSTER_NAME:-${OWNER}-cap}"
 EKS_LOCATION="${EKS_LOCATION:-us-west-2}"
 EKS_KEYPAIR="${EKS_KEYPAIR:-${OWNER}-terraform}"
-EKS_VERS="${EKS_VERS:-1.14}"
+EKS_VERS="${EKS_VERS:-1.15}"
 EKS_CLUSTER_LABEL=${EKS_CLUSTER_LABEL:-\{key = \"${OWNER}-eks-cluster\"\}}
 
 EKS_HOSTED_ZONE_NAME="${EKS_HOSTED_ZONE_NAME:-qa.aws.howdoi.website}"
