@@ -17,7 +17,8 @@ fi
 pushd cap-terraform/eks || exit
 terraform init
 terraform plan -out=my-plan
-terraform apply -auto-approve my-plan
+# Retry once due to intermittent issues we hit
+terraform apply -auto-approve my-plan || terraform apply -auto-approve my-plan
 # get kubectl for eks:
 # aws eks --region "$EKS_LOCATION" update-kubeconfig --name "$EKS_CLUSTER_NAME"
 # or:

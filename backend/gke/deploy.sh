@@ -22,7 +22,8 @@ terraform init
 
 terraform plan -out=my-plan
 
-terraform apply -auto-approve my-plan
+# Retry once due to intermittent issues we hit
+terraform apply -auto-approve my-plan || terraform apply -auto-approve my-plan
 
 popd || exit
 

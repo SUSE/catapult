@@ -47,7 +47,8 @@ terraform plan -out=my-plan
 # temporarily change KUBECONFIG, needed for terraform scripts:
 KUBECONFIG="$(pwd)"/aksk8scfg
 
-terraform apply -auto-approve my-plan
+# Retry once due to intermittent issues we hit
+terraform apply -auto-approve my-plan || terraform apply -auto-approve my-plan
 
 # restore correct KUBECONFIG:
 KUBECONFIG="${BUILD_DIR}"/kubeconfig
