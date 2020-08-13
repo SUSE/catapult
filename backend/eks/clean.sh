@@ -10,6 +10,7 @@ if [ -d "${BUILD_DIR}" ]; then
     . .envrc
     if [ -d "cap-terraform/eks" ]; then
         pushd cap-terraform/eks || exit
+        terraform init
         terraform destroy -auto-approve
         popd || exit
         rm -rf cap-terraform

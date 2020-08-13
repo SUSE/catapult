@@ -18,12 +18,11 @@ pushd cap-terraform/eks || exit
 terraform init
 terraform plan -out=my-plan
 terraform apply -auto-approve my-plan
-popd || exit
-
 # get kubectl for eks:
 # aws eks --region "$EKS_LOCATION" update-kubeconfig --name "$EKS_CLUSTER_NAME"
 # or:
 terraform output kubeconfig > "$KUBECONFIG"
+popd || exit
 
 # wait for cluster ready:
 wait_ns kube-system

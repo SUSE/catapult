@@ -27,6 +27,8 @@ terraform apply -auto-approve my-plan
 popd || exit
 
 # Create kubeclusterreference file for kubeconfig generation
+# This is a custom metadata format which can be used with the gcloud client to generate a kubeconfig, due to gke kubeconfigs expiring after some period.
+# If we want to make this consistent with other cloud providers in the future we may want to look at a workaround. See discussion at https://github.com/SUSE/catapult/pull/242#pullrequestreview-438584796 for more info
 cat << EOF > kubeclusterreference
 ---
 kind: ClusterReference
