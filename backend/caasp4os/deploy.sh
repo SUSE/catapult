@@ -50,17 +50,17 @@ info "Injecting CAP terraform files…"
 
 case "$CAASP_VER" in
     "devel")
-        CAASP_REPO='caasp_40_devel_sle15sp1 = "http://ibs-mirror.prv.suse.net/ibs/Devel:/CaaSP:/4.0/SLE_15_SP1/"'
+        CAASP_REPO='caasp_45_devel_sle15sp2 = "http://ibs-mirror.prv.suse.net/ibs/Devel:/CaaSP:/4.5/SLE_15_SP2/"'
          ;;
     "staging")
-        CAASP_REPO='caasp_40_staging_sle15sp1 = "http://ibs-mirror.prv.suse.net/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/CASP40/staging/"'
+        CAASP_REPO='caasp_45_staging_sle15sp2 = "http://ibs-mirror.prv.SUSE.net/ibs/SUSE:/SLE-15-SP2:/Update:/Products:/CASP45/staging/"'
          ;;
     "product")
          # Already on terraform.tfvars
          CAASP_REPO=
          ;;
     "update")
-        CAASP_REPO='caasp_40_update_sle15sp1 = "http://ibs-mirror.prv.suse.net/ibs/SUSE/Updates/SUSE-CAASP/4.0/x86_64/update/"',
+        CAASP_REPO='caasp_45_update_sle15sp2 = "http://ibs-mirror.prv.suse.net/ibs/SUSE/Updates/SUSE-CAASP/4.5/x86_64/update/"',
          ;;
 esac
 escapeSubst() {

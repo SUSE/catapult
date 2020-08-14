@@ -35,7 +35,11 @@ fi
 
 terraformpath=bin/terraform
 if [ ! -e "$terraformpath" ]; then
-    curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_darwin_amd64.zip
+    else
+        curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip
+    fi
     unzip terraform.zip && rm -rf terraform.zip
     chmod +x terraform && mv terraform bin/
 fi

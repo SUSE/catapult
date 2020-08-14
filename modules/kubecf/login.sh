@@ -17,8 +17,10 @@ mkdir -p "$CF_HOME"
 n=0
 until [ $n -ge 20 ]
 do
+   set +e
    cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$CLUSTER_PASSWORD" -o system
    exit_code=$?
+   set -e
    if [ $exit_code -eq 0 ]; then
 
       cf create-space tmp
