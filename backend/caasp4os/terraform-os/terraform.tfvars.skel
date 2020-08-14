@@ -94,7 +94,7 @@ packages = [
 #  "ssh-rsa <key-content>"
 # ]
 authorized_keys = [
-"#~placeholder_sshkey~#"
+  "#~placeholder_sshkey~#"
 ]
 
 # IMPORTANT: Replace these ntp servers with ones from your infrastructure
