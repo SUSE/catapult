@@ -20,9 +20,17 @@ RUN zypper --gpg-auto-import-keys ref -s
 
 # RUN zypper ar --no-gpgcheck "http://download.suse.de/ibs/SUSE/Products/SUSE-CAASP/4.5/x86_64/product/" caasp-product
 RUN zypper ar --no-gpgcheck "$IBS/SUSE:/CA/SLE_15_SP2/SUSE:CA.repo"
+# For terraform package (they need ca-certificates installed already)
+RUN zypper ar --no-gpgcheck \
+  http://download.suse.de/ibs/SUSE/Products/SLE-Module-Public-Cloud/15-SP2/x86_64/product/ \
+  public-cloud
+RUN zypper ar \
+  --no-gpgcheck http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Public-Cloud/15-SP2/x86_64/update/ \
+  public-cloud-updates
 # RUN zypper ref
 RUN zypper in --auto-agree-with-licenses --no-confirm -t product caasp
 RUN zypper in --auto-agree-with-licenses --no-confirm ca-certificates-suse openssh
+
 RUN zypper -n in -t pattern SUSE-CaaSP-Management
 RUN zypper up
 RUN zypper clean -a
