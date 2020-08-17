@@ -10,7 +10,7 @@ RUN wget "https://github.com/krishicks/yaml-patch/releases/download/v0.0.10/yaml
   chmod +x /usr/local/bin/yaml-patch
 
 # Extras, mostly for the terminal image (that could be split in another image)
-RUN zypper in --no-recommends -y vim zsh tmux glibc-locale glibc-i18ndata python ruby python3 python3-pip cf-cli
+RUN zypper in --no-recommends -y vim zsh tmux glibc-locale glibc-i18ndata python ruby python3 python3-pip cf-cli gnuplot
 
 RUN zypper ar --priority 100 https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Factory/devel:languages:go.repo && \
   zypper --gpg-auto-import-keys -n in --no-recommends -y --from=devel_languages_go go1.13
@@ -47,6 +47,9 @@ RUN zypper in --no-recommends -y gcc libffi-devel python3-devel libopenssl-devel
 RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
   printf "/usr/local/lib/azure-cli\n/usr/local/bin\n\n\n" | python3 ./install.py && \
   rm ./install.py
+
+# KubeCF dependencies:
+RUN zypper in --no-recommends -y python3-yamllint ShellCheck
 
 RUN zypper rm -y glibc-locale && zypper clean --all
 

@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# Common options
+##################
+
+OWNER="${OWNER:-$(whoami)}"
+
 # GKE options
 #############
 
 GKE_PROJECT="${GKE_PROJECT:-suse-css-platform}"
 GKE_LOCATION="${GKE_LOCATION:-europe-west4-a}"
-GKE_CLUSTER_NAME="${GKE_CLUSTER_NAME:-$(whoami)-cap}"
+GKE_CLUSTER_NAME="${GKE_CLUSTER_NAME:-${OWNER}-cap}"
 GKE_CRED_JSON="${GKE_CRED_JSON:-}"
 GKE_DNSCRED_JSON="${GKE_DNSCRED_JSON:-${GKE_CRED_JSON}}"
 GKE_NODE_COUNT="${GKE_NODE_COUNT:-3}"
@@ -14,8 +19,6 @@ GKE_DNSDOMAIN="${GKE_DNSDOMAIN:-${GKE_CLUSTER_NAME}.ci.kubecf.charmedquarks.me}"
 
 # Instance type of the nodes: empty string for terraform's default, or for example n1-highcpu-16 for 1-node cluster
 GKE_INSTANCE_TYPE="${GKE_INSTANCE_TYPE:-}"
-
-HELM_VERSION="${HELM_VERSION:-v3.1.1}"
 
 # Settings for terraform state save/restore
 #

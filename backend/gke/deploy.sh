@@ -34,7 +34,7 @@ gke_sa_key     = "$GKE_CRED_JSON"
 gcp_dns_sa_key = "$GKE_DNSCRED_JSON"
 cluster_labels = {
     catapult-clustername = "$GKE_CLUSTER_NAME",
-    owner = "$(whoami)"
+    owner = "${OWNER}"
 }
 cluster_name   = "$GKE_CLUSTER_NAME"
 k8s_version    = "latest"

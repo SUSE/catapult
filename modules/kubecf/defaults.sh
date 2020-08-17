@@ -6,7 +6,7 @@
 # kubecf-chart revelant:
 
 CHART_URL="${CHART_URL:-}" # FIXME deprecated, used in SCF_CHART
-SCF_CHART="${SCF_CHART:-$CHART_URL}"
+SCF_CHART="${SCF_CHART:-$CHART_URL}" # set to empty to download from GH, "from_repo" to download from repo, or abs path to file
 
 SCF_HELM_VERSION="${SCF_HELM_VERSION:-}"
 OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
