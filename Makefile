@@ -167,6 +167,10 @@ module-experimental-eirini_release:
 module-experimental-tf-force-clean:
 	$(MAKE) -C modules/experimental tf_force_clean
 
+.PHONY: module-experimental-tf-auto-deploy
+module-experimental-tf-auto-deploy:
+	$(MAKE) -C modules/experimental tf_auto_deploy
+
 # kubecf-only targets:
 .PHONY: kubecf-build
 kubecf-build: ##@kubecf Build chart from source and install KubeCF

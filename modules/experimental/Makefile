@@ -12,3 +12,7 @@ eirinifs:
 .PHONY: tf_force_clean
 tf_force_clean:
 	./tf_force_clean.sh
+
+.PHONY: tf_auto_deploy
+tf_auto_deploy:
+	./tf_auto_deploy.sh

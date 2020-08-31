@@ -6,7 +6,7 @@ source "$ROOT_DIR"/include/colors.sh
 
 debug_mode
 
-if [ -n "$CONFIG" ]; then
+if [ -n "${CONFIG:-}" ]; then
   load_env_from_json "$CONFIG"
 fi
 

@@ -1,36 +1,27 @@
 #!/bin/bash
 
-# Takes an aks, gke, or eks cluster by CLUSTER_NAME and destroys it with terraform
+# Deploys an eks/aks/gke cluster with values taken from concourse secrets. For local use, but deploys a k8s cluster like CI
 
-. ./defaults.sh
-
-# BACKEND needs to be set before common script is run, or it defaults to kind
-if [[ "${CLUSTER_NAME}" =~ -aks- ]]; then
-    export BACKEND=aks
-elif [[ "${CLUSTER_NAME}" =~ -gke- ]]; then
-    export BACKEND=gke
-elif [[ "${CLUSTER_NAME}" =~ -eks- ]]; then
-    export BACKEND=eks
-fi
-
-if [[ "${BACKEND}" =~ ^aks$|^gke$ ]] && ! [[ -f "${KUBECFG}" ]]; then
-    echo "KUBECFG must be set to path of valid kubeconfig for ${CLUSTER_NAME} for GKE and AKS backends"
-    echo "If this cluster was created via CI, you can obtain this by hijacking the build, or checking the pools repo"
+if [[ -n "${CLUSTER_NAME}" ]]; then
+    echo "module-experimental-tf-force-clean requires CLUSTER_NAME to be unset"
     exit 1
 fi
 . ../../include/common.sh
-if [[ -z "${CLUSTER_NAME}" ]]; then
-    err "module-experimental-tf-force-clean requires CLUSTER_NAME to be set"
-    exit 1
-elif ! [[ "${BACKEND}" =~ ^(aks|gke|eks)$ ]]; then
-    err "module-experimental-tf-force-clean requires CLUSTER_NAME to contain '-aks-', '-gke-', or '-eks-', or for BACKEND to be set to aks/gke/eks"
+unset BUILD_DIR
+
+if ! [[ "${BACKEND}" =~ ^(aks|gke|eks)$ ]]; then
+    err "module-experimental-tf-force-clean requires BACKEND to be set to aks/gke/eks"
     exit 1
 fi
+random_variable=$(hexdump -n 8 -e '2/4 "%08x"' /dev/urandom)
+export CLUSTER_NAME=${BACKEND}-${random_variable}
+# Need to source common again after setting CLUSTER_NAME
+. ../../include/common.sh
+. ./defaults.sh
 
 cd "${ROOT_DIR}"
 make common-deps
 cd "${BUILD_DIR}"
-rm -rf cap-terraform
 . .envrc
 
 git clone https://github.com/suse/cap-terraform -b "${CAP_TERRAFORM_BRANCH}"
@@ -60,6 +51,7 @@ elif [[ "${BACKEND}" == eks ]]; then
     ci_secret_key=$(kubectl get secrets -n concourse-main -o json aws-service-account-ci-creds | jq -r '.data["secret-key"]'  | base64 -d)
     export AWS_ACCESS_KEY_ID=${ci_access_key_id}
     export AWS_SECRET_ACCESS_KEY=${ci_secret_key}
+    export EKS_KEYPAIR=ssh-key-ci
     # The following work would assume the EKS_DEPLOYER role and generate a useable kubeconfig. However, a kubeconfig isn't needed to run tf destroy for EKS.
     # Leaving commented out for reference purposes
     # assumed_role=$(aws sts assume-role --role-arn ${EKS_DEPLOYER_ROLE_ARN} --role-session-name RoleTest)
@@ -77,4 +69,4 @@ else
 fi
 export TF_KEY=${CLUSTER_NAME}
 cd "${ROOT_DIR}"
-make clean
+make k8s
