@@ -4,7 +4,6 @@
 . ../../include/common.sh
 . .envrc
 
-
 info "Generating KubeCF config values"
 
 kubectl patch -n kube-system configmap cap-values -p $'data:\n services: "'$SCF_SERVICES'"'
@@ -102,9 +101,41 @@ services:
 EOF
 fi
 
-# CONFIG_OVERRIDE last, to actually override
-cat >> scf-config-values.yaml <<EOF
-${CONFIG_OVERRIDE}
-EOF
+# Create json structure to make iterative changes
+scf_config_values=$(y2j scf-config-values.yaml | jq --compact-output .)
 
+# Create and merge overrides for airgapped deployments
+if [[ "${DOCKER_REGISTRY}" != "registry.suse.com" ]]; then
+  airgap_overrides=$(y2j << EOF
+---
+releases:
+  defaults:
+    url: ${DOCKER_REGISTRY}/${DOCKER_ORG}
+  pxc:
+    image:
+      repository: ${DOCKER_REGISTRY}/${DOCKER_ORG}/pxc
+EOF
+)
+  buildpacks="suse-staticfile-buildpack suse-java-buildpack suse-ruby-buildpack suse-dotnet-core-buildpack suse-nodejs-buildpack suse-go-buildpack suse-python-buildpack suse-php-buildpack suse-nginx-buildpack suse-binary-buildpack"
+  for buildpack in ${buildpacks}; do
+    buildpack_override=$(y2j << EOF
+---
+releases:
+  ${buildpack}:
+    url: ${DOCKER_REGISTRY}/${DOCKER_ORG}
+EOF
+)
+    airgap_overrides=$(jq --compact-output --null-input "${airgap_overrides} * ${buildpack_override}")
+  done
+  scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${airgap_overrides}")
+fi
+
+# Ensure CONFIG_OVERRIDE is a json object
+CONFIG_OVERRIDE=${CONFIG_OVERRIDE:-{}}
+CONFIG_OVERRIDE=$(y2j <<< ${CONFIG_OVERRIDE})
+# merge current scf config values with overrides
+scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${CONFIG_OVERRIDE}")
+
+# Convert scf-config-values to yaml and write to file
+j2y <<< "${scf_config_values}" > scf-config-values.yaml
 ok "KubeCF config values generated"

@@ -54,9 +54,9 @@ else
 fi
 
 if [[ "${DOCKER_REGISTRY}" != "registry.suse.com" ]]; then
-  operator_install_args+=(--set "image.org=${DOCKER_REGISTRY}/cfcontainerization")
-  operator_install_args+=(--set "quarks-job.image.org=${DOCKER_REGISTRY}/cfcontainerization")
-  operator_install_args+=(--set "operator.boshDNSDockerImage=${DOCKER_REGISTRY}/cfcontainerization/coredns:0.1.0-1.6.7-bp152.1.2")
+  operator_install_args+=(--set "image.org=${DOCKER_REGISTRY}/${DOCKER_ORG}")
+  operator_install_args+=(--set "quarks-job.image.org=${DOCKER_REGISTRY}/${DOCKER_ORG}")
+  operator_install_args+=(--set "operator.boshDNSDockerImage=${DOCKER_REGISTRY}/${DOCKER_ORG}/coredns:0.1.0-1.6.7-bp152.1.2")
   operator_install_args+=(--set "createWatchNamespace=false")
   operator_install_args+=(--set "quarks-job.createWatchNamespace=false")
   operator_install_args+=(--set "global.singleNamespace.create=false")
@@ -109,14 +109,6 @@ kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-lit
 kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
 kubecf_install_args=(--values scf-config-values.yaml)
-if [[ "${DOCKER_REGISTRY}" != "registry.suse.com" ]]; then
-  kubecf_install_args+=(--set "releases.defaults.url=${DOCKER_REGISTRY}/${DOCKER_ORG}")
-  kubecf_install_args+=(--set "releases.pxc.image.repository=${DOCKER_REGISTRY}/${DOCKER_ORG}/pxc")
-  buildpacks="suse-staticfile-buildpack suse-java-buildpack suse-ruby-buildpack suse-dotnet-core-buildpack suse-nodejs-buildpack suse-go-buildpack suse-python-buildpack suse-php-buildpack suse-nginx-buildpack suse-binary-buildpack"
-  for buildpack in ${buildpacks}; do
-    kubecf_install_args+=(--set "releases.${buildpack}.url=${DOCKER_REGISTRY}/${DOCKER_ORG}")
-  done
-fi
 
 helm_install susecf-scf ${SCF_CHART} \
   --namespace scf \
