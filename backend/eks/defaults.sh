@@ -32,3 +32,6 @@ TF_KEY="${TF_KEY:-}"
 # TF_KEY is empty (default, see above).
 TF_BUCKET="${TF_BUCKET:-cap-ci-tf}"
 TF_REGION="${TF_REGION:-us-west-2}"
+
+AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID:-}"
+AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-}"
