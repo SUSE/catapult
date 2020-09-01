@@ -53,4 +53,4 @@ fi
 
 # terraform needs helm client installed and configured:
 helm_init_client
-popd
+popd || exit

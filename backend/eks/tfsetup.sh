@@ -45,4 +45,4 @@ terraform {
 }
 EOF
 fi
-popd
+popd || exit

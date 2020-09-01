@@ -55,7 +55,7 @@ KUBECONFIG="${BUILD_DIR}"/kubeconfig
 
 # get kubectl for aks:
 cp aksk8scfg "${KUBECONFIG}"
-popd
+popd || exit
 
 # wait for cluster ready:
 wait_ns kube-system
