@@ -32,8 +32,15 @@ else
 INGRESS_BLOCK=''
 fi
 
+INSTALL_STACKS="[sle15, cflinuxfs3]"
+if [[ $ENABLE_EIRINI == true ]]; then
+    INSTALL_STACKS="[sle15]"
+fi
+
 cat > scf-config-values.yaml <<EOF
 system_domain: $domain
+
+install_stacks: ${INSTALL_STACKS}
 
 features:
   eirini:
