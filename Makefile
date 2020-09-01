@@ -179,7 +179,7 @@ kubecf-build: ##@kubecf Build chart from source and install KubeCF
 kubecf-clean: ##@kubecf Only delete installation of KubeCF & related files
 	$(MAKE) -C modules/kubecf clean
 
-.PHONY: scf
+.PHONY: kubecf
 kubecf: ##@STATES Delete if exists then deploy KubeCF in cluster
 	$(MAKE) -C modules/kubecf
 
