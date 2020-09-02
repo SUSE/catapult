@@ -138,7 +138,7 @@ EOF
 fi
 
 # Ensure CONFIG_OVERRIDE is a json object
-CONFIG_OVERRIDE=${CONFIG_OVERRIDE:-{}}
+CONFIG_OVERRIDE=${CONFIG_OVERRIDE:-"{}"}
 CONFIG_OVERRIDE=$(y2j <<< ${CONFIG_OVERRIDE})
 # merge current scf config values with overrides
 scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${CONFIG_OVERRIDE}")

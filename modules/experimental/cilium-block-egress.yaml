@@ -6,33 +6,33 @@ spec:
   - endpointSelector:
       matchLabels: {}
     egress:
-    - toEndpoints:
-      - matchLabels:
-          "k8s:io.kubernetes.pod.namespace": cf-operator
+      - toEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": cf-operator
     ingress:
-    - fromEndpoints:
-      - matchLabels:
-          "k8s:io.kubernetes.pod.namespace": cf-operator
+      - fromEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": cf-operator
   - endpointSelector:
       matchLabels: {}
     egress:
-    - toEndpoints:
-      - matchLabels:
-          "k8s:io.kubernetes.pod.namespace": scf
+      - toEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": scf
   - endpointSelector:
       matchLabels: {}
     ingress:
-    - fromEndpoints:
-      - matchLabels:
-          "k8s:io.kubernetes.pod.namespace": scf
+      - fromEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": scf
   - endpointSelector:
       matchLabels:
         {}
     egress:
-    - toCIDR:
-      - 0.0.0.0/32
-      - 10.0.0.0/8
-      - 100.64.0.0/10
-      - 127.0.0.0/8
-      - 172.16.0.0/12
-      - 192.168.0.0/16
+      - toCIDR:
+          - 0.0.0.0/32
+          - 10.0.0.0/8
+          - 100.64.0.0/10
+          - 127.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16

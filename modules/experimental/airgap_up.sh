@@ -10,13 +10,15 @@ if [[ ${BACKEND} != "caasp4os" ]]; then
 fi
 
 airgap_up_node() {
-  local kube_node=$1
+  local kube_node host_ip
+  kube_node=$1
   info "Adding airgap iptables rules for ${kube_node}"
-  local host_ip=$(ssh sles@$kube_node 'echo $SSH_CONNECTION' | awk '{ print $1 }')
+  host_ip=$(ssh sles@$kube_node 'echo $SSH_CONNECTION' | awk '{ print $1 }')
   if ! grep -qE "([0-9]{1,3}\.){3}[0-9]{1,3}" <<< $host_ip; then
     err "Couldn't get catapult host IP from CaaSP node for iptables whitelist"
     exit 1
   fi
+  # shellcheck disable=SC2087
   ssh -T sles@${kube_node} << EOF
 sudo -s << 'EOS'
   iptables -A OUTPUT -j ACCEPT -d ${host_ip}
