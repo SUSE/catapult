@@ -14,14 +14,23 @@ rm -rf helm chart scf_chart_url suse kubecf
 if [ "$SCF_CHART" == "from_repo" ]; then
     HELM_REPO="${SCF_HELM_REPO:-https://kubernetes-charts.suse.com/}"
     HELM_REPO_NAME="${SCF_HELM_REPO_NAME:-suse}"
+    KUBECF_VERSION=${KUBECF_VERSION:-}
+    CF_OPERATOR_VERSION=${CF_OPERATOR_VERSION:-}
     info "Grabbing chart from $HELM_REPO"
 
     helm_init_client
     helm repo add "$HELM_REPO_NAME" $HELM_REPO
     helm repo update
-
-    helm fetch "$HELM_REPO_NAME/kubecf"
-    helm fetch "$HELM_REPO_NAME/cf-operator"
+    if [[ -n "${KUBECF_VERSION}" ]]; then
+        helm fetch "$HELM_REPO_NAME/kubecf" --version "${KUBECF_VERSION}"
+    else
+        helm fetch "$HELM_REPO_NAME/kubecf"
+    fi
+    if [[ -n "${CF_OPERATOR_VERSION}" ]]; then
+        helm fetch "$HELM_REPO_NAME/cf-operator" --version "${CF_OPERATOR_VERSION}"
+    else
+        helm fetch "$HELM_REPO_NAME/cf-operator"
+    fi
 else
     if [ -z "$SCF_CHART" ]; then
         warn "No chart url given - using latest public release from GH"
