@@ -18,4 +18,4 @@ export DOWNLOAD_BINS="${DOWNLOAD_BINS:-true}"
 
 # Download binaries of catapult dependencies
 export DOWNLOAD_CATAPULT_DEPS="${DOWNLOAD_CATAPULT_DEPS:-true}"
-
+export CAP_TERRAFORM_BRANCH="${CAP_TERRAFORM_BRANCH:-cap-ci}"
