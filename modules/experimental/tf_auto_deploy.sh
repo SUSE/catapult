@@ -3,7 +3,7 @@
 # Deploys an eks/aks/gke cluster with values taken from concourse secrets. For local use, but deploys a k8s cluster like CI
 
 if [[ -n "${CLUSTER_NAME}" ]]; then
-    echo "module-experimental-tf-force-clean requires CLUSTER_NAME to be unset"
+    echo "module-experimental-tf-auto-deploy requires CLUSTER_NAME to be unset"
     exit 1
 fi
 . ../../include/common.sh
