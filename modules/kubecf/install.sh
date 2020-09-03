@@ -39,7 +39,6 @@ if [ "$OPERATOR_CHART_URL" = latest ]; then
 fi
 
 info "Installing cf-operator"
-kubectl create namespace cf-operator || true
 
 # Detect the chart version to handle different install parameters
 operator_version="$(helm_chart_app_version "${OPERATOR_CHART_URL}")"
@@ -54,11 +53,25 @@ else
     operator_install_args+=(--set "global.operator.watchNamespace=scf")
 fi
 
+if [[ "${DOCKER_REGISTRY}" != "registry.suse.com" ]]; then
+  operator_install_args+=(--set "image.org=${DOCKER_REGISTRY}/${DOCKER_ORG}")
+  operator_install_args+=(--set "quarks-job.image.org=${DOCKER_REGISTRY}/${DOCKER_ORG}")
+  operator_install_args+=(--set "operator.boshDNSDockerImage=${DOCKER_REGISTRY}/${DOCKER_ORG}/coredns:0.1.0-1.6.7-bp152.1.2")
+  operator_install_args+=(--set "createWatchNamespace=false")
+  operator_install_args+=(--set "quarks-job.createWatchNamespace=false")
+  operator_install_args+=(--set "global.singleNamespace.create=false")
+  operator_install_args+=(--set "quarks-job.singleNamespace.createNamespace=false")
+  operator_install_args+=(--set "quarks-job.global.singleNamespace.create=false")
+fi
+
+
 echo "Installing CFO from: ${OPERATOR_CHART_URL}"
+
+kubectl create namespace cf-operator || true
 # Install the operator
+
 helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
     "${operator_install_args[@]}"
-
 # fixes operator readiness issue on AKS.
 sleep 240
 
@@ -73,11 +86,16 @@ wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
 info "Test CRDs are ready"
 #wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
 wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
-wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
+  # qstate_tolerations fails when internet connectivity is disabled.
+  wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+fi
 wait_ns scf
 #wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
 wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
-wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
+  wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+fi
 ok "cf-operator ready"
 
 # KubeCF Doesn't support to setup a cluster password yet, doing it manually.
@@ -90,9 +108,12 @@ kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-lit
 ## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
 kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
+kubecf_install_args=(--values scf-config-values.yaml)
+
 helm_install susecf-scf ${SCF_CHART} \
---namespace scf \
---values scf-config-values.yaml
+  --namespace scf \
+  --values scf-config-values.yaml \
+  "${kubecf_install_args[@]}"
 
 sleep 540
 

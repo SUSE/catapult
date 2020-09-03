@@ -353,3 +353,21 @@ external_dns_annotate_scf() {
             -n "$ns" \
             "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
 }
+
+# Convert yaml to json
+y2j() {
+    if [[ -e ${1:-} ]]; then
+        ruby -r json -r yaml -e "puts YAML.load(File.read('$1')).to_json"
+    else
+        ruby -r json -r yaml -e 'puts (YAML.load(ARGF.read).to_json)'
+    fi
+}
+
+# Convert json to yaml
+j2y() {
+    if [[ -e ${1:-} ]]; then
+        ruby -r json -r yaml -e "puts YAML.dump(JSON.parse(File.read('$1')))"
+    else
+        ruby -r json -r yaml -e "puts YAML.dump(JSON.parse(ARGF.read))"
+    fi
+}

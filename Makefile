@@ -163,6 +163,14 @@ module-experimental-eirinifs:
 module-experimental-eirini_release:
 	$(MAKE) -C modules/experimental eirini_release
 
+.PHONY: module-experimental-airgap-up
+module-experimental-airgap-up:
+	$(MAKE) -C modules/experimental airgap-up
+
+.PHONY: module-experimental-airgap-down
+module-experimental-airgap-down:
+	$(MAKE) -C modules/experimental airgap-down
+
 .PHONY: module-experimental-tf-force-clean
 module-experimental-tf-force-clean:
 	$(MAKE) -C modules/experimental tf_force_clean
@@ -182,7 +190,7 @@ kubecf-build: ##@kubecf Build chart from source and install KubeCF
 kubecf-clean: ##@kubecf Only delete installation of KubeCF & related files
 	$(MAKE) -C modules/kubecf clean
 
-.PHONY: sc	f
+.PHONY: kubecf
 kubecf: ##@STATES Delete if exists then deploy KubeCF in cluster
 	$(MAKE) -C modules/kubecf
 

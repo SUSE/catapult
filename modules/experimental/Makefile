@@ -9,6 +9,14 @@ eirini_release:
 eirinifs:
 	./eirinifs.sh
 
+.PHONY: airgap-up
+airgap-up: airgap-down
+	./airgap_up.sh
+
+PHONY: airgap-down
+airgap-down:
+	./airgap_down.sh
+
 .PHONY: tf_force_clean
 tf_force_clean:
 	./tf_force_clean.sh
