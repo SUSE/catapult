@@ -19,6 +19,11 @@ private:
 buildir:
 	include/buildir.sh
 
+.PHONY: common-deps
+common-deps: ##@STATES Install common deps kubectl, yq, yamlpatch, and helm into BUILD_DIR
+common-deps: buildir
+	$(MAKE) -C modules/common
+
 # General targets (Public)
 .PHONY: clean
 clean: ##@STATES Delete cluster of type $BACKEND and location build$CLUSTER_NAME
@@ -27,14 +32,12 @@ clean: kubecf-clean # first kubecf-clean to delete PVCs, DNS entries, etc
 
 .PHONY: k8s
 k8s: ##@STATES Delete if exists then deploy cluster of type $BACKEND in build$CLUSTER_NAME
-k8s: clean buildir
-	$(MAKE) -C modules/common
+k8s: clean common-deps
 	$(MAKE) -C backend/$(BACKEND)
 
 .PHONY: kubeconfig
 kubeconfig: ##@STATES Import cluster of type $BACKEND from $KUBECFG in build$CLUSTER_NAME
-kubeconfig: buildir
-	$(MAKE) -C modules/common
+kubeconfig: common-deps
 	$(MAKE) -C backend/$(BACKEND) deps
 	$(MAKE) -C backend/$(BACKEND) kubeconfig
 	backend/check.sh
@@ -53,7 +56,7 @@ restart: ##@k8s Restart cluster of type $BACKEND (only present in some backends,
 
 .PHONY: recover
 recover: ##@k8s Obtain kubeconfig from cluster without build folder (only present in kind)
-recover: buildir
+recover: common-deps
 	$(MAKE) -C modules/common
 	$(MAKE) -C backend/$(BACKEND) kubeconfig
 
@@ -159,6 +162,14 @@ module-experimental-eirinifs:
 .PHONY: module-experimental-eirini_release
 module-experimental-eirini_release:
 	$(MAKE) -C modules/experimental eirini_release
+
+.PHONY: module-experimental-tf-force-clean
+module-experimental-tf-force-clean:
+	$(MAKE) -C modules/experimental tf_force_clean
+
+.PHONY: module-experimental-tf-auto-deploy
+module-experimental-tf-auto-deploy:
+	$(MAKE) -C modules/experimental tf_auto_deploy
 
 # kubecf-only targets:
 .PHONY: kubecf-build

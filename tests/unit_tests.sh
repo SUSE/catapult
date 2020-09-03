@@ -191,7 +191,6 @@ testCommonDeps() {
 
   assertTrue 'yaml-patch downloaded' "[ -e 'buildtest/bin/yaml-patch' ]"
   assertTrue 'yq downloaded' "[ -e 'buildtest/bin/yq' ]"
-
   # test DOWNLOAD_CATAPULT_DEPS=false on all backends
   for b in kind caasp4os eks gke imported minikube aks; do
       if [ -d "$ROOT_DIR/backend/$b" ]; then
@@ -223,6 +222,8 @@ testCommonDeps() {
               aks)
                   assertFalse 'az not downloaded' "[ -e 'buildtest/bin/az' ]"
                   assertFalse 'terraform not downloaded' "[ -e 'buildtest/bin/terraform' ]"
+                  # AKS clean fails if kubeconfig doesn't exist, as the clean script copies it to a path used by terraform destroy
+                  touch buildtest/kubeconfig
                   ;;
           esac
           BACKEND="$b" make clean
