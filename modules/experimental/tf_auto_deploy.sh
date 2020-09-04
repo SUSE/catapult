@@ -13,11 +13,16 @@ if ! [[ "${BACKEND}" =~ ^(aks|gke|eks)$ ]]; then
     err "module-experimental-tf-force-clean requires BACKEND to be set to aks/gke/eks"
     exit 1
 fi
+
+if [[ "${BACKEND}" == gke ]]; then
+    warn "tf-auto-deploy may not work with GKE"
+fi
+
 random_variable=$(hexdump -n 8 -e '2/4 "%08x"' /dev/urandom)
 export CLUSTER_NAME=${BACKEND}-${random_variable}
 # Need to source common again after setting CLUSTER_NAME
-. ../../include/common.sh
-. ./defaults.sh
+. $ROOT_DIR/include/common.sh
+. $ROOT_DIR/backend/$BACKEND/defaults.sh
 
 cd "${ROOT_DIR}" || exit
 make common-deps
@@ -39,7 +44,6 @@ if [[ "${BACKEND}" == aks ]]; then
     AZURE_DNS_JSON=${AZURE_DNS_JSON_PATH}
     AZURE_RESOURCE_GROUP=${CLUSTER_NAME}-rg
     AZURE_CLUSTER_NAME=${CLUSTER_NAME}
-    cp "${KUBECFG}" "${KUBECONFIG}"
 elif [[ "${BACKEND}" == eks ]]; then
     export EKS_DEPLOYER_ROLE_ARN EKS_CLUSTER_ROLE_NAME EKS_CLUSTER_ROLE_ARN EKS_WORKER_NODE_ROLE_NAME EKS_WORKER_NODE_ROLE_ARN EKS_CLUSTER_NAME KUBE_AUTHORIZED_ROLE_ARN AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY EKS_KEYPAIR
     EKS_DEPLOYER_ROLE_ARN=$(kubectl get secrets -n concourse-main -o json aws-service-account-ci-creds | jq -r '.data["deployer-role-arn"]' | base64 -d)
@@ -68,7 +72,6 @@ else
     kubectl get secrets -n concourse-main -o json gke-key-json | jq -r .data.value | base64 -d > gke-key.json
     export GKE_CREDS_JSON
     GKE_CREDS_JSON=$PWD/gke-key.json
-    cp "${KUBECFG}" "${KUBECONFIG}"
 fi
 export TF_KEY=${CLUSTER_NAME}
 cd "${ROOT_DIR}" || exit
