@@ -2,6 +2,7 @@
 
 .PHONY: clean
 clean:
+	../experimental/airgap_down.sh
 	./clean.sh
 
 .PHONY: chart

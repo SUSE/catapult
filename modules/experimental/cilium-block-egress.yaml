@@ -1,0 +1,38 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "cilium-airgap-simulation"
+spec:
+  - endpointSelector:
+      matchLabels: {}
+    egress:
+      - toEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": cf-operator
+    ingress:
+      - fromEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": cf-operator
+  - endpointSelector:
+      matchLabels: {}
+    egress:
+      - toEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": scf
+  - endpointSelector:
+      matchLabels: {}
+    ingress:
+      - fromEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": scf
+  - endpointSelector:
+      matchLabels:
+        {}
+    egress:
+      - toCIDR:
+          - 0.0.0.0/32
+          - 10.0.0.0/8
+          - 100.64.0.0/10
+          - 127.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
