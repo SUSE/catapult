@@ -108,12 +108,9 @@ kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-lit
 ## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
 kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
-kubecf_install_args=(--values scf-config-values.yaml)
-
 helm_install susecf-scf ${SCF_CHART} \
   --namespace scf \
-  --values scf-config-values.yaml \
-  "${kubecf_install_args[@]}"
+  --values scf-config-values.yaml
 
 sleep 540
 
