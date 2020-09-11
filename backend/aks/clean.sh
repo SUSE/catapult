@@ -16,7 +16,7 @@ if [ -d "$BUILD_DIR" ]; then
     export ARM_TENANT_ID="${AZURE_TENANT_ID}"
 
     pushd cap-terraform/aks || exit
-    if [[ ! -f aksk8scfg ]]; then
+    if [[ -f "${KUBECONFIG}" && ! -f aksk8scfg ]]; then
         cp "${KUBECONFIG}" aksk8scfg
     fi
     terraform init
