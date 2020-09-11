@@ -5,8 +5,6 @@
 . .envrc
 
 
-domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-
 if [[ $ENABLE_EIRINI == true ]] ; then
    # [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm_ls 2>/dev/null | grep -qi metrics-server ; then
