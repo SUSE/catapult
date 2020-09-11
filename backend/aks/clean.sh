@@ -22,6 +22,9 @@ if [ -d "$BUILD_DIR" ]; then
     terraform init
     terraform destroy -auto-approve
     popd || exit
+    if az group show --name "${AZURE_RESOURCE_GROUP}" 2>/dev/null; then
+        az group delete --name "${AZURE_RESOURCE_GROUP}" --yes
+    fi
     rm -rf "$BUILD_DIR"
     ok "AKS cluster deleted successfully"
 else
