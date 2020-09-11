@@ -12,7 +12,7 @@ fi
 gcloudpath=bin/gcloud
 if [ ! -e "$gcloudpath" ]; then
     curl -o google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-264.0.0-linux-x86_64.tar.gz
-    tar -xvf google-cloud-sdk.tar.gz
+    tar -xf google-cloud-sdk.tar.gz
     rm google-cloud-sdk.tar.gz
     pushd google-cloud-sdk || exit
     bash ./install.sh -q
