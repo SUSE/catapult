@@ -100,8 +100,7 @@ ok "cf-operator ready"
 
 helm_install susecf-scf ${SCF_CHART} \
   --namespace scf \
-  --values scf-config-values.yaml \
-  "${kubecf_install_args[@]}"
+  --values scf-config-values.yaml
 
 sleep 540
 
