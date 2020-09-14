@@ -96,12 +96,18 @@ services:
   router:
     type: LoadBalancer
     externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "${domain}, *.${domain}"
   ssh-proxy:
     type: LoadBalancer
     externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "ssh.${domain}"
   tcp-router:
     type: LoadBalancer
     externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "*.tcp.${domain}, tcp.${domain}"
     port_range:
       start: 20000
       end: 20008

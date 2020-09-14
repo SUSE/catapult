@@ -5,9 +5,6 @@
 . .envrc
 
 
-domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
-
 if [[ $ENABLE_EIRINI == true ]] ; then
    # [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm_ls 2>/dev/null | grep -qi metrics-server ; then
@@ -118,8 +115,5 @@ helm_install susecf-scf ${SCF_CHART} \
 sleep 540
 
 wait_ns scf
-if [ "$services" == "lb" ]; then
-    external_dns_annotate_kubecf scf "$domain"
-fi
 
 ok "KubeCF deployed successfully"

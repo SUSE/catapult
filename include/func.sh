@@ -312,27 +312,6 @@ external_dns_annotate_stratos() {
             "external-dns.alpha.kubernetes.io/hostname=console.${domain}, *.console.${domain}"
 }
 
-external_dns_annotate_kubecf() {
-    local ns=$1;shift
-    local domain=$1;shift
-    # for kubecf
-    kubectl annotate svc router-public \
-            -n "$ns" \
-            "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
-    if [[ "${ENABLE_EIRINI}" == true ]] ; then
-        kubectl annotate svc eirinix-ssh-proxy \
-                -n "$ns" \
-                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
-    else
-        kubectl annotate svc ssh-proxy-public \
-            -n "$ns" \
-            "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
-    fi
-    kubectl annotate svc tcp-router-public \
-            -n "$ns" \
-            "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
-}
-
 external_dns_annotate_scf() {
     local ns=$1;shift
     local domain=$1;shift
