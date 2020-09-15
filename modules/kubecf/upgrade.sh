@@ -5,6 +5,20 @@
 . .envrc
 
 
+info "Upgrading CFO…"
+
+helm_upgrade cf-operator cf-operator/ \
+             --namespace cf-operator \
+             --reuse-values
+
+info "Wait for cf-operator to be ready"
+
+wait_for_cf-operator
+
+ok "cf-operator ready"
+
+info "Upgrading KubeCF…"
+
 if [ -n "$SCF_CHART" ]; then
 # save SCF_CHART on cap-values configmap
     kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
