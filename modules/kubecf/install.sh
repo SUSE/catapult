@@ -69,30 +69,11 @@ kubectl create namespace cf-operator || true
 
 helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
     "${operator_install_args[@]}"
-# fixes operator readiness issue on AKS.
-sleep 240
-
-wait_ns cf-operator
 
 info "Wait for cf-operator to be ready"
-wait_for "kubectl get endpoints -n cf-operator cf-operator-webhook -o name"
-wait_for "kubectl get crd quarksstatefulsets.quarks.cloudfoundry.org -o name"
-wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
-wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
-wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
-info "Test CRDs are ready"
-#wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
-wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
-if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
-  # qstate_tolerations fails when internet connectivity is disabled.
-  wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
-fi
-wait_ns scf
-#wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
-wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
-if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
-  wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
-fi
+
+wait_for_cf-operator
+
 ok "cf-operator ready"
 
 # KubeCF Doesn't support to setup a cluster password yet, doing it manually.
