@@ -221,7 +221,7 @@ SUITES
     kubectl get secret -n "${KUBECF_NAMESPACE}" "${cats_secret_name}" -o json  | \
     jq -r '.data."properties.yaml"' | base64 -d | \
     yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.include" "${suites}" | \
-    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.stacks" "[sle15]" | \
+    yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.stacks[0]" 'sle15' | \
     yq w - "instance_groups.(name==acceptance-tests).jobs.(name==acceptance-tests).properties.acceptance_tests.credhub_mode" 'skip-tests' | \
     base64 -w 0 )"
 
