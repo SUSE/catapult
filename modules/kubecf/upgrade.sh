@@ -4,18 +4,23 @@
 . ../../include/common.sh
 . .envrc
 
+helm list -A
+kubectl get pods -A
 
 info "Upgrading CFO…"
 
 helm_upgrade cf-operator cf-operator/ \
              --namespace cf-operator \
-             --reuse-values
+             --set "global.singleNamespace.name=scf"
 
 info "Wait for cf-operator to be ready"
 
 wait_for_cf-operator
 
 ok "cf-operator ready"
+
+helm list -A
+kubectl get pods -A
 
 info "Upgrading KubeCF…"
 
@@ -32,3 +37,6 @@ sleep 10
 wait_ns scf
 
 ok "KubeCF deployment upgraded successfully"
+
+helm list -A
+kubectl get pods -A
