@@ -10,6 +10,9 @@ if [ -n "$EKCP_PROXY" ]; then
 fi
 
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+admin_pass=$(kubectl get secret --namespace scf \
+                     var-cf-admin-password \
+                     -o jsonpath='{.data.password}' | base64 --decode)
 
 mkdir -p "$CF_HOME"
 
@@ -18,7 +21,7 @@ n=0
 until [ $n -ge 20 ]
 do
    set +e
-   cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$CLUSTER_PASSWORD" -o system
+   cf login --skip-ssl-validation -a https://api."$domain" -u admin -p "$admin_pass" -o system
    exit_code=$?
    set -e
    if [ $exit_code -eq 0 ]; then
