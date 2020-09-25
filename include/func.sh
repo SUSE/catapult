@@ -352,8 +352,7 @@ j2y() {
 }
 
 wait_for_cf-operator() {
-    # fixes operator readiness issue on AKS.
-    sleep 240
+    sleep 10
 
     wait_ns cf-operator
 
