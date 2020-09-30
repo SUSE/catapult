@@ -104,6 +104,8 @@ info "Disabling node updates…"
 skuba_updates all disable
 wait
 
+# reboots commented, no updates to trigger them
+# info "Disabling node reboots …"
 # skuba_reboots disable
 # wait
 
