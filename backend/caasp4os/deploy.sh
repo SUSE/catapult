@@ -107,6 +107,10 @@ wait
 # skuba_reboots disable
 # wait
 
+info "Raising pid_limits for crio…"
+skuba_raise_pid_limit all
+wait
+
 # Create k8s configmap
 PUBLIC_IP="$(skuba_container terraform output -json | jq -r '.ip_load_balancer.value|to_entries|map(.value)|first')"
 ROOTFS=overlay-xfs
