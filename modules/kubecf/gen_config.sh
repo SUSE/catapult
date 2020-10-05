@@ -6,8 +6,9 @@
 
 info "Generating KubeCF config values"
 
-kubectl patch -n kube-system configmap cap-values -p $'data:\n services: "'$SCF_SERVICES'"'
-services="$SCF_SERVICES"
+if [ -n "$KUBECF_SERVICES" ]; then
+    services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
+fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 array_external_ips=()
