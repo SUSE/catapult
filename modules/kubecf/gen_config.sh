@@ -6,19 +6,10 @@
 
 info "Generating KubeCF config values"
 
-if [ -n "$KUBECF_SERVICES" ]; then
+if [ -z "$KUBECF_SERVICES" ]; then
     services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
 fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
-array_external_ips=()
-while IFS='' read -r line; do array_external_ips+=("$line");
-done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
-external_ips+="\"$public_ip\""
-for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
-external_ips+=", \"${array_external_ips[$i]}\""
-done
-
 if [ "$services" == ingress ]; then
 INGRESS_BLOCK="ingress:
     enabled: true
@@ -30,6 +21,19 @@ INGRESS_BLOCK="ingress:
 "
 else
 INGRESS_BLOCK=''
+fi
+
+if [ "${services}" == "hardcoded" ]; then
+    public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
+    array_external_ips=()
+    while IFS='' read -r line; do array_external_ips+=("$line");
+    done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
+    external_ips+="\"$public_ip\""
+    for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
+        external_ips+=", \"${array_external_ips[$i]}\""
+    done
+else
+    external_ips=''
 fi
 
 INSTALL_STACKS="[sle15, cflinuxfs3]"
