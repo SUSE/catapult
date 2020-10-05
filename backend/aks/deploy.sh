@@ -75,6 +75,7 @@ wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-nginx-ingress-controll
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
+            --from-literal=services="lb" \
             --from-literal=public-ip="${PUBLIC_IP}" \
             --from-literal=domain="${AZURE_DNS_DOMAIN}" \
             --from-literal=platform=aks

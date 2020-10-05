@@ -115,6 +115,7 @@ DOMAIN="$PUBLIC_IP"."$MAGICDNS"
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=public-ip="${PUBLIC_IP}" \
+            --from-literal=services="hardcoded" \
             --from-literal=domain="${DOMAIN}" \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=platform=caasp4

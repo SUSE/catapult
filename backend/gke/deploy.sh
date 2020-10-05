@@ -51,6 +51,7 @@ if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; the
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
             --from-literal=public-ip="${PUBLIC_IP}" \
+            --from-literal=services="lb" \
             --from-literal=domain="${GKE_DNSDOMAIN}" \
             --from-literal=platform=gke
 fi
