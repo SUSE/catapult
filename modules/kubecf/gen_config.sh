@@ -5,6 +5,7 @@
 . .envrc
 
 info "Generating KubeCF config values"
+rm -f scf-config-values.yaml
 
 if [ -z "$KUBECF_SERVICES" ]; then
     services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
@@ -36,12 +37,39 @@ else
     external_ips=''
 fi
 
+if [ "${services}" == "lb" ]; then
+    cat >> scf-config-values.yaml <<EOF
+#  External endpoints are created for the instance groups only if
+#  features.ingress.enabled is false.
+services:
+  router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "${domain}, *.${domain}"
+  ssh-proxy:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "ssh.${domain}"
+  tcp-router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "*.tcp.${domain}, tcp.${domain}"
+    port_range:
+      start: 20000
+      end: 20008
+EOF
+fi
+
+
 INSTALL_STACKS="[sle15, cflinuxfs3]"
 if [[ $ENABLE_EIRINI == true ]]; then
     INSTALL_STACKS="[sle15]"
 fi
 
-cat > scf-config-values.yaml <<EOF
+cat >> scf-config-values.yaml <<EOF
 system_domain: $domain
 
 install_stacks: ${INSTALL_STACKS}
@@ -92,32 +120,6 @@ properties:
         include: "${BRAIN_INCLUDE}"
         exclude: "${BRAIN_EXCLUDE}"
 EOF
-
-if [ "${services}" == "lb" ]; then
-    cat >> scf-config-values.yaml <<EOF
-#  External endpoints are created for the instance groups only if
-#  features.ingress.enabled is false.
-services:
-  router:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    annotations:
-      "external-dns.alpha.kubernetes.io/hostname": "${domain}, *.${domain}"
-  ssh-proxy:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    annotations:
-      "external-dns.alpha.kubernetes.io/hostname": "ssh.${domain}"
-  tcp-router:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    annotations:
-      "external-dns.alpha.kubernetes.io/hostname": "*.tcp.${domain}, tcp.${domain}"
-    port_range:
-      start: 20000
-      end: 20008
-EOF
-fi
 
 # Create json structure to make iterative changes
 scf_config_values=$(y2j scf-config-values.yaml | jq --compact-output .)
