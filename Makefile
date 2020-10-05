@@ -191,7 +191,7 @@ kubecf-clean: ##@kubecf Only delete installation of KubeCF & related files
 	$(MAKE) -C modules/kubecf clean
 
 .PHONY: kubecf
-kubecf: ##@STATES Delete if exists then deploy KubeCF in cluster
+kubecf: ##@STATES Does not delete if exists. Deploys KubeCF in cluster
 	$(MAKE) -C modules/kubecf
 
 .PHONY: kubecf-chart

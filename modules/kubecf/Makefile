@@ -1,9 +1,5 @@
 .DEFAULT_GOAL := all
 
-.PHONY: clean
-clean:
-	./clean.sh
-
 .PHONY: chart
 chart:
 	./chart.sh
@@ -25,9 +21,13 @@ purge:
 	./purge.sh
 
 .PHONY: all
-all: clean chart gen-config install
+all: chart gen-config install
 
 ## one-offs:
+
+.PHONY: clean
+clean:
+	./clean.sh
 
 .PHONY: precheck
 precheck:
