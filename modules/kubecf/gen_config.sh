@@ -48,16 +48,6 @@ features:
     enabled: ${AUTOSCALER}
   ${INGRESS_BLOCK}
 
-kube:
-  service_cluster_ip_range: 0.0.0.0/0
-  pod_cluster_ip_range: 0.0.0.0/0
-
-  registry:
-    hostname: "${DOCKER_REGISTRY}"
-    username: "${DOCKER_USERNAME}"
-    password: "${DOCKER_PASSWORD}"
-  organization: "${DOCKER_ORG}"
-
 high_availability: ${HA}
 
 testing:
