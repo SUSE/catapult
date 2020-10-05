@@ -5,21 +5,18 @@
 . .envrc
 
 info "Generating KubeCF config values"
+rm -f scf-config-values.yaml
 
-kubectl patch -n kube-system configmap cap-values -p $'data:\n services: "'$SCF_SERVICES'"'
-services="$SCF_SERVICES"
+if [ -z "$KUBECF_SERVICES" ]; then
+    services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
+else
+    # KUBECF_SERVICES not empty, we want to override then:
+    services="$KUBECF_SERVICES"
+fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
-array_external_ips=()
-while IFS='' read -r line; do array_external_ips+=("$line");
-done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
-external_ips+="\"$public_ip\""
-for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
-external_ips+=", \"${array_external_ips[$i]}\""
-done
 
-if [ "$services" == ingress ]; then
-INGRESS_BLOCK="ingress:
+if [ "${services}" == "ingress" ]; then
+    INGRESS_BLOCK="ingress:
     enabled: true
     tls:
       crt: ~
@@ -28,15 +25,55 @@ INGRESS_BLOCK="ingress:
     labels: {}
 "
 else
-INGRESS_BLOCK=''
+    INGRESS_BLOCK=''
 fi
+
+if [ "${services}" == "hardcoded" ]; then
+    public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
+    array_external_ips=()
+    while IFS='' read -r line; do array_external_ips+=("$line");
+    done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
+    external_ips+="\"$public_ip\""
+    for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
+        external_ips+=", \"${array_external_ips[$i]}\""
+    done
+else
+    external_ips=''
+fi
+
+if [ "${services}" == "lb" ]; then
+    cat >> scf-config-values.yaml <<EOF
+#  External endpoints are created for the instance groups only if
+#  features.ingress.enabled is false.
+services:
+  router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "${domain}, *.${domain}"
+  ssh-proxy:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "ssh.${domain}"
+  tcp-router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "*.tcp.${domain}, tcp.${domain}"
+    port_range:
+      start: 20000
+      end: 20008
+EOF
+fi
+
 
 INSTALL_STACKS="[sle15, cflinuxfs3]"
 if [[ $ENABLE_EIRINI == true ]]; then
     INSTALL_STACKS="[sle15]"
 fi
 
-cat > scf-config-values.yaml <<EOF
+cat >> scf-config-values.yaml <<EOF
 system_domain: $domain
 
 install_stacks: ${INSTALL_STACKS}
@@ -77,32 +114,6 @@ properties:
         include: "${BRAIN_INCLUDE}"
         exclude: "${BRAIN_EXCLUDE}"
 EOF
-
-if [ "${services}" == "lb" ]; then
-    cat >> scf-config-values.yaml <<EOF
-#  External endpoints are created for the instance groups only if
-#  features.ingress.enabled is false.
-services:
-  router:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    annotations:
-      "external-dns.alpha.kubernetes.io/hostname": "${domain}, *.${domain}"
-  ssh-proxy:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    annotations:
-      "external-dns.alpha.kubernetes.io/hostname": "ssh.${domain}"
-  tcp-router:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    annotations:
-      "external-dns.alpha.kubernetes.io/hostname": "*.tcp.${domain}, tcp.${domain}"
-    port_range:
-      start: 20000
-      end: 20008
-EOF
-fi
 
 # Create json structure to make iterative changes
 scf_config_values=$(y2j scf-config-values.yaml | jq --compact-output .)

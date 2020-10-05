@@ -13,7 +13,7 @@ OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
 
 # kubecf-gen-config relevant:
 
-SCF_SERVICES="${SCF_SERVICES:-lb}" # lb, ingress
+KUBECF_SERVICES="${KUBECF_SERVICES:-}" # empty, lb, ingress, hardcoded. If not empty, overwrites the cluster's cap-values "services"
 GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
 DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
 STORAGECLASS="${STORAGECLASS:-persistent}"
