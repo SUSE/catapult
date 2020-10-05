@@ -11,8 +11,9 @@ if [ -z "$KUBECF_SERVICES" ]; then
     services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
 fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-if [ "$services" == ingress ]; then
-INGRESS_BLOCK="ingress:
+
+if [ "${services}" == "ingress" ]; then
+    INGRESS_BLOCK="ingress:
     enabled: true
     tls:
       crt: ~
@@ -21,7 +22,7 @@ INGRESS_BLOCK="ingress:
     labels: {}
 "
 else
-INGRESS_BLOCK=''
+    INGRESS_BLOCK=''
 fi
 
 if [ "${services}" == "hardcoded" ]; then
