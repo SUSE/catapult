@@ -9,6 +9,9 @@ rm -f scf-config-values.yaml
 
 if [ -z "$KUBECF_SERVICES" ]; then
     services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
+else
+    # KUBECF_SERVICES not empty, we want to override then:
+    services="$KUBECF_SERVICES"
 fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
