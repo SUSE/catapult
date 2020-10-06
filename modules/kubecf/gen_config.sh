@@ -15,19 +15,6 @@ else
 fi
 domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 
-if [ "${services}" == "ingress" ]; then
-    INGRESS_BLOCK="ingress:
-    enabled: true
-    tls:
-      crt: ~
-      key: ~
-    annotations: {}
-    labels: {}
-"
-else
-    INGRESS_BLOCK=''
-fi
-
 if [ "${services}" == "hardcoded" ]; then
     public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
     array_external_ips=()
@@ -83,7 +70,6 @@ features:
     enabled: ${ENABLE_EIRINI}
   autoscaler:
     enabled: ${AUTOSCALER}
-  ${INGRESS_BLOCK}
 
 high_availability: ${HA}
 
@@ -143,6 +129,36 @@ EOF
   done
   scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${airgap_overrides}")
 fi
+
+
+if [ "${services}" == "ingress" ]; then
+    ingress_block=$(y2j << EOF
+---
+features:
+  ingress:
+    enabled: true
+    tls:
+      crt:
+      key:
+    annotations: {}
+    labels: {}
+EOF
+)
+    # save ingress cert and key to file
+    kubectl get configmap -n kube-system cap-values -o json | \
+        jq -r '.data["ingress-cert"]' \
+           > ingress-cert
+    kubectl get configmap -n kube-system cap-values -o json | \
+        jq -r '.data["ingress-cert-key"]' \
+           > ingress-cert-key
+    # add ingress block
+    scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${ingress_block}")
+    # patch values json with cert and key from file
+    scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile crt ./ingress-cert '.features.ingress.tls.crt=$crt')
+    scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile key ./ingress-cert-key '.features.ingress.tls.key=$key')
+fi
+
+
 
 # Ensure CONFIG_OVERRIDE is a json object
 CONFIG_OVERRIDE=${CONFIG_OVERRIDE:-"{}"}
