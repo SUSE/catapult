@@ -41,7 +41,7 @@ else
     external_ips=''
 fi
 
-if [ "${services}" == "lb" ]; then
+if [ "${services}" == "lb" ] || [ "${services}" == "hardcoded" ]; then
     cat >> scf-config-values.yaml <<EOF
 #  External endpoints are created for the instance groups only if
 #  features.ingress.enabled is false.
