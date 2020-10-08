@@ -79,7 +79,7 @@ sed -e "s%#~placeholder_stack~#%$(escapeSubst "$STACK")%g" \
 # enable cpi
 sed -i '/cpi_enable/s/^#//g' deployment/cpi.auto.tfvars
 # inject our terraform files
-cp -r "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
+cp -rf "$ROOT_DIR"/backend/caasp4os/terraform-os/* deployment/
 
 pushd deployment || exit
 

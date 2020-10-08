@@ -25,10 +25,10 @@ if [ -d "$BUILD_DIR" ]; then
         if [[ ! -v OS_PASSWORD ]]; then
             err "Missing openstack credentials" && exit 1
         fi
+        skuba_container terraform init
         skuba_container terraform destroy -auto-approve
         info "Terraform infrastructure destroyed"
         # TODO see deployment/my-cluster/cloud/
-        # TODO one needs to manually delete cinder volumes and LB
         # TODO external-dns will fail to delete DNS entries
         # https://github.com/kubernetes-sigs/external-dns/pull/1255
         popd || exit
