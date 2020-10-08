@@ -14,7 +14,9 @@
 #     | xargs --no-run-if-empty kubectl delete -n scf
 
 if helm_ls 2>/dev/null | grep -qi minibroker ; then
-    helm_delete minibroker --namespace minibroker
+    # minibroker testsuite may leave leftovers,
+    # https://github.com/SUSE/minibroker-integration-tests/issues/24
+    helm ls -n minibroker --short | xargs -L1 helm delete -n minibroker
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi minibroker ; then
     kubectl delete --ignore-not-found namespace minibroker
