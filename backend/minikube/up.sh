@@ -6,18 +6,36 @@
 
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    MINIKUBE_VM_DRIVER=virtualbox
+    VM_DRIVER=virtualbox
 else
-    MINIKUBE_VM_DRIVER=kvm2
+    VM_DRIVER=docker # or kvm2
 fi
 
-minikube config set WantUpdateNotification false
-minikube config set memory 8192
-minikube config set cpus $(($(nproc) - 2))
-minikube config set disk-size 60g
-minikube config set kubernetes-version 1.15.4
+: "${VM_CPUS:=4}"
+: "${VM_MEMORY:=16384}"
+: "${VM_DISK_SIZE:=120g}"
 
+: "${MINIKUBE_ISO_VERSION:=0.1.8}"
+: "${MINIKUBE_ISO_URL:=https://github.com/f0rmiga/opensuse-minikube-image/releases/download/v${MINIKUBE_ISO_VERSION}/minikube-openSUSE.x86_64-${MINIKUBE_ISO_VERSION}.iso}"
+
+# shellcheck disable=SC2086
 minikube start \
-         --container-runtime="$MINIKUBE_RUNTIME" \
-         --vm-driver="$MINIKUBE_VM_DRIVER" \
-         --bootstrapper=kubeadm
+         --profile "$CLUSTER_NAME" \
+         --kubernetes-version "1.17.5" \
+         --insecure-registry "10.0.0.0/24" \
+         --cpus "${VM_CPUS}" \
+         --memory "${VM_MEMORY}" \
+         --disk-size "${VM_DISK_SIZE}" \
+         --iso-url "${MINIKUBE_ISO_URL}" \
+         ${VM_DRIVER:+--vm-driver "${VM_DRIVER}"} \
+         --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true \
+         --extra-config=apiserver.enable-admission-plugins=MutatingAdmissionWebhook,PodPreset \
+         ${MINIKUBE_EXTRA_OPTIONS:-}
+
+# Enable hairpin by setting the docker0 promiscuous mode on.
+minikube --profile "$CLUSTER_NAME" ssh -- "sudo ip link set docker0 promisc on"
+
+minikube --profile "$CLUSTER_NAME" addons enable dashboard
+minikube --profile "$CLUSTER_NAME" addons enable metrics-server
+
+ok "Minikube is started"
