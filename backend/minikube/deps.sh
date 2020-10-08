@@ -8,7 +8,7 @@ if [[ "$DOWNLOAD_CATAPULT_DEPS" == "false" ]]; then
     exit 0
 fi
 
-MINIKUBE_VERSION=latest
+MINIKUBE_VERSION="v1.9.2" # or latest, for example
 if [[ "$OSTYPE" == "darwin"* ]]; then
     MINIKUBE_BIN=minikube-darwin-amd64
 else

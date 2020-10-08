@@ -5,4 +5,4 @@
 . .envrc
 
 
-minikube start
+minikube start --profile "$CLUSTER_NAME"
