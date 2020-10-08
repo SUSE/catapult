@@ -5,7 +5,7 @@
 
 helm_init
 
-container_ip=$(minikube ip)
+container_ip=$(minikube ip --profile "$CLUSTER_NAME")
 domain="${container_ip}.$MAGICDNS"
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
