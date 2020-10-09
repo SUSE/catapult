@@ -146,16 +146,16 @@ EOF
 )
     # save ingress cert and key to file
     kubectl get configmap -n kube-system cap-values -o json | \
-        jq -r '.data["ingress-cert"]' \
+        jq -j '.data["ingress-cert"]' \
            > ingress-cert
     kubectl get configmap -n kube-system cap-values -o json | \
-        jq -r '.data["ingress-cert-key"]' \
-           > ingress-cert-key
+        jq -j '.data["ingress-key"]' \
+           > ingress-key
     # add ingress block
     scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${ingress_block}")
     # patch values json with cert and key from file
     scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile crt ./ingress-cert '.features.ingress.tls.crt=$crt')
-    scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile key ./ingress-cert-key '.features.ingress.tls.key=$key')
+    scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile key ./ingress-key '.features.ingress.tls.key=$key')
 fi
 
 
