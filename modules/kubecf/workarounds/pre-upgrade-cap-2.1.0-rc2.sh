@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
 
-info "WORKAROUND CAP 2.1.0-rc2"
-kubectl delete qjob --namespace scf dm
+info "Applying WORKAROUND $(basename ${BASH_SOURCE[0]})"
+set +x # print workaround
+
+kubectl delete qjob --namespace scf dm --ignore-not-found
+
+debug_mode # reset printing option
