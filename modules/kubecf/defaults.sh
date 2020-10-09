@@ -15,18 +15,9 @@ OPERATOR_CHART_URL="${OPERATOR_CHART_URL:-latest}"
 
 KUBECF_SERVICES="${KUBECF_SERVICES:-}" # empty, lb, ingress, hardcoded. If not empty, overwrites the cluster's cap-values "services"
 GARDEN_ROOTFS_DRIVER="${GARDEN_ROOTFS_DRIVER:-overlay-xfs}"
-DIEGO_SIZING="${DIEGO_SIZING:-$SIZING}"
 STORAGECLASS="${STORAGECLASS:-persistent}"
 AUTOSCALER="${AUTOSCALER:-false}"
-
 HA="${HA:-false}"
-if [ "$HA" = "true" ]; then
-    SIZING="${SIZING:-2}"
-else
-    SIZING="${SIZING:-1}"
-fi
-
-UAA_UPGRADE="${UAA_UPGRADE:-true}"
 
 OVERRIDE="${OVERRIDE:-}"
 CONFIG_OVERRIDE="${CONFIG_OVERRIDE:-$OVERRIDE}"
