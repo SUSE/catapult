@@ -4,6 +4,8 @@
 . ../../include/common.sh
 . .envrc
 
+. "$ROOT_DIR"/modules/kubecf/workarounds/pre-upgrade-cap-2.1.0-rc2.sh
+
 info "Upgrading CFO…"
 helm list -A
 
