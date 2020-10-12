@@ -1,0 +1,16 @@
+--- # kubecf options
+testing:
+  brain_tests:
+    enabled: true
+  cf_acceptance_tests:
+    enabled: true
+  smoke_tests:
+    enabled: true
+  sync_integration_tests:
+    enabled: true
+kube:
+  registry:
+    hostname: foo
+    username: bar
+    password: baz
+  organization: cap-staging
