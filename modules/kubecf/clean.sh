@@ -40,6 +40,12 @@ if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
     kubectl delete --ignore-not-found namespace cf-operator
 fi
 
+for webhook in $(kubectl get validatingwebhookconfigurations.admissionregistration.k8s.io \
+                         --no-headers -o custom-columns=":metadata.name" | grep cf-operator);
+do
+    kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io "$webhook"
+done
+
 if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
     kubectl delete --ignore-not-found namespace eirini
 fi
