@@ -46,6 +46,12 @@ do
     kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io "$webhook"
 done
 
+for webhook in $(kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io \
+                         --no-headers -o custom-columns=":metadata.name" | grep cf-operator);
+do
+    kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io "$webhook"
+done
+
 if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
     kubectl delete --ignore-not-found namespace eirini
 fi
