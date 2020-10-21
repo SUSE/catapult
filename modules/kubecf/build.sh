@@ -15,8 +15,6 @@ else
     pushd "$SCF_LOCAL" || exit
 fi
 
-GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
 ./scripts/kubecf-build.sh
 tar -xvf "$(ls -t1 output/kubecf-*.tgz | head -n 1 )" -C "$BUILD_DIR"
-SCF_CHART=kubecf-"$GIT_HEAD"
 popd || exit
