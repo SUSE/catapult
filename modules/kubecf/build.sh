@@ -20,6 +20,3 @@ GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
 tar -xvf "$(ls -t1 output/kubecf-*.tgz | head -n 1 )" -C "$BUILD_DIR"
 SCF_CHART=kubecf-"$GIT_HEAD"
 popd || exit
-
-# save SCF_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'
