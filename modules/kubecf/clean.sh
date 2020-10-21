@@ -52,6 +52,12 @@ do
     kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io "$webhook"
 done
 
+for crd in $(kubectl get crd \
+                         --no-headers -o custom-columns=":metadata.name" | grep quark);
+do
+    kubectl delete crd "$crd"
+done
+
 if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
     kubectl delete --ignore-not-found namespace eirini
 fi
