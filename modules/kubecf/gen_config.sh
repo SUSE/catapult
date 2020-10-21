@@ -5,38 +5,62 @@
 . .envrc
 
 info "Generating KubeCF config values"
+rm -f scf-config-values.yaml
 
-kubectl patch -n kube-system configmap cap-values -p $'data:\n services: "'$SCF_SERVICES'"'
-services="$SCF_SERVICES"
-domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
-array_external_ips=()
-while IFS='' read -r line; do array_external_ips+=("$line");
-done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
-external_ips+="\"$public_ip\""
-for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
-external_ips+=", \"${array_external_ips[$i]}\""
-done
-
-if [ "$services" == ingress ]; then
-INGRESS_BLOCK="ingress:
-    enabled: true
-    tls:
-      crt: ~
-      key: ~
-    annotations: {}
-    labels: {}
-"
+if [ -z "$KUBECF_SERVICES" ]; then
+    services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
 else
-INGRESS_BLOCK=''
+    # KUBECF_SERVICES not empty, we want to override then:
+    services="$KUBECF_SERVICES"
 fi
+domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
+
+if [ "${services}" == "hardcoded" ]; then
+    public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
+    array_external_ips=()
+    while IFS='' read -r line; do array_external_ips+=("$line");
+    done < <(kubectl get nodes -o json | jq -r '.items[].status.addresses[] | select(.type == "InternalIP").address')
+    external_ips+="\"$public_ip\""
+    for (( i=0; i < ${#array_external_ips[@]}; i++ )); do
+        external_ips+=", \"${array_external_ips[$i]}\""
+    done
+else
+    external_ips=''
+fi
+
+if [ "${services}" == "lb" ] || [ "${services}" == "hardcoded" ]; then
+    cat >> scf-config-values.yaml <<EOF
+#  External endpoints are created for the instance groups only if
+#  features.ingress.enabled is false.
+services:
+  router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "${domain}, *.${domain}"
+  ssh-proxy:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "ssh.${domain}"
+  tcp-router:
+    type: LoadBalancer
+    externalIPs: [${external_ips}]
+    annotations:
+      "external-dns.alpha.kubernetes.io/hostname": "*.tcp.${domain}, tcp.${domain}"
+    port_range:
+      start: 20000
+      end: 20008
+EOF
+fi
+
 
 INSTALL_STACKS="[sle15, cflinuxfs3]"
 if [[ $ENABLE_EIRINI == true ]]; then
     INSTALL_STACKS="[sle15]"
 fi
 
-cat > scf-config-values.yaml <<EOF
+cat >> scf-config-values.yaml <<EOF
 system_domain: $domain
 
 install_stacks: ${INSTALL_STACKS}
@@ -46,17 +70,6 @@ features:
     enabled: ${ENABLE_EIRINI}
   autoscaler:
     enabled: ${AUTOSCALER}
-  ${INGRESS_BLOCK}
-
-kube:
-  service_cluster_ip_range: 0.0.0.0/0
-  pod_cluster_ip_range: 0.0.0.0/0
-
-  registry:
-    hostname: "${DOCKER_REGISTRY}"
-    username: "${DOCKER_USERNAME}"
-    password: "${DOCKER_PASSWORD}"
-  organization: "${DOCKER_ORG}"
 
 high_availability: ${HA}
 
@@ -88,26 +101,6 @@ properties:
         exclude: "${BRAIN_EXCLUDE}"
 EOF
 
-if [ "${services}" == "lb" ]; then
-    cat >> scf-config-values.yaml <<EOF
-#  External endpoints are created for the instance groups only if
-#  features.ingress.enabled is false.
-services:
-  router:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-  ssh-proxy:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-  tcp-router:
-    type: LoadBalancer
-    externalIPs: [${external_ips}]
-    port_range:
-      start: 20000
-      end: 20008
-EOF
-fi
-
 # Create json structure to make iterative changes
 scf_config_values=$(y2j scf-config-values.yaml | jq --compact-output .)
 
@@ -136,6 +129,36 @@ EOF
   done
   scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${airgap_overrides}")
 fi
+
+
+if [ "${services}" == "ingress" ]; then
+    ingress_block=$(y2j << EOF
+---
+features:
+  ingress:
+    enabled: true
+    tls:
+      crt:
+      key:
+    annotations: {}
+    labels: {}
+EOF
+)
+    # save ingress cert and key to file
+    kubectl get configmap -n kube-system cap-values -o json | \
+        jq -j '.data["ingress-cert"]' \
+           > ingress-cert
+    kubectl get configmap -n kube-system cap-values -o json | \
+        jq -j '.data["ingress-key"]' \
+           > ingress-key
+    # add ingress block
+    scf_config_values=$(jq --compact-output --null-input "${scf_config_values} * ${ingress_block}")
+    # patch values json with cert and key from file
+    scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile crt ./ingress-cert '.features.ingress.tls.crt=$crt')
+    scf_config_values=$(echo "$scf_config_values" | jq --compact-output --rawfile key ./ingress-key '.features.ingress.tls.key=$key')
+fi
+
+
 
 # Ensure CONFIG_OVERRIDE is a json object
 CONFIG_OVERRIDE=${CONFIG_OVERRIDE:-"{}"}

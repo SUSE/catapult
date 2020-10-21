@@ -4,7 +4,7 @@
 . ../../include/common.sh
 . .envrc
 
-rm -rf helm chart scf_chart_url suse kubecf
+rm -rf helm chart scf_chart_url suse kubecf cf-operator
 
 # our url or passed by user
 # from_repo

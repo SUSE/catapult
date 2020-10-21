@@ -24,6 +24,9 @@ AZURE_DNS_JSON="${AZURE_DNS_JSON:-}"
 AZURE_DNS_RESOURCE_GROUP="${AZURE_DNS_RESOURCE_GROUP:-susecap-domain}"
 AZURE_DNS_DOMAIN="${AZURE_DNS_DOMAIN:-${AZURE_CLUSTER_NAME}.susecap.net}"
 
+# Optional: SSH key file for Azure to use.  If unset, take first in SSH agent.
+AZURE_SSH_KEY="${AZURE_SSH_KEY:-}"
+
 # Settings for terraform state save/restore
 #
 # Set to a non-empty key to trigger state save in deploy.sh.

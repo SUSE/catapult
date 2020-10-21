@@ -44,9 +44,9 @@ else
     fi
 
     if [ ! -e "bin/cf" ]; then
-        curl -sSL "https://packages.cloudfoundry.org/stable?release=${CFCLI_OS_TYPE}-binary&source=github" | tar -zx
-        mv cf bin/
-        rm -rf "$CFCLI_OS_TYPE" LICENSE NOTICE
+        curl -sSL "https://packages.cloudfoundry.org/stable?release=${CFCLI_OS_TYPE}-binary&version=7.1.0&source=github" | tar -zx
+        rm -rf "$CFCLI_OS_TYPE" cf LICENSE NOTICE
+        mv cf7 bin/cf
         chmod +x bin/cf
         info "CF cli version:"
         cf version

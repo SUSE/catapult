@@ -7,6 +7,10 @@
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 container_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 
+admin_pass=$(kubectl get secret --namespace scf \
+                     var-cf-admin-password \
+                     -o jsonpath='{.data.password}' | base64 --decode)
+
 cat > eirini-values.yaml <<EOF
 env:
   DOMAIN: &DOMAIN ${DOMAIN}
@@ -24,9 +28,9 @@ kube:
     shared: persistent
 
 secrets: &secrets
-  CLUSTER_ADMIN_PASSWORD: ${CLUSTER_PASSWORD}
-  UAA_ADMIN_CLIENT_SECRET: ${CLUSTER_PASSWORD}
-  BLOBSTORE_PASSWORD: &BLOBSTORE_PASSWORD "${CLUSTER_PASSWORD}"
+  CLUSTER_ADMIN_PASSWORD: ${admin_pass}
+  UAA_ADMIN_CLIENT_SECRET: ${admin_pass}
+  BLOBSTORE_PASSWORD: &BLOBSTORE_PASSWORD "${admin_pass}"
 
 services: &services
   loadbalanced: false
@@ -42,8 +46,8 @@ eirini:
 
   secrets:
     BLOBSTORE_PASSWORD: *BLOBSTORE_PASSWORD
-    BITS_SERVICE_SECRET: &BITS_SERVICE_SECRET "${CLUSTER_PASSWORD}"
-    BITS_SERVICE_SIGNING_USER_PASSWORD: &BITS_SERVICE_SIGNING_USER_PASSWORD  "${CLUSTER_PASSWORD}"
+    BITS_SERVICE_SECRET: &BITS_SERVICE_SECRET "${admin_pass}"
+    BITS_SERVICE_SIGNING_USER_PASSWORD: &BITS_SERVICE_SIGNING_USER_PASSWORD  "${admin_pass}"
 
   kube:
     external_ips: *external_ips

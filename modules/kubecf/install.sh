@@ -5,9 +5,6 @@
 . .envrc
 
 
-domain=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
-services=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["services"]')
-
 if [[ $ENABLE_EIRINI == true ]] ; then
    # [ ! -f "helm/cf/templates/eirini-namespace.yaml" ] && kubectl create namespace eirini
     if ! helm_ls 2>/dev/null | grep -qi metrics-server ; then
@@ -72,41 +69,12 @@ kubectl create namespace cf-operator || true
 
 helm_install cf-operator "${OPERATOR_CHART_URL}" --namespace cf-operator \
     "${operator_install_args[@]}"
-# fixes operator readiness issue on AKS.
-sleep 240
-
-wait_ns cf-operator
 
 info "Wait for cf-operator to be ready"
-wait_for "kubectl get endpoints -n cf-operator cf-operator-webhook -o name"
-wait_for "kubectl get crd quarksstatefulsets.quarks.cloudfoundry.org -o name"
-wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
-wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
-wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
-info "Test CRDs are ready"
-#wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
-wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
-if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
-  # qstate_tolerations fails when internet connectivity is disabled.
-  wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
-fi
-wait_ns scf
-#wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
-wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
-if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
-  wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
-fi
+
+wait_for_cf-operator
+
 ok "cf-operator ready"
-
-# KubeCF Doesn't support to setup a cluster password yet, doing it manually.
-
-## Versions of cf-operator prior to 4 included deployment name in front of secrets
-## Note: this can be dropped once we don't test anymore kubecf 1.x. in favor of the secret without the
-## deployment name, or either we can clearly identify the operator version without hackish ways.
-kubectl create secret generic -n scf susecf-scf.var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
-
-## CF-Operator >= 4 don't have deployment name in front of secrets name anymore
-kubectl create secret generic -n scf var-cf-admin-password --from-literal=password="${CLUSTER_PASSWORD}"
 
 helm_install susecf-scf ${SCF_CHART} \
   --namespace scf \
@@ -115,8 +83,5 @@ helm_install susecf-scf ${SCF_CHART} \
 sleep 540
 
 wait_ns scf
-if [ "$services" == "lb" ]; then
-    external_dns_annotate_kubecf scf "$domain"
-fi
 
 ok "KubeCF deployed successfully"

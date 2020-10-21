@@ -14,7 +14,9 @@
 #     | xargs --no-run-if-empty kubectl delete -n scf
 
 if helm_ls 2>/dev/null | grep -qi minibroker ; then
-    helm_delete minibroker --namespace minibroker
+    # minibroker testsuite may leave leftovers,
+    # https://github.com/SUSE/minibroker-integration-tests/issues/24
+    helm ls -n minibroker --short | xargs -L1 helm delete -n minibroker
 fi
 if kubectl get namespaces 2>/dev/null | grep -qi minibroker ; then
     kubectl delete --ignore-not-found namespace minibroker
@@ -38,6 +40,18 @@ if kubectl get namespaces 2>/dev/null | grep -qi cf-operator ; then
     kubectl delete --ignore-not-found namespace cf-operator
 fi
 
+for webhook in $(kubectl get validatingwebhookconfigurations.admissionregistration.k8s.io \
+                         --no-headers -o custom-columns=":metadata.name" | grep cf-operator);
+do
+    kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io "$webhook"
+done
+
+for webhook in $(kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io \
+                         --no-headers -o custom-columns=":metadata.name" | grep cf-operator);
+do
+    kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io "$webhook"
+done
+
 if kubectl get namespaces 2>/dev/null | grep -qi eirini ; then
     kubectl delete --ignore-not-found namespace eirini
 fi
@@ -53,12 +67,6 @@ rm -rf cf-operator* kubecf* assets templates Chart.yaml values.yaml Metadata.yam
 # delete SCF_CHART on cap-values configmap
 if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data.chart // empty')" ]]; then
     kubectl patch -n kube-system configmap cap-values --type json -p '[{"op": "remove", "path": "/data/chart"}]'
-fi
-
-# delete SCF_SERVICES on cap-values configmap
-if [[ -n "$(kubectl get -o json -n kube-system configmap cap-values | jq -r '.data.services // empty')" ]]; then
-    kubectl patch -n kube-system configmap cap-values --type json \
-            -p '[{"op": "remove", "path": "/data/services"}]'
 fi
 
 ok "Cleaned up KubeCF from the k8s cluster"

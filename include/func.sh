@@ -312,27 +312,6 @@ external_dns_annotate_stratos() {
             "external-dns.alpha.kubernetes.io/hostname=console.${domain}, *.console.${domain}"
 }
 
-external_dns_annotate_kubecf() {
-    local ns=$1;shift
-    local domain=$1;shift
-    # for kubecf
-    kubectl annotate svc router-public \
-            -n "$ns" \
-            "external-dns.alpha.kubernetes.io/hostname=${domain}, *.${domain}"
-    if [[ "${ENABLE_EIRINI}" == true ]] ; then
-        kubectl annotate svc eirinix-ssh-proxy \
-                -n "$ns" \
-                "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
-    else
-        kubectl annotate svc ssh-proxy-public \
-            -n "$ns" \
-            "external-dns.alpha.kubernetes.io/hostname=ssh.${domain}"
-    fi
-    kubectl annotate svc tcp-router-public \
-            -n "$ns" \
-            "external-dns.alpha.kubernetes.io/hostname=*.tcp.${domain}, tcp.${domain}"
-}
-
 external_dns_annotate_scf() {
     local ns=$1;shift
     local domain=$1;shift
@@ -369,5 +348,31 @@ j2y() {
         ruby -r json -r yaml -e "puts YAML.dump(JSON.parse(File.read('$1')))"
     else
         ruby -r json -r yaml -e "puts YAML.dump(JSON.parse(ARGF.read))"
+    fi
+}
+
+wait_for_cf-operator() {
+    # fixes operator readiness issue on AKS.
+    sleep 240
+
+    wait_ns cf-operator
+
+    wait_for "kubectl get endpoints -n cf-operator cf-operator-webhook -o name"
+    wait_for "kubectl get crd quarksstatefulsets.quarks.cloudfoundry.org -o name"
+    wait_for "kubectl get crd quarkssecrets.quarks.cloudfoundry.org -o name"
+    wait_for "kubectl get crd quarksjobs.quarks.cloudfoundry.org -o name"
+    wait_for "kubectl get crd boshdeployments.quarks.cloudfoundry.org -o name"
+    info "Test CRDs are ready"
+    #wait_for "kubectl apply -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
+    wait_for "kubectl apply -f ../kube/cf-operator/password.yaml --namespace=scf"
+    if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
+      # qstate_tolerations fails when internet connectivity is disabled.
+      wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
+    fi
+    wait_ns scf
+    #wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
+    wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
+    if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
+      wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     fi
 }

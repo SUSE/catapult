@@ -9,6 +9,9 @@
 DOMAIN=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["domain"]')
 public_ip=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["public-ip"]')
 DEPLOYED_CHART=$(kubectl get configmap -n kube-system cap-values -o json | jq -r '.data["chart"]')
+admin_pass=$(kubectl get secret --namespace scf \
+                     var-cf-admin-password \
+                     -o jsonpath='{.data.password}' | base64 --decode)
 
 info
 info "@@@@@@@@@"
@@ -24,7 +27,7 @@ export BRATS_CF_HOST="api.$DOMAIN"
 export PROXY_HOST="$public_ip"
 export PROXY_SCHEME="$PROXY_SCHEME"
 export BRATS_CF_USERNAME="$BRATS_CF_USERNAME"
-export BRATS_CF_PASSWORD="$BRATS_CF_PASSWORD"
+export BRATS_CF_PASSWORD="$admin_pass"
 export PROXY_PORT="$PROXY_PORT"
 export PROXY_USERNAME="$PROXY_USERNAME"
 export PROXY_PASSWORD="$PROXY_PASSWORD"

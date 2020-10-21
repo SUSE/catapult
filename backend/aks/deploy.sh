@@ -37,8 +37,14 @@ export ARM_TENANT_ID="${AZURE_TENANT_ID}"
 pushd cap-terraform/aks || exit
 # ssh_public_key needs to be a file. Build it regardless of {ssh,gpg}-agent, or
 # forwarding of agents:
-ssh-add -L
-(ssh-add -L | head -n 1) > ./sshkey.pub
+if [[ -n "${AZURE_SSH_KEY:-}" ]]; then
+  test -r "${AZURE_SSH_KEY}"
+  ssh-add -L | grep --silent -F "$(ssh-keygen -y -f "${AZURE_SSH_KEY}")"
+  ssh-keygen -y -f "${AZURE_SSH_KEY}" > ./sshkey.pub
+else
+  ssh-add -L
+  (ssh-add -L | head -n 1) > ./sshkey.pub
+fi
 
 terraform init
 
@@ -69,6 +75,7 @@ wait_for 'PUBLIC_IP="$(kubectl get services nginx-ingress-nginx-ingress-controll
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
     kubectl create configmap -n kube-system cap-values \
             --from-literal=garden-rootfs-driver="${ROOTFS}" \
+            --from-literal=services="lb" \
             --from-literal=public-ip="${PUBLIC_IP}" \
             --from-literal=domain="${AZURE_DNS_DOMAIN}" \
             --from-literal=platform=aks

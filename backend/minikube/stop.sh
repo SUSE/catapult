@@ -4,4 +4,4 @@
 . .envrc
 
 
-minikube stop
+minikube stop --profile "$CLUSTER_NAME"

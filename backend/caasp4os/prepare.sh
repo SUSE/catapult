@@ -84,7 +84,7 @@ HEREDOC
 }
 
 
-create_rolebinding
+# create_rolebinding
 install_helm_and_tiller
 create_cpi_storageclass
 
