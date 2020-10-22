@@ -64,6 +64,16 @@ recover: common-deps
 force-clean: ##@k8s Remove build folder no matter what (caution)
 force-clean: buildir clean
 
+.PHONY: find-resources
+find-resources: ##@k8s List used and unused resources of type $BACKEND (only present in some backends)
+find-resources:
+	$(MAKE) -C backend/$(BACKEND) $@
+
+.PHONE: force-clean-cluster
+force-clean-cluster: ##@k8s Force delete a previously unmanaged cluster (only present in some backends)
+force-clean-cluster:
+	$(MAKE) -C backend/$(BACKEND) $@
+
 .PHONY: all
 all: ## Alias for `make k8s scf scf-login`
 all: k8s kubecf kubecf-login # TODO remove scf-deploy
