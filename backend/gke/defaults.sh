@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# Common options
-##################
-
-OWNER="${OWNER:-$(whoami)}"
-
 # GKE options
 #############
 
