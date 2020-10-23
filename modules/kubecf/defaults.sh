@@ -39,6 +39,8 @@ SCF_LOCAL="${SCF_LOCAL:-}"
 
 # relevant to several:
 
+HELM_VERSION="${HELM_VERSION:-v3.1.1}"
+
 SCF_REPO="${SCF_REPO:-https://github.com/cloudfoundry-incubator/kubecf}"
 SCF_BRANCH="${SCF_BRANCH:-master}"
 
