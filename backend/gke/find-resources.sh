@@ -71,7 +71,7 @@ disks="$(
 
 combined="{\"clusters\": ${clusters}, \"addresses\": ${addresses}, \"disks\": ${disks}}"
 
-if [[ -n "${OUTPUT_FILE}" ]]; then
+if [[ -n "${OUTPUT_FILE:-}" ]]; then
     exec >"${OUTPUT_FILE}"
 fi
 
