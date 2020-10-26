@@ -20,6 +20,9 @@ GKE_DNSDOMAIN="${GKE_DNSDOMAIN:-${GKE_CLUSTER_NAME}.ci.kubecf.charmedquarks.me}"
 # Instance type of the nodes: empty string for terraform's default, or for example n1-highcpu-16 for 1-node cluster
 GKE_INSTANCE_TYPE="${GKE_INSTANCE_TYPE:-}"
 
+# Extra labels to attach to clusters, in terraform syntax.
+EXTRA_LABELS="${EXTRA_LABELS:-}"
+
 # Settings for terraform state save/restore
 #
 # Set to a non-empty key to trigger state save in deploy.sh.
