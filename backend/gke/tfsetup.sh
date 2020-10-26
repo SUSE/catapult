@@ -28,6 +28,7 @@ gcp_dns_sa_key = "$GKE_DNSCRED_JSON"
 cluster_labels = {
     catapult-clustername = "$GKE_CLUSTER_NAME",
     owner = "${OWNER}"
+    ${EXTRA_LABELS}
 }
 cluster_name   = "$GKE_CLUSTER_NAME"
 k8s_version    = "latest"
