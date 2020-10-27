@@ -24,6 +24,16 @@ docker-kubeconfig:
 prepare:
 	./prepare.sh
 
+.PHONY: find-resources
+find-resources:
+	echo "$@ not implemented yet for ${BACKEND}"
+	exit 1
+
+.PHONY: force-clean-cluster
+force-clean-cluster:
+	echo "$@ not implemented yet for ${BACKEND}"
+	exit 1
+
 .PHONY: all
 all: deps up kubeconfig prepare
 
