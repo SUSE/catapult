@@ -6,6 +6,7 @@
 
 # OPTIONS:
 # GKE_CRED_JSON gcloud credentials
+# GKE_LOCATION  gcloud AZ
 # GKE_PROJECT   gcloud project
 # OWNER         The owner of the clusters to filter on
 # OUTPUT_FILE   File to output to; outputs to standard out if not set.
