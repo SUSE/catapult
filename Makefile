@@ -69,7 +69,7 @@ find-resources: ##@k8s List used and unused resources of type $BACKEND (only pre
 find-resources:
 	$(MAKE) -C backend/$(BACKEND) $@
 
-.PHONE: force-clean-cluster
+.PHONY: force-clean-cluster
 force-clean-cluster: ##@k8s Force delete a previously unmanaged cluster (only present in some backends)
 force-clean-cluster:
 	$(MAKE) -C backend/$(BACKEND) $@
