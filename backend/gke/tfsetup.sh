@@ -16,28 +16,32 @@ pushd cap-terraform/gke || exit
 git checkout "${CAP_TERRAFORM_BRANCH}"
 git pull
 
-cat <<HEREDOC > terraform.tfvars
-project        = "$GKE_PROJECT"
-location       = "$GKE_LOCATION"
-node_pool_name = "$GKE_CLUSTER_NAME"
-instance_count = "$GKE_NODE_COUNT"
-preemptible    = "$GKE_PREEMPTIBLE"
-vm_type        = "UBUNTU"
-gke_sa_key     = "$GKE_CRED_JSON"
-gcp_dns_sa_key = "$GKE_DNSCRED_JSON"
-cluster_labels = {
-    catapult-clustername = "$GKE_CLUSTER_NAME",
-    owner = "${OWNER}"
-    ${EXTRA_LABELS}
-}
-cluster_name   = "$GKE_CLUSTER_NAME"
-k8s_version    = "latest"
+# Clear out any existing variables file
+echo "" > terraform.tfvars.json
+yq merge --inplace --tojson --prettyPrint terraform.tfvars.json - <<HEREDOC
+project        : "$GKE_PROJECT"
+location       : "$GKE_LOCATION"
+node_pool_name : "$GKE_CLUSTER_NAME"
+instance_count : "$GKE_NODE_COUNT"
+preemptible    : "$GKE_PREEMPTIBLE"
+vm_type        : "UBUNTU"
+gke_sa_key     : "$GKE_CRED_JSON"
+gcp_dns_sa_key : "$GKE_DNSCRED_JSON"
+cluster_labels :
+    catapult-clustername: "$GKE_CLUSTER_NAME"
+    owner : "${OWNER}"
+cluster_name   : "$GKE_CLUSTER_NAME"
+k8s_version    : "latest"
 HEREDOC
 
+if [ -n "${EXTRA_LABELS}" ] ; then
+    yq merge --inplace --tojson --prettyPrint --overwrite terraform.tfvars.json \
+        - <<< "cluster_labels: ${EXTRA_LABELS}"
+fi
+
 if [ -n "${GKE_INSTANCE_TYPE}" ] ; then
-    cat >> terraform.tfvars <<EOF
-instance_type   = "$GKE_INSTANCE_TYPE"
-EOF
+    yq write --inplace --tojson --prettyPrint terraform.tfvars.json \
+        instance_type "${GKE_INSTANCE_TYPE}"
 fi
 
 if [ -n "${TF_KEY}" ] ; then
