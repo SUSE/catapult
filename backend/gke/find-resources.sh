@@ -64,7 +64,8 @@ done)"
 disks="$(
     gcloud compute disks list --format='json(name,description,labels)' --filter="
         description~kubernetes.io/created-for/pv/name
-        zone:('${GKE_LOCATION%-[abcdedf]}')
+        zone:('${GKE_LOCATION}')
+        -users:*
         ( labels.owner:('${OWNER}') OR -labels.owner:* )
         name~\"^gke-kubecf-.*-pvc-${guid_re}\$\"
         ${disk_cluster_filter}
