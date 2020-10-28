@@ -13,15 +13,8 @@
 
 . ./defaults.sh
 . ../../include/common.sh
-# Do not require .envrc
-
-# check gcloud credentials:
-info "Using creds from GKE_CRED_JSON…"
-gcloud auth revoke 2>/dev/null || true
-gcloud auth activate-service-account --project "$GKE_PROJECT" --key-file "$GKE_CRED_JSON"
-if [[ $(gcloud auth list  --format="value(account)" | wc -l ) -le 0 ]]; then
-    err "GKE_CRED_JSON creds don't authenticate, aborting" && exit 1
-fi
+. .envrc
+. "${ROOT_DIR}/backend/gke/lib/auth.sh"
 
 info "Listing GKE clusters…"
 
