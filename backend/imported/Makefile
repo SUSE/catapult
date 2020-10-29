@@ -12,5 +12,13 @@ clean:
 deps:
 	#no-op
 
+.PHONY: find-resources
+find-resources:
+	echo "$@ does not make sense for ${BACKEND}; skipped"
+
+.PHONY: force-clean-cluster
+force-clean-cluster:
+	echo "$@ does not make sense for ${BACKEND}; skipped"
+
 .PHONY: all
 all: kubeconfig

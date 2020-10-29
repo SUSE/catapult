@@ -20,5 +20,13 @@ clean: deps tfsetup
 deploy: deps tfsetup
 	./deploy.sh
 
+.PHONY: find-resources
+find-resources:
+	./$@.sh
+
+.PHONY: force-clean-cluster
+force-clean-cluster:
+	./$@.sh
+
 .PHONY: all
 all: deploy

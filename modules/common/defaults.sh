@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Common options
+##################
+
+# Cluster owner (for metadata)
+OWNER="${OWNER:-$(whoami)}"
+
 # Dependencies options
 ######################
 
