@@ -38,4 +38,18 @@ minikube --profile "$CLUSTER_NAME" ssh -- "sudo ip link set docker0 promisc on"
 minikube --profile "$CLUSTER_NAME" addons enable dashboard
 minikube --profile "$CLUSTER_NAME" addons enable metrics-server
 
-ok "Minikube is started"
+container_ip=$(minikube ip --profile "$CLUSTER_NAME")
+domain="${container_ip}.$MAGICDNS"
+
+helm_init
+
+if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
+    kubectl create configmap -n kube-system cap-values \
+            --from-literal=public-ip="${container_ip}" \
+            --from-literal=domain="$domain" \
+            --from-literal=services="$services" \
+            --from-literal=services="hardcoded" \
+            --from-literal=platform="minikube"
+fi
+
+ok "Minikube is ready"

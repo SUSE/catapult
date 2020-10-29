@@ -16,12 +16,8 @@ deps:
 up:
 	./up.sh
 
-.PHONY: prepare
-prepare:
-	./prepare.sh
-
 .PHONY: all
-all: deps up prepare
+all: deps up
 
 # one-offs:
 
