@@ -41,6 +41,18 @@ minikube --profile "$CLUSTER_NAME" addons enable metrics-server
 container_ip=$(minikube ip --profile "$CLUSTER_NAME")
 domain="${container_ip}.$MAGICDNS"
 
+case "$CLUSTER_SERVICES" in
+   "ingress")
+       services="ingress"
+       minikube --profile "$CLUSTER_NAME" addons enable ingress
+       ;;
+   *)
+       services="hardcoded"
+       ;;
+esac
+
+wait_ns kube-system
+
 helm_init
 
 if ! kubectl get configmap -n kube-system 2>/dev/null | grep -qi cap-values; then
