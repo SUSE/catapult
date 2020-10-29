@@ -38,12 +38,14 @@ HEREDOC
 
 if [ -n "${EXTRA_LABELS}" ] ; then
     jq --raw-output --argjson labels "${EXTRA_LABELS}" '.cluster_labels *= $labels' terraform.tfvars.json \
-        | sponge terraform.tfvars.json
+        > terraform.tfvars.temp.json
+    mv terraform.tfvars.temp.json terraform.tfvars.json
 fi
 
 if [ -n "${GKE_INSTANCE_TYPE}" ] ; then
     jq --argjson type "${GKE_INSTANCE_TYPE}" '.instance_type = $type' terraform.tfvars.json \
-        | sponge terraform.tfvars.json
+        > terraform.tfvars.temp.json
+    mv terraform.tfvars.temp.json terraform.tfvars.json
 fi
 
 if [ -n "${TF_KEY}" ] ; then
