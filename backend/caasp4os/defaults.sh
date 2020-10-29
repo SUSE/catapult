@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Common options
-##################
-
-OWNER="${OWNER:-$(whoami)}"
-
 # Caasp4os options
 ##################
 
