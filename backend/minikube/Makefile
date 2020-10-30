@@ -16,10 +16,6 @@ deps:
 up:
 	./up.sh
 
-.PHONY: prepare
-prepare:
-	./prepare.sh
-
 .PHONY: find-resources
 find-resources:
 	echo "$@ not implemented yet for ${BACKEND}"
@@ -31,7 +27,7 @@ force-clean-cluster:
 	exit 1
 
 .PHONY: all
-all: deps up prepare
+all: deps up
 
 # one-offs:
 
