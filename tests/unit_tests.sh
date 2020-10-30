@@ -24,7 +24,7 @@ tearDown() {
 # Tests creation and deletion of build directory
 testBuilddir() {
   rm -rf buildtest
-  make buildir
+  BACKEND="" make buildir
   assertTrue 'create buildir' "[ -d 'buildtest' ]"
   ENVRC="$(cat "$PWD"/buildtest/.envrc)"
   assertContains 'contains KUBECONFIG' "$ENVRC" "KUBECONFIG=\"$PWD/buildtest\"/kubeconfig"
