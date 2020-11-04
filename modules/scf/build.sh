@@ -15,7 +15,6 @@ else
     pushd "$SCF_LOCAL" || exit
 fi
 
-GIT_HEAD=$(git log --pretty=format:'%h' -n 1)
 sed -i 's|exit 1||' make/kube-dist || true
 sed -i 's|exit 1||' make/bundle-dist || true
 docker exec "$DOCKER_OPTS" \
@@ -23,8 +22,4 @@ docker exec "$DOCKER_OPTS" \
 /bin/bash -exc ' apt-get update && apt-get install -y ruby git wget make; cd /code/scf && chmod -R 777 src && source .envrc && ./bin/dev/install_tools.sh && make vagrant-prep bundle-dist'
 cp -rfv output/*.zip ../
 unzip -o ./*.zip
-SCF_CHART=scf-"$GIT_HEAD"
 popd || exit
-
-# save SCF_CHART on cap-values configmap
-kubectl patch -n kube-system configmap cap-values -p $'data:\n chart: "'$SCF_CHART'"'

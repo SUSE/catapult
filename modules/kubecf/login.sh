@@ -39,4 +39,5 @@ done
 
 if [ $exit_code -ne 0 ] ; then
    err "Could not log into KubeCF"
+   exit $exit_code
 fi
