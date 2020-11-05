@@ -9,6 +9,10 @@ eirini_release:
 eirinifs:
 	./eirinifs.sh
 
+.PHONY: local-registry
+local-registry:
+	./local-registry.sh
+
 .PHONY: airgap-up
 airgap-up: airgap-down
 	./airgap_up.sh
