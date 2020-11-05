@@ -13,6 +13,10 @@ eirinifs:
 local-registry:
 	./local-registry.sh
 
+.PHONY: push-imagelist
+push-imagelist:
+	./push-imagelist.sh
+
 .PHONY: airgap-up
 airgap-up: airgap-down
 	./airgap_up.sh

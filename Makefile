@@ -177,6 +177,10 @@ module-experimental-eirini_release:
 module-experimental-local-registry:
 	$(MAKE) -C modules/experimental local-registry
 
+.PHONY: module-experimental-push-imagelist
+module-experimental-push-imagelist:
+	$(MAKE) -C modules/experimental push-imagelist
+
 .PHONY: module-experimental-airgap-up
 module-experimental-airgap-up:
 	$(MAKE) -C modules/experimental airgap-up
