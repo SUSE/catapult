@@ -38,3 +38,7 @@ start:
 .PHONY: stop
 stop:
 	./stop.sh
+
+.PHONY: airgap-up airgap-down
+airgap-up airgap-down:
+	echo "Not implemented yet" && exit 1

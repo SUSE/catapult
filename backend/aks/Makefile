@@ -35,3 +35,7 @@ all::
 	@echo 'WARNING: stil WIP. Use it on your own risk.'
 	@echo 'Kindly waiting for 5s…'; sleep 5
 all:: deploy
+
+.PHONY: airgap-up airgap-down
+airgap-up airgap-down:
+	echo "Not implemented yet" && exit 1
