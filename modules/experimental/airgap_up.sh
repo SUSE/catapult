@@ -9,6 +9,8 @@ if [[ ${BACKEND} != "caasp4os" ]]; then
   exit 1
 fi
 
+DOCKER_REGISTRY=registry.scf.svc.cluster.local
+
 airgap_up_node() {
   local kube_node host_ip
   kube_node=$1
@@ -31,6 +33,13 @@ sudo -s << 'EOS'
   iptables -A OUTPUT -j DROP -d 0.0.0.0/0
 EOS
 EOF
+
+  # Include insecure registry
+  # shellcheck disable=SC2087
+  ssh -T sles@${kube_node} << EOF
+sudo sed 's/^\(CRIO_OPTIONS\s*=\s*\).*$/\1"--insecure-registry=${DOCKER_REGISTRY}"/' \
+  /etc/sysconfig/crio
+EOF
 }
 
 kube_nodes=$(kubectl get nodes -o json | jq -r '.items[] | .status.addresses[] | select(.type=="InternalIP").address')
@@ -43,6 +52,13 @@ kubectl create namespace cf-operator 2>/dev/null|| true
 kubectl create namespace scf 2>/dev/null || true
 kubectl create -n cf-operator -f ../modules/experimental/cilium-block-egress.yaml
 kubectl create -n scf -f ../modules/experimental/cilium-block-egress.yaml
+
+# # test that indeed it is airgapped:
+# if ! kubectl run hello-world --image=hello-world >/dev/null; then
+#     err "Airgap enabled, but could download an external hello-world container image"
+#     exit 1
+# fi
+# kubectl delete pod hello-world --ignore-not-found
 
 info "Cluster ${CLUSTER_NAME} is now running a simulated airgapped setup. Run \`make module-experimental-airgap-down\` to restore internet access"
 

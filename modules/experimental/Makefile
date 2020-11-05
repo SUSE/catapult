@@ -22,7 +22,7 @@ podman-imagelist:
 	./podman-imagelist.sh
 
 .PHONY: airgap-up
-airgap-up: airgap-down
+airgap-up:
 	./airgap_up.sh
 
 PHONY: airgap-down
