@@ -17,6 +17,10 @@ local-registry:
 push-imagelist:
 	./push-imagelist.sh
 
+.PHONY: podman-imagelist
+podman-imagelist:
+	./podman-imagelist.sh
+
 .PHONY: airgap-up
 airgap-up: airgap-down
 	./airgap_up.sh

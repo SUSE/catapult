@@ -181,6 +181,10 @@ module-experimental-local-registry:
 module-experimental-push-imagelist:
 	$(MAKE) -C modules/experimental push-imagelist
 
+.PHONY: module-experimental-podman-imagelist
+module-experimental-podman-imagelist:
+	$(MAKE) -C modules/experimental podman-imagelist
+
 .PHONY: module-experimental-airgap-up
 module-experimental-airgap-up:
 	$(MAKE) -C modules/experimental airgap-up
