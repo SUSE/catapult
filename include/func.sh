@@ -375,3 +375,140 @@ wait_for_cf-operator() {
       wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     fi
 }
+
+
+gke_isolate_network() {
+    enable="${1:-1}"
+
+    if [[ $enable == 1 ]]; then
+      # Complaint wrong. The echo generates a traling newline the `blue` doesn't.
+      # shellcheck disable=SC2005
+      echo "$(blue "Configure cluster network: Deny egress external")"
+      # enable isolation
+      # ingress - allows all incoming traffic
+      # egress  - allows dns traffic anywhere
+      #         - allows traffic to all ports, pods, namespaces
+      #           (but no whitelisting of external ips!)
+      # references
+      # - BASE = https://github.com/ahmetb/kubernetes-network-policy-recipes
+      # - (BASE)/blob/master/02a-allow-all-traffic-to-an-application.md
+      # - (BASE)/blob/master/14-deny-external-egress-traffic.md
+      # - See also https://www.youtube.com/watch?v=3gGpMmYeEO8 (31min)
+      #   - Egress info wrt disallow external see 17:20-17:52
+      #
+      # __ATTENTION__
+      # Requires a networking plugin to enforce, else ignored
+      # (if not directly supported by platform)
+      # - Example plugins: Calico, WeaveNet, Romana
+      #
+      # GKE: Uses Calico, Use `--enable-network-policy` when
+      # creating a cluster (`gcloud`).
+      # Minikube needs special setup.
+      # KinD used by our Drone setup may have support.
+
+      cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: airgap-quarks
+  namespace: ${QUARKS_NAMESPACE}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - namespaceSelector: {}
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - namespaceSelector: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: airgap-kubecf
+  namespace: ${KUBECF_NAMESPACE}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - namespaceSelector: {}
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - namespaceSelector: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dnsoutbound-quarks
+  namespace: ${QUARKS_NAMESPACE}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      - namespaceSelector: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dnsoutbound-kubecf
+  namespace: ${KUBECF_NAMESPACE}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      - namespaceSelector: {}
+EOF
+      # For debugging, show what kube thinks of it.
+      kubectl describe networkpolicies \
+              --namespace "${QUARKS_NAMESPACE}" \
+              airgap-quarks
+      kubectl describe networkpolicies \
+        --namespace "${KUBECF_NAMESPACE}" \
+        airgap-kubecf
+      kubectl describe networkpolicies \
+              --namespace "${QUARKS_NAMESPACE}" \
+              dnsoutbound-quarks
+      kubectl describe networkpolicies \
+              --namespace "${KUBECF_NAMESPACE}" \
+              dnsoutbound-kubecf
+    else
+      # shellcheck disable=SC2005
+      echo "$(blue "Configure cluster network: Full access")"
+      # disable isolation
+      kubectl delete networkpolicies \
+        --namespace "${KUBECF_NAMESPACE}" \
+        --ignore-not-found \
+        airgap-kubecf dnsoutbound-kubecf
+      kubectl delete networkpolicies \
+        --namespace "${QUARKS_NAMESPACE}" \
+        --ignore-not-found \
+        airgap-quarks dnsoutbound-quarks
+    fi
+}
