@@ -287,7 +287,7 @@ function helm_ls {
 # Given a chart path in $1, find its app version
 function helm_chart_app_version {
     # helm 3 aliases "inspect" to "show", so the syntax is the same for 2 & 3.
-    helm inspect chart "${1}" | yq read - appVersion
+    helm inspect chart "${1}" | yq read - version
 }
 
 function wait_for {

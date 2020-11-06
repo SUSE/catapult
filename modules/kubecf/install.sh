@@ -43,10 +43,15 @@ operator_install_args=(
     --set "operator-webhook-use-service-reference=true"
     --set "customResources.enableInstallation=true"
 )
+info "operator_version: ${operator_version}"
 if [[ "${operator_version%%.*}" -ge 5 ]]; then
+    info "operator_version is greater than 5"
+    info "setting param global.singleNamespace.name"
     operator_install_args+=(--set "global.singleNamespace.name=scf")
 else
     # quarks-operator 4.x uses a different key to target namespace to watch
+    info "operator_version is less than 5"
+    info "setting param global.operator.watchNamespace"
     operator_install_args+=(--set "global.operator.watchNamespace=scf")
 fi
 
