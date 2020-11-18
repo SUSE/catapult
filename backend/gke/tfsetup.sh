@@ -10,7 +10,7 @@
 
 
 if ! [[ -d cap-terraform ]]; then
-    git clone https://github.com/SUSE/cap-terraform.git -b "${CAP_TERRAFORM_BRANCH}"
+    git clone "${CAP_TERRAFORM_REPOSITORY}" -b "${CAP_TERRAFORM_BRANCH}"
 fi
 pushd cap-terraform/gke || exit
 git checkout "${CAP_TERRAFORM_BRANCH}"
