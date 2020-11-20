@@ -8,7 +8,7 @@ info "Upgrading CFO…"
 helm list -A
 
 OPERATOR_DIR=cf-operator
-if [ -d quarks ]; then
+if [ -f quarks/Chart.yaml ]; then
     OPERATOR_DIR=quarks
 fi
 helm_upgrade cf-operator "${OPERATOR_DIR}/" \
