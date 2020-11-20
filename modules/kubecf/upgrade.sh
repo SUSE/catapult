@@ -7,7 +7,11 @@
 info "Upgrading CFO…"
 helm list -A
 
-helm_upgrade cf-operator cf-operator/ \
+OPERATOR_DIR=cf-operator
+if [ -f quarks/Chart.yaml ]; then
+    OPERATOR_DIR=quarks
+fi
+helm_upgrade cf-operator "${OPERATOR_DIR}/" \
              --namespace cf-operator \
              --set "global.singleNamespace.name=scf"
 
