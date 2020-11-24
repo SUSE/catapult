@@ -45,6 +45,7 @@ RUN curl -o kubectl-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/201
 
 RUN zypper in --no-recommends -y gcc libffi-devel python3-devel libopenssl-devel
 RUN curl -o install.py https://azurecliprod.blob.core.windows.net/install.py && \
+  sed -i 's/python3-devel/python38-devel/g' install.py && \
   printf "/usr/local/lib/azure-cli\n/usr/local/bin\n\n\n" | python3 ./install.py && \
   rm ./install.py
 
