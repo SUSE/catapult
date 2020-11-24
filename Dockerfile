@@ -1,4 +1,4 @@
-FROM opensuse/tumbleweed:latest
+FROM registry.opensuse.org/opensuse/tumbleweed:latest
 # Catapult dependencies:
 RUN zypper ref && zypper in --no-recommends -y git zip wget docker ruby gzip make jq curl which unzip bazel1.2 direnv
 RUN echo 'eval $(direnv hook bash)' >> ~/.bashrc
