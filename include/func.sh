@@ -230,7 +230,7 @@ function helm_init {
     if [[ "$HELM_VERSION" != v3* ]]; then
         helm init --upgrade --wait
     else
-        helm repo add stable https://kubernetes-charts.storage.googleapis.com
+        helm repo add stable https://charts.helm.sh/stable
         helm repo update
     fi
 }
@@ -239,7 +239,7 @@ function helm_init_client {
     if [[ "$HELM_VERSION" != v3* ]]; then
         helm init --client-only
     else
-        helm repo add stable https://kubernetes-charts.storage.googleapis.com
+        helm repo add stable https://charts.helm.sh/stable
         helm repo update
     fi
 }
