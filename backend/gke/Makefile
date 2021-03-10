@@ -30,3 +30,11 @@ force-clean-cluster:
 
 .PHONY: all
 all: deploy
+
+.PHONY: airgap-up
+airgap-up:
+	./airgap-up.sh
+
+.PHONY: airgap-down
+airgap-down:
+	./airgap-down.sh

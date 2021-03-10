@@ -1,0 +1,5 @@
+FROM opensuse/leap:latest
+LABEL MAINTAINER="Víctor Cuadrado Juan <vcuadradojuan@suse.com>, Christian Richter <crichter@suse.com>"
+RUN zypper ref \
+  && zypper in -y --no-recommends skopeo \
+  && zypper clean --all

@@ -34,6 +34,13 @@ sudo -s << 'EOS'
   fi
 EOS
 EOF
+
+  # Remove insecure registry
+  # shellcheck disable=SC2087
+  ssh -T sles@${kube_node} << EOF
+sudo sed 's/^\(CRIO_OPTIONS\s*=\s*\).*$/\1""/' \
+  /etc/sysconfig/crio
+EOF
 }
 
 kube_nodes=$(kubectl get nodes -o json | jq -r '.items[] | .status.addresses[] | select(.type=="InternalIP").address')

@@ -32,3 +32,7 @@ force-clean-cluster:
 
 .PHONY: all
 all: deploy
+
+.PHONY: airgap-up airgap-down
+airgap-up airgap-down:
+	echo "Not implemented yet" && exit 1

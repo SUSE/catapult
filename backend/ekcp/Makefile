@@ -36,3 +36,7 @@ force-clean-cluster:
 
 .PHONY: all
 all: up kubeconfig prepare
+
+.PHONY: airgap-up airgap-down
+airgap-up airgap-down:
+	echo "Not implemented yet" && exit 1

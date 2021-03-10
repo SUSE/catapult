@@ -9,8 +9,20 @@ eirini_release:
 eirinifs:
 	./eirinifs.sh
 
+.PHONY: local-registry
+local-registry:
+	./local-registry.sh
+
+.PHONY: push-imagelist
+push-imagelist:
+	./push-imagelist.sh
+
+.PHONY: podman-imagelist
+podman-imagelist:
+	./podman-imagelist.sh
+
 .PHONY: airgap-up
-airgap-up: airgap-down
+airgap-up:
 	./airgap_up.sh
 
 PHONY: airgap-down
