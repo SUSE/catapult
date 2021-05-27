@@ -212,8 +212,17 @@ function wait_container_attached {
 }
 
 function wait_ns {
-    while ! ( kubectl get pods --namespace "$1" | gawk '{ if ((match($2, /^([0-9]+)\/([0-9]+)$/, c) && c[1] != c[2] && !match($3, /Completed/)) || !match($3, /STATUS|Completed|Running/)) { print ; exit 1 } }' )
-    do
+    while true; do
+        local output
+        if output="$(kubectl get pods --namespace "$1")"
+        then
+            if gawk <<< "${output}" '{ if ((match($2, /^([0-9]+)\/([0-9]+)$/, c) && c[1] != c[2] && !match($3, /Completed/)) || !match($3, /STATUS|Completed|Running/)) { print ; exit 1 } }'
+            then
+                echo "Ready:"
+                echo "${output}"
+                break
+            fi
+        fi
         sleep 10
     done
 }
