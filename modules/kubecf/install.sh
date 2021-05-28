@@ -87,6 +87,6 @@ helm_install susecf-scf ${SCF_CHART} \
 
 sleep 540
 
-wait_for_scf
+wait_for_kubecf
 
 ok "KubeCF deployed successfully"

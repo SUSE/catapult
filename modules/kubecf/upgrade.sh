@@ -30,7 +30,7 @@ helm_upgrade susecf-scf kubecf/ \
              --values scf-config-values.yaml
 sleep 10
 
-wait_for_scf
+wait_for_kubecf
 
 ok "KubeCF deployment upgraded successfully"
 helm list -A
