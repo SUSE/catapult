@@ -218,8 +218,8 @@ function wait_container_attached {
 # See wait_for_kubecf() below for a usage example, and why all this is needed.
 function wait_ns {
     local NAMESPACE=$1
-    local MUSTHAVE=$2
-    local MUSTNOT=$3
+    local MUSTHAVE=${2:-}
+    local MUSTNOT=${3:-}
 
     while true; do
         local output
