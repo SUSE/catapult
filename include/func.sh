@@ -402,7 +402,8 @@ wait_for_cf-operator() {
       # qstate_tolerations fails when internet connectivity is disabled.
       wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     fi
-    wait_for_kubecf
+    # Not waiting for kubecf, just for the toleration pod to be up and running
+    wait_ns scf
     #wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
     wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
     if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
