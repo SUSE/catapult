@@ -211,16 +211,41 @@ function wait_container_attached {
     done
 }
 
+# wait_ns NAMESPACE MUSTHAVE MUSTNOT
+# wait_ns waits for all pods in the NAMESPACE to be running or completed (and all containers to be running).
+# It also waits until an instance of the MUSTHAVE pod exist (if non-blank), and that no instances of MUSTNOT
+# exist (again, if non-blank). Only a single pod name is allowed for each of MUSTHAVE and MUSTNOT.
+# See wait_for_kubecf() below for a usage example, and why all this is needed.
 function wait_ns {
+    local NAMESPACE=$1
+    local MUSTHAVE=${2:-}
+    local MUSTNOT=${3:-}
+
     while true; do
         local output
-        if output="$(kubectl get pods --namespace "$1")"
+        if output="$(kubectl get pods --namespace "$NAMESPACE")"
         then
             if gawk <<< "${output}" '{ if ((match($2, /^([0-9]+)\/([0-9]+)$/, c) && c[1] != c[2] && !match($3, /Completed/)) || !match($3, /STATUS|Completed|Running/)) { print ; exit 1 } }'
             then
-                echo "Ready:"
-                echo "${output}"
-                break
+                local ready=1
+                if [ -n "$MUSTHAVE" ]; then
+                    if ! grep -q  <<< "${output}" -E "^${MUSTHAVE}-"; then
+                        echo "Waiting for '$MUSTHAVE' pod"
+                        ready=0
+                    fi
+                fi
+                if [ -n "$MUSTNOT" ]; then
+                    if grep -q  <<< "${output}" -E "^${MUSTNOT}-"; then
+                        echo "Waiting for '$MUSTNOT' pod to go away"
+                        grep <<< "${output}" -E "^${MUSTNOT}-"
+                        ready=0
+                    fi
+                fi
+                if [ $ready -eq 1 ]; then
+                    echo "Ready:"
+                    echo "${output}"
+                    break
+                fi
             fi
         fi
         sleep 10
@@ -377,10 +402,22 @@ wait_for_cf-operator() {
       # qstate_tolerations fails when internet connectivity is disabled.
       wait_for "kubectl apply -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     fi
-    wait_ns scf
+    wait_for_kubecf
     #wait_for "kubectl delete -f ../kube/cf-operator/boshdeployment.yaml --namespace=scf"
     wait_for "kubectl delete -f ../kube/cf-operator/password.yaml --namespace=scf"
     if [[ "${DOCKER_REGISTRY}" == "registry.suse.com" ]]; then
       wait_for "kubectl delete -f ../kube/cf-operator/qstatefulset_tolerations.yaml --namespace=scf"
     fi
+}
+
+wait_for_kubecf() {
+    # There can be a brief moment when the "ig" job has terminated, but none of the
+    # stateful sets have created a pod yet, where everything within the namespace
+    # seems to be ready. That's why we also have to wait for the "api" pod to exist.
+    #
+    # There is a different scenario when one or more "ig" jobs have been launched by
+    # quarks, and they seem to be in "completed" status and everything appears to be
+    # "ready". But then one of the "ig" jobs restarts and terminates all the scf pods
+    # again. So we need to wait until all the "ig" jobs are gone.
+    wait_ns scf api ig
 }
