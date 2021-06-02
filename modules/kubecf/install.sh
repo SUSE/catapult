@@ -11,11 +11,11 @@ if [[ $ENABLE_EIRINI == true ]] ; then
         helm_install metrics-server stable/metrics-server\
              --set args[0]="--kubelet-preferred-address-types=InternalIP" \
              --set args[1]="--kubelet-insecure-tls" || true
-    fi
 
-    echo "Waiting for metrics server to come up..."
-    wait_ns default
-    sleep 10
+        echo "Waiting for metrics server to come up..."
+        wait_ns default
+        sleep 10
+    fi
 fi
 
 SCF_CHART="kubecf"
