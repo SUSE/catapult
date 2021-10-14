@@ -25,9 +25,6 @@ fi
 if helm_ls 2>/dev/null | grep -qi susecf-scf ; then
     helm_delete susecf-scf --namespace scf
 fi
-if kubectl get namespaces 2>/dev/null | grep -qi scf ; then
-    kubectl delete --ignore-not-found namespace scf
-fi
 
 if kubectl get psp 2>/dev/null | grep -qi susecf-scf ; then
     kubectl delete --ignore-not-found psp susecf-scf-default
