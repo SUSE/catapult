@@ -197,7 +197,8 @@ kubecf-build: ##@kubecf Build chart from source and install KubeCF
 	$(MAKE) -C modules/kubecf install
 
 .PHONY: kubecf-clean
-kubecf-clean: ##@kubecf Only delete installation of KubeCF & related files
+kubecf-clean: ##@kubecf Delete installation of KubeCF, Stratos & related files
+kubecf-clean: stratos-clean metrics-clean # remove any stratos install, as it would be broken
 	$(MAKE) -C modules/kubecf clean
 
 .PHONY: kubecf
@@ -267,7 +268,8 @@ scf-build: ##@scf Build chart from source and install CF
 	$(MAKE) -C modules/scf install
 
 .PHONY: scf-clean
-scf-clean: ##@scf Only delete installation of CF & related files
+scf-clean: ##@scf Delete installation of SCF, Stratos & related files
+scf-clean: stratos-clean metrics-clean # remove any stratos install, as it would be broken
 	$(MAKE) -C modules/scf clean
 
 .PHONY: scf
